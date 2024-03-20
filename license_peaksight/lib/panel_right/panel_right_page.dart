@@ -3,7 +3,12 @@ import 'package:file_picker/file_picker.dart';
 import 'dart:io';
 import 'package:license_peaksight/constants.dart';
 
+// Add a callback function parameter to PanelRightPage
 class PanelRightPage extends StatefulWidget {
+  final Function(String imagePath)? onImageSelected;
+
+  PanelRightPage({this.onImageSelected});
+
   @override
   _PanelRightPageState createState() => _PanelRightPageState();
 }
@@ -44,6 +49,10 @@ class _PanelRightPageState extends State<PanelRightPage> with SingleTickerProvid
         _animationController!.reset();
         _animationController!.forward();
       });
+      // Ensures the selected image path is communicated back right after picking
+      if(images.isNotEmpty) {
+        widget.onImageSelected?.call(images[currentIndex]);
+      }
     }
   }
 
@@ -54,6 +63,9 @@ class _PanelRightPageState extends State<PanelRightPage> with SingleTickerProvid
         _animationController!.reset();
         _animationController!.forward();
       });
+      // Call the callback function with the new image path
+      widget.onImageSelected?.call(images[currentIndex]);
+      print("Selected image path: ${images[currentIndex]}");
     }
   }
 
@@ -64,6 +76,9 @@ class _PanelRightPageState extends State<PanelRightPage> with SingleTickerProvid
         _animationController!.reset();
         _animationController!.forward();
       });
+      // Call the callback function with the new image path
+      widget.onImageSelected?.call(images[currentIndex]);
+      print("Selected image path: ${images[currentIndex]}");
     }
   }
 

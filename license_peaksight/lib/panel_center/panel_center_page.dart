@@ -1,6 +1,9 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:license_peaksight/constants.dart';
+import '../predict_image_noise_level.dart';
+
 
 class Person {
   String name;
@@ -9,11 +12,17 @@ class Person {
 }
 
 class PanelCenterPage extends StatefulWidget {
+  final String imagePath;
+
+  PanelCenterPage({required this.imagePath});
+
   @override
   _PanelCenterPageState createState() => _PanelCenterPageState();
 }
 
+
 class _PanelCenterPageState extends State<PanelCenterPage> {
+  double? qualityScore;
   List<Person> _persons = [
     Person(name: "John Doe", color: Constants.orangeDark),
     Person(name: "Jane Doe", color: Constants.redDark),
@@ -21,6 +30,27 @@ class _PanelCenterPageState extends State<PanelCenterPage> {
     Person(name: "Gilbert Smith", color: Constants.greenLight),
     Person(name: "Jane Smith", color: Constants.orangeLight),
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    // Call the function to calculate the image quality score
+    if (widget.imagePath.isNotEmpty) {
+      calculateQualityScore();
+    }
+  }
+
+  void calculateQualityScore() async {
+    try {
+      final score = await predictImageQuality(File(widget.imagePath));
+      setState(() {
+        qualityScore = score;
+      });
+    } catch (e) {
+      print("Failed to load quality score: $e");
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -94,6 +124,40 @@ class _PanelCenterPageState extends State<PanelCenterPage> {
                         ),
                       )
                     ),
+                  ),
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(Constants.kPadding),
+              child: Card(
+                color: Constants.purpleLight,
+                elevation: 3,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20)),
+                child: Padding(
+                  padding: const EdgeInsets.all(Constants.kPadding),
+                  child: Column(
+                    children: [
+                      ListTile(
+                        title: Text(
+                          "Image Quality Score based on Noise Level",
+                          style: TextStyle(color: Colors.white),
+                        ),
+                        subtitle: Text(
+                          qualityScore != null ? "$qualityScore" : "No score calculated",
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
+                      // Button to trigger score calculation
+                      ElevatedButton(
+                        onPressed: calculateQualityScore,
+                        child: Text('Calculate Score', style: TextStyle(color: Colors.white)),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Constants.blue,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ),

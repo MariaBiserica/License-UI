@@ -12,6 +12,15 @@ class WidgetTree extends StatefulWidget {
 }
 
 class _WidgetTreeState extends State<WidgetTree> {
+  String _imagePath = ''; // Holds the path of the selected image
+
+  // Function to be called when an image is selected in PanelRightPage
+  void _onImageSelected(String imagePath) {
+    setState(() {
+      _imagePath = imagePath;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -24,11 +33,11 @@ class _WidgetTreeState extends State<WidgetTree> {
       ),
       body: ResponsiveLayout(
         tiny: Container(),
-        phone: PanelCenterPage(),
+        phone: PanelCenterPage(imagePath: _imagePath),
         tablet: Row(
           children: [
             Expanded(child: PanelLeftPage(),),
-            Expanded(child: PanelCenterPage(),),
+            Expanded(child: PanelCenterPage(imagePath: _imagePath),),
           ],
         ),
         largeTablet: Row(
@@ -39,11 +48,11 @@ class _WidgetTreeState extends State<WidgetTree> {
             ),
             Expanded(
               flex: 2, // Adjust the flex factor to control size
-              child: PanelCenterPage(),
+              child: PanelCenterPage(imagePath: _imagePath),
             ),
             Expanded(
               flex: 3, // Give more space to the right panel
-              child: PanelRightPage(),
+              child: PanelRightPage(onImageSelected: _onImageSelected), // Add the callback here
             ),
           ],
         ),
@@ -59,11 +68,11 @@ class _WidgetTreeState extends State<WidgetTree> {
             ),
             Expanded(
               flex: 2, // Adjust the flex factor to control size
-              child: PanelCenterPage(),
+              child: PanelCenterPage(imagePath: _imagePath),
             ),
             Expanded(
               flex: 4, // Give more space to the right panel
-              child: PanelRightPage(),
+              child: PanelRightPage(onImageSelected: _onImageSelected), // Add the callback here
             ),
           ],
         ),
