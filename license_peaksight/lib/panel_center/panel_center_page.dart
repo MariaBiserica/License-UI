@@ -24,7 +24,7 @@ class PanelCenterPage extends StatefulWidget {
 class _PanelCenterPageState extends State<PanelCenterPage> {
   double? noiseScore;
   double? contrastScore;
-  double? scaledContrastScore;
+  double? brightnessScore;
   List<Person> _persons = [
     Person(name: "John Doe", color: Constants.orangeDark),
     Person(name: "Jane Doe", color: Constants.redDark),
@@ -48,6 +48,7 @@ class _PanelCenterPageState extends State<PanelCenterPage> {
       setState(() {
         noiseScore = scores.noiseScore;
         contrastScore = scores.contrastScore;
+        brightnessScore = scores.brightnessScore;
       });
     } catch (e) {
       print("Failed to load quality scores: $e");
@@ -173,6 +174,18 @@ class _PanelCenterPageState extends State<PanelCenterPage> {
                         subtitle: Text(
                           contrastScore != null 
                           ? "${contrastScore} - ${getQualityLevelMessage(contrastScore)}" 
+                          : "No score calculated",
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
+                      ListTile(
+                        title: Text(
+                          "Image Brightness Score",
+                          style: TextStyle(color: Colors.white),
+                        ),
+                        subtitle: Text(
+                          brightnessScore != null 
+                          ? "${brightnessScore} - ${getQualityLevelMessage(brightnessScore)}" 
                           : "No score calculated",
                           style: TextStyle(color: Colors.white),
                         ),

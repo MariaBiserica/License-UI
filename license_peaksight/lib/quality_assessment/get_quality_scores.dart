@@ -6,10 +6,12 @@ import 'dart:convert';
 class QualityScores {
   final double noiseScore;
   final double contrastScore;
+  final double brightnessScore;
 
   QualityScores({
     required this.noiseScore, 
     required this.contrastScore,
+    required this.brightnessScore,
   });
 }
 
@@ -28,6 +30,7 @@ Future<QualityScores> predictImageQuality(File imageFile) async {
     return QualityScores(
       noiseScore: jsonResponse['noise_score'],
       contrastScore: jsonResponse['contrast_score'],
+      brightnessScore: jsonResponse['brightness_score'],
     );
   } else {
     throw Exception('Failed to load quality scores');
