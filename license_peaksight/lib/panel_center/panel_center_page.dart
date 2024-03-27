@@ -2,7 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:license_peaksight/constants.dart';
-import '../quality_assessment/predict_image_noise_level.dart';
+import '../quality_assessment/get_quality_scores.dart';
 
 
 class Person {
@@ -22,7 +22,9 @@ class PanelCenterPage extends StatefulWidget {
 
 
 class _PanelCenterPageState extends State<PanelCenterPage> {
-  double? qualityScore;
+  double? noiseScore;
+  double? contrastScore;
+  double? scaledContrastScore;
   List<Person> _persons = [
     Person(name: "John Doe", color: Constants.orangeDark),
     Person(name: "Jane Doe", color: Constants.redDark),
@@ -34,21 +36,33 @@ class _PanelCenterPageState extends State<PanelCenterPage> {
   @override
   void initState() {
     super.initState();
-    // Call the function to calculate the image quality score
+    // Call the function to calculate the image quality scores
     if (widget.imagePath.isNotEmpty) {
-      calculateQualityScore();
+      calculateQualityScores();
     }
   }
 
-  void calculateQualityScore() async {
+  void calculateQualityScores() async {
     try {
-      final score = await predictImageQuality(File(widget.imagePath));
+      final scores = await predictImageQuality(File(widget.imagePath));
       setState(() {
-        qualityScore = score;
+        noiseScore = scores.noiseScore;
+        contrastScore = scores.contrastScore;
       });
     } catch (e) {
-      print("Failed to load quality score: $e");
+      print("Failed to load quality scores: $e");
     }
+  }
+
+  // Additional helper method to provide personalized message based on noise score
+  String getQualityLevelMessage(double? score) {
+    if (score == null) return "No score calculated";
+    if (score > 5) return "Outlier quality, something is wrong";
+    if (score > 4 && score <= 5) return "Excellent quality";
+    if (score > 3 && score <= 4) return "Good quality";
+    if (score > 2 && score <= 3) return "Fair quality";
+    if (score > 1 && score <= 2) return "Poor quality";
+    return "Bad quality";
   }
 
   @override
@@ -141,18 +155,32 @@ class _PanelCenterPageState extends State<PanelCenterPage> {
                     children: [
                       ListTile(
                         title: Text(
-                          "Image Quality Score based on Noise Level",
+                          "Image Noise Score",
                           style: TextStyle(color: Colors.white),
                         ),
                         subtitle: Text(
-                          qualityScore != null ? "$qualityScore" : "No score calculated",
+                          noiseScore != null 
+                          ? "${noiseScore} - ${getQualityLevelMessage(noiseScore)}" 
+                          : "No score calculated",
                           style: TextStyle(color: Colors.white),
                         ),
                       ),
-                      // Button to trigger score calculation
+                      ListTile(
+                        title: Text(
+                          "Image Contrast Score",
+                          style: TextStyle(color: Colors.white),
+                        ),
+                        subtitle: Text(
+                          contrastScore != null 
+                          ? "${contrastScore} - ${getQualityLevelMessage(contrastScore)}" 
+                          : "No score calculated",
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
+                      // Button to trigger scores calculation
                       ElevatedButton(
-                        onPressed: calculateQualityScore,
-                        child: Text('Calculate Score', style: TextStyle(color: Colors.white)),
+                        onPressed: calculateQualityScores,
+                        child: Text('Calculate Scores', style: TextStyle(color: Colors.white)),
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Constants.blue,
                         ),
