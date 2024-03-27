@@ -25,6 +25,8 @@ class _PanelCenterPageState extends State<PanelCenterPage> {
   double? noiseScore;
   double? contrastScore;
   double? brightnessScore;
+  double? sharpnessScore;
+
   List<Person> _persons = [
     Person(name: "John Doe", color: Constants.orangeDark),
     Person(name: "Jane Doe", color: Constants.redDark),
@@ -49,6 +51,7 @@ class _PanelCenterPageState extends State<PanelCenterPage> {
         noiseScore = scores.noiseScore;
         contrastScore = scores.contrastScore;
         brightnessScore = scores.brightnessScore;
+        sharpnessScore = scores.sharpnessScore;
       });
     } catch (e) {
       print("Failed to load quality scores: $e");
@@ -62,7 +65,7 @@ class _PanelCenterPageState extends State<PanelCenterPage> {
     if (score > 4 && score <= 5) return "Excellent quality";
     if (score > 3 && score <= 4) return "Good quality";
     if (score > 2 && score <= 3) return "Fair quality";
-    if (score > 1 && score <= 2) return "Poor quality";
+    if (score > 1.50 && score <= 2) return "Poor quality";
     return "Bad quality";
   }
 
@@ -186,6 +189,18 @@ class _PanelCenterPageState extends State<PanelCenterPage> {
                         subtitle: Text(
                           brightnessScore != null 
                           ? "${brightnessScore} - ${getQualityLevelMessage(brightnessScore)}" 
+                          : "No score calculated",
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
+                      ListTile(
+                        title: Text(
+                          "Image Sharpness Score",
+                          style: TextStyle(color: Colors.white),
+                        ),
+                        subtitle: Text(
+                          sharpnessScore != null 
+                          ? "${sharpnessScore} - ${getQualityLevelMessage(sharpnessScore)}" 
                           : "No score calculated",
                           style: TextStyle(color: Colors.white),
                         ),

@@ -7,11 +7,13 @@ class QualityScores {
   final double noiseScore;
   final double contrastScore;
   final double brightnessScore;
+  final double sharpnessScore;
 
   QualityScores({
     required this.noiseScore, 
     required this.contrastScore,
     required this.brightnessScore,
+    required this.sharpnessScore,
   });
 }
 
@@ -31,6 +33,7 @@ Future<QualityScores> predictImageQuality(File imageFile) async {
       noiseScore: jsonResponse['noise_score'],
       contrastScore: jsonResponse['contrast_score'],
       brightnessScore: jsonResponse['brightness_score'],
+      sharpnessScore: jsonResponse['sharpness_score'],
     );
   } else {
     throw Exception('Failed to load quality scores');
