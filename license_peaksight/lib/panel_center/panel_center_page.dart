@@ -2,7 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:license_peaksight/constants.dart';
-import '../predict_image_noise_level.dart';
+import '../quality_assessment/predict_image_noise_level.dart';
 
 
 class Person {

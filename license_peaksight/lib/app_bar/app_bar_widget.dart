@@ -6,6 +6,10 @@ List<String> _buttonNames = ["Overview", "Revenue", "Sales", "Control"];
 int _currentSelectedButton= 0;
 
 class AppBarWidget extends StatefulWidget {
+  final String currentSection;
+
+  AppBarWidget({required this.currentSection});
+
   @override
   _AppBarWidgetState createState() => _AppBarWidgetState();
 }

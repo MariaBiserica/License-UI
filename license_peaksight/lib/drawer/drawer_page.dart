@@ -4,6 +4,11 @@ import 'package:license_peaksight/constants.dart';
 import 'package:license_peaksight/responsive_layout.dart';
 
 class DrawerPage extends StatefulWidget {
+  final Function(String) onSectionSelected; // Add this line
+  DrawerPage({required this.onSectionSelected}) {
+    print("Callback set: $onSectionSelected");
+  }
+
   @override
   _DrawerPageState createState() => _DrawerPageState();
 }
@@ -12,20 +17,19 @@ class ButtonsInfo {
   String title;
   IconData icon;
 
-  ButtonsInfo({ required this.title, required this.icon});
+  ButtonsInfo({required this.title, required this.icon});
 }
 
 int _currentIndex = 0;
 
 List<ButtonsInfo> _buttonNames = [
-  ButtonsInfo(title: 'Home', icon: Icons.home),
+  ButtonsInfo(title: 'Home', icon: Icons.dashboard),
+  ButtonsInfo(title: 'Image Quality Assessment', icon: Icons.assessment),
+  ButtonsInfo(title: 'Image Modifier', icon: Icons.tune),
+  ButtonsInfo(title: 'Batch Processing', icon: Icons.batch_prediction),
+  ButtonsInfo(title: 'Statistics', icon: Icons.bar_chart),
   ButtonsInfo(title: 'Settings', icon: Icons.settings),
-  ButtonsInfo(title: 'Notifications', icon: Icons.notifications),
-  ButtonsInfo(title: 'Contacts', icon: Icons.contact_phone_rounded),
-  ButtonsInfo(title: 'Sales', icon: Icons.sell),
-  ButtonsInfo(title: 'Marketing', icon: Icons.mark_email_read),
-  ButtonsInfo(title: 'Security', icon: Icons.verified_user),
-  ButtonsInfo(title: 'Users', icon: Icons.supervised_user_circle),
+  ButtonsInfo(title: 'Help & Documentation', icon: Icons.help_outline),
 ];
 
 class _DrawerPageState extends State<DrawerPage> {
@@ -58,7 +62,7 @@ class _DrawerPageState extends State<DrawerPage> {
                             color: Colors.white,
                           )),
                 ),
-                // Create a list of widget, put ... to tel Flutter 
+                // Create a list of widget, put ... to tell Flutter 
                 // that it is a list instead of creating another Column
                 ...List.generate(
                   _buttonNames.length,
@@ -86,9 +90,10 @@ class _DrawerPageState extends State<DrawerPage> {
                           ),
                         ),
                         onTap: () {
-                          setState(() {
+                            setState(() {
                             _currentIndex = index;
                           });
+                          widget.onSectionSelected(_buttonNames[index].title); // Use the onSectionSelected callback
                         },
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(20),
