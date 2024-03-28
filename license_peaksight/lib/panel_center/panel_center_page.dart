@@ -26,6 +26,7 @@ class _PanelCenterPageState extends State<PanelCenterPage> {
   double? contrastScore;
   double? brightnessScore;
   double? sharpnessScore;
+  double? chromaticScore;
 
   List<Person> _persons = [
     Person(name: "John Doe", color: Constants.orangeDark),
@@ -52,6 +53,7 @@ class _PanelCenterPageState extends State<PanelCenterPage> {
         contrastScore = scores.contrastScore;
         brightnessScore = scores.brightnessScore;
         sharpnessScore = scores.sharpnessScore;
+        chromaticScore = scores.chromaticScore;
       });
     } catch (e) {
       print("Failed to load quality scores: $e");
@@ -201,6 +203,18 @@ class _PanelCenterPageState extends State<PanelCenterPage> {
                         subtitle: Text(
                           sharpnessScore != null 
                           ? "${sharpnessScore} - ${getQualityLevelMessage(sharpnessScore)}" 
+                          : "No score calculated",
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
+                      ListTile(
+                        title: Text(
+                          "Image Chromatic Score",
+                          style: TextStyle(color: Colors.white),
+                        ),
+                        subtitle: Text(
+                          chromaticScore != null 
+                          ? "${chromaticScore} - ${getQualityLevelMessage(chromaticScore)}" 
                           : "No score calculated",
                           style: TextStyle(color: Colors.white),
                         ),
