@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "818671994627",
+    "project_id": "peak-sight",
+    "storage_bucket": "peak-sight.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:818671994627:android:269c7a1e2b92a11b2ecb36",
+        "android_client_info": {
+          "package_name": "com.example.license_peaksight"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAxajUS_N-Ofw16xe1Ph0ct-96E-Nss0xc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
