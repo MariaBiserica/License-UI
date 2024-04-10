@@ -1,8 +1,8 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:license_peaksight/authentication/login_page.dart';
 import 'package:license_peaksight/constants.dart';
 import 'package:license_peaksight/firebase_options.dart';
-import 'package:license_peaksight/widget_tree.dart';
 
 Future <void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -24,7 +24,7 @@ class MyApp extends StatelessWidget {
         scaffoldBackgroundColor: Constants.purpleDark,
         canvasColor: Constants.purpleLight
       ),
-      home: WidgetTree(),
+      home: LoginPage(), // Set LoginPage as the home widget
     );
   }
 }
