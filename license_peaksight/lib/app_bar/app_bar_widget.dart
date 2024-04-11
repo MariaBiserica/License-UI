@@ -7,8 +7,9 @@ int _currentSelectedButton= 0;
 
 class AppBarWidget extends StatefulWidget {
   final String currentSection;
+  final String? avatarUrl;
 
-  AppBarWidget({required this.currentSection});
+  AppBarWidget({required this.currentSection, this.avatarUrl});
 
   @override
   _AppBarWidgetState createState() => _AppBarWidgetState();
@@ -173,7 +174,7 @@ class _AppBarWidgetState extends State<AppBarWidget> {
               child: CircleAvatar(
                 backgroundColor: Constants.orangeDark,
                 radius: 30,
-                child: Image.asset("images/profile.png"),
+                backgroundImage: widget.avatarUrl != null ? NetworkImage(widget.avatarUrl!) : AssetImage("images/profile.png") as ImageProvider,
               ),
             ),
         ],

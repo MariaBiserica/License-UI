@@ -9,6 +9,10 @@ import 'package:license_peaksight/menu_widgets/home_widget.dart';
 import 'package:license_peaksight/menu_widgets/image_quality_widget.dart';
 
 class WidgetTree extends StatefulWidget {
+  final String? userAvatarUrl;
+
+  WidgetTree({this.userAvatarUrl});
+
   @override
   _WidgetTreeState createState() => _WidgetTreeState();
 }
@@ -61,7 +65,7 @@ class _WidgetTreeState extends State<WidgetTree> {
         child: (ResponsiveLayout.isTinyLimit(context) ||
                 ResponsiveLayout.isTinyHeightLimit(context)
                 ? Container() 
-                : AppBarWidget(currentSection: _currentSection)),
+                : AppBarWidget(currentSection: _currentSection, avatarUrl: widget.userAvatarUrl)),
       ),
       body: _getSectionWidget(),
       // ResponsiveLayout(

@@ -1,5 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:license_peaksight/authentication/register_page.dart';
+import 'package:license_peaksight/authentication/user_model.dart';
 import 'package:license_peaksight/widget_tree.dart';
 import 'authentication_service.dart';
 
@@ -53,9 +56,12 @@ class _LoginPageState extends State<LoginPage> {
                       setState(() => error = 'Could not sign in with those credentials');
                     } else {
                       // If login is successful, navigate to the WidgetTree page
+                      UserModel? userModel = await fetchUserData();
                       Navigator.pushReplacement(
                         context,
-                        MaterialPageRoute(builder: (context) => WidgetTree()),
+                        MaterialPageRoute(
+                          builder: (context) => WidgetTree(userAvatarUrl: userModel?.avatarUrl),
+                        ),
                       );
                     }
                   }
@@ -81,5 +87,21 @@ class _LoginPageState extends State<LoginPage> {
         ),
       ),
     );
+  }
+
+  Future<UserModel?> fetchUserData() async {
+    try {
+      User? user = FirebaseAuth.instance.currentUser;
+      if (user != null) {
+        final DocumentSnapshot userDoc = await FirebaseFirestore.instance.collection('users').doc(user.uid).get();
+        if (userDoc.exists) {
+          return UserModel.fromFirestore(userDoc.data() as Map<String, dynamic>);
+        }
+      }
+    } catch (e) {
+      print("Error fetching user data: $e");
+      // Handle the error or return null
+    }
+    return null;
   }
 }

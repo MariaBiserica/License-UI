@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'authentication_service.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
+import 'package:firebase_auth/firebase_auth.dart';
 
 enum AvatarSelectionOption { enterUrl, pickImage, choosePredefined }
 
@@ -181,26 +182,41 @@ class _RegisterPageState extends State<RegisterPage> {
     }
 
     // Proceed with registration using the obtained avatarUrl
-    dynamic result = await _authService.signUpWithEmailAndPassword(
-      email,
-      password,
-      username,
-      avatarUrl, // Pass the final avatar URL here
-    );
-
-    if (result != null) {
-      Navigator.pop(context); // Go back to the previous screen upon successful registration
-    } else {
-      // Handle registration error
+    try {
+      // Attempt to sign up the user with Firebase Auth
+      User? user = await _authService.signUpWithEmailAndPassword(email, password);
+      if (user != null) {
+        // User is signed up, now create the Firestore user document
+        await _authService.createUserDocument(user, username, avatarUrl);
+        // Navigate to the next screen or show a success message
+        Navigator.pop(context); // Go back to the previous screen upon successful registration
+      } else {
+        // Handle the case where the user couldn't be signed up
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: Text('Registration Error'),
+            content: Text('Failed to create a new user.'),
+            actions: <Widget>[
+              TextButton(
+                child: Text('Ok'),
+                onPressed: () => Navigator.of(context).pop(),
+              ),
+            ],
+          ),
+        );
+      }
+    } catch (e) {
+      // Handle any errors that come from Firebase Auth
       showDialog(
         context: context,
         builder: (context) => AlertDialog(
           title: Text('Error'),
-          content: Text('Registration failed. Please try again.'),
+          content: Text(e.toString()),
           actions: <Widget>[
             TextButton(
               child: Text('Ok'),
-              onPressed: () => Navigator.of(context).pop(), // Close the dialog
+              onPressed: () => Navigator.of(context).pop(),
             ),
           ],
         ),
