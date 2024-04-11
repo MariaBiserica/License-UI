@@ -14,75 +14,109 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final AuthService _authService = AuthService();
   final _formKey = GlobalKey<FormState>();
-
-  String email = '';
-  String password = '';
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
   String error = '';
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
-      body: Container(
-        padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 50.0),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            children: <Widget>[
-              SizedBox(height: 20.0),
-              TextFormField(
-                decoration: InputDecoration(labelText: 'Email'),
-                validator: (val) => val!.isEmpty ? 'Enter an email' : null,
-                onChanged: (val) {
-                  setState(() => email = val);
-                },
-              ),
-              SizedBox(height: 20.0),
-              TextFormField(
-                decoration: InputDecoration(labelText: 'Password'),
-                obscureText: true,
-                validator: (val) => val!.length < 6 ? 'Password too short' : null,
-                onChanged: (val) {
-                  setState(() => password = val);
-                },
-              ),
-              SizedBox(height: 20.0),
-              ElevatedButton(
-                child: Text('Login'),
-                onPressed: () async {
-                  if (_formKey.currentState!.validate()) {
-                    dynamic result = await _authService.signInWithEmailAndPassword(email, password);
-                    if (result == null) {
-                      setState(() => error = 'Could not sign in with those credentials');
-                    } else {
-                      // If login is successful, navigate to the WidgetTree page
-                      UserModel? userModel = await fetchUserData();
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => WidgetTree(userAvatarUrl: userModel?.avatarUrl),
+      body: AnimatedContainer(
+        duration: Duration(seconds: 2),
+        curve: Curves.fastOutSlowIn,
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [Colors.purple, Colors.orange],
+          ),
+        ),
+        child: Center(
+          child: Card(
+            elevation: 5.0, // Adjust elevation for shadow depth
+            child: Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  CircleAvatar(
+                    //backgroundColor: Color.fromARGB(255, 168, 249, 212),
+                    radius: 100,
+                    child: Image.asset("images/logo.png"),
+                  ),
+                  SizedBox(height: 20),
+                  Form(
+                    key: _formKey,
+                    child: Column(
+                      children: <Widget>[
+                        TextFormField(
+                          controller: _emailController,
+                          decoration: InputDecoration(labelText: 'Email'),
+                          validator: (val) =>
+                              val!.isEmpty ? 'Enter an email' : null,
+                          onChanged: (val) {
+                            // No need to set state here since we're using a controller
+                          },
                         ),
-                      );
-                    }
-                  }
-                },
+                        SizedBox(height: 20.0),
+                        TextFormField(
+                          controller: _passwordController,
+                          obscureText: true,
+                          decoration: InputDecoration(labelText: 'Password'),
+                          validator: (val) => val!.length < 6
+                              ? 'Enter a password 6+ chars long'
+                              : null,
+                          onChanged: (val) {
+                            // No need to set state here since we're using a controller
+                          },
+                        ),
+                        SizedBox(height: 20.0),
+                        ElevatedButton(
+                          child: Text('Login'),
+                          onPressed: () async {
+                            if (_formKey.currentState!.validate()) {
+                              dynamic result =
+                                  await _authService.signInWithEmailAndPassword(
+                                _emailController.text,
+                                _passwordController.text,
+                              );
+                              if (result == null) {
+                                setState(() =>
+                                    error = 'Could not sign in with those credentials');
+                              } else {
+                                UserModel? userModel = await fetchUserData();
+                                Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => WidgetTree(
+                                        userAvatarUrl: userModel?.avatarUrl),
+                                  ),
+                                );
+                              }
+                            }
+                          },
+                        ),
+                        SizedBox(height: 12.0),
+                        Text(
+                          error,
+                          style: TextStyle(color: Colors.red, fontSize: 14.0),
+                        ),
+                        TextButton(
+                          child: Text('Register'),
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => RegisterPage()),
+                            );
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
               ),
-              SizedBox(height: 12.0),
-              Text(
-                error,
-                style: TextStyle(color: Colors.red, fontSize: 14.0),
-              ),
-              TextButton(
-                child: Text('Register'),
-                onPressed: () {
-                  // Navigate to the register page
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => RegisterPage()),
-                  );
-                },
-              ),
-            ],
+            ),
           ),
         ),
       ),
@@ -93,14 +127,17 @@ class _LoginPageState extends State<LoginPage> {
     try {
       User? user = FirebaseAuth.instance.currentUser;
       if (user != null) {
-        final DocumentSnapshot userDoc = await FirebaseFirestore.instance.collection('users').doc(user.uid).get();
+        final DocumentSnapshot userDoc = await FirebaseFirestore.instance
+            .collection('users')
+            .doc(user.uid)
+            .get();
         if (userDoc.exists) {
-          return UserModel.fromFirestore(userDoc.data() as Map<String, dynamic>);
+          return UserModel.fromFirestore(
+              userDoc.data() as Map<String, dynamic>);
         }
       }
     } catch (e) {
       print("Error fetching user data: $e");
-      // Handle the error or return null
     }
     return null;
   }
