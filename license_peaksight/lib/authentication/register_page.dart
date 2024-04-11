@@ -27,14 +27,14 @@ class _RegisterPageState extends State<RegisterPage> {
 
   // Predefined avatar images (assuming these are local assets)
   List<String> predefinedAvatars = [
-    'assets/profile_avatars/avatar1.png',
-    'assets/profile_avatars/avatar2.png',
+    'images/profile_avatars/avatar1.png',
+    'images/profile_avatars/avatar2.png',
   ];
 
   // URLs for predefined avatars if already uploaded to Firebase Storage
   List<String> predefinedAvatarUrls = [
-    'URL_for_avatar1_in_Firebase_Storage',
-    'URL_for_avatar2_in_Firebase_Storage',
+    'https://firebasestorage.googleapis.com/v0/b/peak-sight.appspot.com/o/predefined_avatars%2Favatar1.png?alt=media&token=032c8aa9-dd58-4eb2-942b-ba6a2b9471d4',
+    'https://firebasestorage.googleapis.com/v0/b/peak-sight.appspot.com/o/predefined_avatars%2Favatar2.png?alt=media&token=f2314594-e2e2-4036-be30-64dff9ce0c27',
   ];
 
   int selectedAvatarIndex = -1; // No avatar selected by default
@@ -88,8 +88,20 @@ class _RegisterPageState extends State<RegisterPage> {
                   decoration: InputDecoration(labelText: 'Image URL'),
                   onChanged: (val) => avatarUrl = val,
                 ),
-              if (_avatarSelectionOption == AvatarSelectionOption.pickImage && _image != null)
-                Image.file(File(_image!.path), width: 100, height: 100),
+              if (_avatarSelectionOption == AvatarSelectionOption.pickImage)
+                Column(
+                  children: [
+                    ElevatedButton(
+                      onPressed: _pickImageFromGallery, // Directly invoke the method when the button is pressed.
+                      child: Text('Upload Image'),
+                    ),
+                    if (_image != null) // Check if an image has been picked and display it.
+                      Padding(
+                        padding: EdgeInsets.only(top: 8.0),
+                        child: Image.file(File(_image!.path), width: 100, height: 100),
+                      ),
+                  ],
+                ),
               if (_avatarSelectionOption == AvatarSelectionOption.choosePredefined)
                 Wrap(
                   spacing: 10,
@@ -228,15 +240,20 @@ class _RegisterPageState extends State<RegisterPage> {
     File file = File(filePath);
     String fileName = predefinedPath ?? 'user_avatars/${DateTime.now().millisecondsSinceEpoch}_${filePath.split('/').last}';
     try {
-      await firebase_storage.FirebaseStorage.instance
+      print('Uploading file: $fileName');
+      firebase_storage.UploadTask task = firebase_storage.FirebaseStorage.instance
           .ref(fileName)
           .putFile(file);
-      final String downloadUrl = await firebase_storage.FirebaseStorage.instance
-          .ref(fileName)
-          .getDownloadURL();
+
+      // Get the snapshot when the upload is complete
+      firebase_storage.TaskSnapshot snapshot = await task.whenComplete(() => {});
+      
+      // Get the download URL
+      String downloadUrl = await snapshot.ref.getDownloadURL();
+      print('File uploaded, download URL: $downloadUrl');
       return downloadUrl;
     } catch (e) {
-      print(e);
+      print('Failed to upload image: $e');
       return null;
     }
   }
