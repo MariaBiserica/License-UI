@@ -199,14 +199,18 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
         final DocumentSnapshot userDoc = await FirebaseFirestore.instance
             .collection('users')
             .doc(user.uid)
-           .get();
-        if (userDoc.exists) {
-          return UserModel.fromFirestore(
-              userDoc.data as Map<String, dynamic>);
+            .get();
+        if (userDoc.exists && userDoc.data() != null) {
+          // Make sure to safely cast the data
+          Map<String, dynamic>? userData = userDoc.data() as Map<String, dynamic>?;
+          if (userData != null) {
+            return UserModel.fromFirestore(userData);
+          }
         }
       }
     } catch (e) {
       print("Error fetching user data: $e");
+      return null;
     }
     return null;
   }
