@@ -2,6 +2,7 @@ import 'dart:math';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:license_peaksight/authentication/animated_background/circle_painter.dart';
 
 class PulsingBackground extends StatefulWidget {
   @override
@@ -11,13 +12,13 @@ class PulsingBackground extends StatefulWidget {
 class _PulsingBackgroundState extends State<PulsingBackground>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
-  late List<Offset> _positions;
+  late List<Offset> _positions1, _positions2, _positions3;
 
   @override
   void initState() {
     super.initState();
     _controller = AnimationController(
-      duration: const Duration(seconds: 2), // Duration for one full cycle
+      duration: const Duration(seconds: 4), // Duration for one full cycle
       vsync: this,
     )..repeat(reverse: true);
   }
@@ -25,7 +26,9 @@ class _PulsingBackgroundState extends State<PulsingBackground>
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    _positions = generateRandomPositions(15);
+    _positions1 = generateRandomPositions(15);
+    _positions2 = generateRandomPositions(10);
+    _positions3 = generateRandomPositions(5);
   }
 
   List<Offset> generateRandomPositions(int count) {
@@ -51,8 +54,25 @@ class _PulsingBackgroundState extends State<PulsingBackground>
               painter: CirclePainter(
                 context: context,
                 controllerValue: _controller.value,
-                positions: _positions,
+                color: Color.fromARGB(255, 135, 95, 222).withOpacity(1 - _controller.value),
+                positions: _positions1,
               ),
+              child: CustomPaint(
+                painter: CirclePainter(
+                  context: context,
+                  controllerValue: _controller.value,
+                  color: Color.fromARGB(189, 55, 178, 222).withOpacity(1 - _controller.value),
+                  positions: _positions2,
+                ),
+                child: CustomPaint(
+                  painter: CirclePainter(
+                    context: context,
+                    controllerValue: _controller.value,
+                    color: Color.fromARGB(122, 236, 22, 233).withOpacity(1 - _controller.value),
+                    positions: _positions3,
+                  ),
+                ),
+              )
             );
           },
         ),
@@ -64,37 +84,5 @@ class _PulsingBackgroundState extends State<PulsingBackground>
   void dispose() {
     _controller.dispose();
     super.dispose();
-  }
-}
-
-class CirclePainter extends CustomPainter {
-  CirclePainter({
-    required this.context,
-    required this.controllerValue,
-    required this.positions,
-  });
-
-  final BuildContext context;
-  final double controllerValue;
-  final List<Offset> positions;
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    Paint paint = Paint()
-      ..color = Color.fromARGB(255, 135, 95, 247).withOpacity(1 - controllerValue)
-      ..maskFilter = MaskFilter.blur(BlurStyle.normal, convertRadiusToSigma(100.0)); // Increase the sigma for a larger blur
-
-    // The radius is multiplied by a larger number to increase the size
-    double radius = controllerValue * 20.0 + 50.0; // Base radius + animated growth
-    for (var position in positions) {
-      canvas.drawCircle(position, radius, paint);
-    }
-  }
-
-  @override
-  bool shouldRepaint(CirclePainter oldDelegate) => true;
-
-  double convertRadiusToSigma(double radius) {
-    return radius * 0.57735 + 0.5;
   }
 }

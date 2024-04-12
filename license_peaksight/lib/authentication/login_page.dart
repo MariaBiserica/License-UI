@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:license_peaksight/authentication/animated_background.dart';
+import 'package:license_peaksight/authentication/animated_background/animated_background.dart';
 import 'package:license_peaksight/authentication/register_page.dart';
 import 'package:license_peaksight/authentication/user_model.dart';
 import 'package:license_peaksight/widget_tree.dart';
