@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:license_peaksight/authentication/animated_background/animated_background.dart';
 import 'authentication_service.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:firebase_auth/firebase_auth.dart';
@@ -42,83 +43,96 @@ class _RegisterPageState extends State<RegisterPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
-      body: SingleChildScrollView(
-        padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 50.0),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            children: <Widget>[
-              TextFormField(
-                decoration: InputDecoration(labelText: 'Email'),
-                validator: (val) => val!.isEmpty ? 'Enter an email' : null,
-                onChanged: (val) => setState(() => email = val),
-              ),
-              TextFormField(
-                decoration: InputDecoration(labelText: 'Password'),
-                obscureText: true,
-                validator: (val) => val!.length < 6 ? 'Enter a password 6+ chars long' : null,
-                onChanged: (val) => setState(() => password = val),
-              ),
-              TextFormField(
-                decoration: InputDecoration(labelText: 'Username'),
-                validator: (val) => val!.isEmpty ? 'Enter a username' : null,
-                onChanged: (val) => setState(() => username = val),
-              ),
-              // UI for selecting avatar option
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  ElevatedButton(
-                    onPressed: () => setState(() => _avatarSelectionOption = AvatarSelectionOption.enterUrl),
-                    child: Text('Enter Image URL'),
-                  ),
-                  ElevatedButton(
-                    onPressed: () => setState(() => _avatarSelectionOption = AvatarSelectionOption.pickImage),
-                    child: Text('Pick Image from Gallery'),
-                  ),
-                  ElevatedButton(
-                    onPressed: () => setState(() => _avatarSelectionOption = AvatarSelectionOption.choosePredefined),
-                    child: Text('Choose Predefined'),
-                  ),
-                ],
-              ),
-              if (_avatarSelectionOption == AvatarSelectionOption.enterUrl)
-                TextFormField(
-                  decoration: InputDecoration(labelText: 'Image URL'),
-                  onChanged: (val) => avatarUrl = val,
-                ),
-              if (_avatarSelectionOption == AvatarSelectionOption.pickImage)
-                Column(
-                  children: [
-                    ElevatedButton(
-                      onPressed: _pickImageFromGallery, // Directly invoke the method when the button is pressed.
-                      child: Text('Upload Image'),
+      body: Stack(
+        children: [
+          PulsingBackground(), // Use the same animated background
+          Center(
+            child: Card(
+              elevation: 5.0,
+              margin: EdgeInsets.symmetric(horizontal: 300),// Increase the margin for smaller fields
+              child: Padding(
+                padding: EdgeInsets.all(20),
+                child: Form(
+                  key: _formKey,
+                  child: SingleChildScrollView(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        TextFormField(
+                          decoration: InputDecoration(labelText: 'Email'),
+                          validator: (val) => val!.isEmpty ? 'Enter an email' : null,
+                          onChanged: (val) => setState(() => email = val),
+                        ),
+                        TextFormField(
+                          decoration: InputDecoration(labelText: 'Password'),
+                          obscureText: true,
+                          validator: (val) => val!.length < 6 ? 'Enter a password 6+ chars long' : null,
+                          onChanged: (val) => setState(() => password = val),
+                        ),
+                        TextFormField(
+                          decoration: InputDecoration(labelText: 'Username'),
+                          validator: (val) => val!.isEmpty ? 'Enter a username' : null,
+                          onChanged: (val) => setState(() => username = val),
+                        ),
+                        // UI for selecting avatar option
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            ElevatedButton(
+                              onPressed: () => setState(() => _avatarSelectionOption = AvatarSelectionOption.enterUrl),
+                              child: Text('Enter Image URL'),
+                            ),
+                            ElevatedButton(
+                              onPressed: () => setState(() => _avatarSelectionOption = AvatarSelectionOption.pickImage),
+                              child: Text('Pick Image from Gallery'),
+                            ),
+                            ElevatedButton(
+                              onPressed: () => setState(() => _avatarSelectionOption = AvatarSelectionOption.choosePredefined),
+                              child: Text('Choose Predefined'),
+                            ),
+                          ],
+                        ),
+                        if (_avatarSelectionOption == AvatarSelectionOption.enterUrl)
+                          TextFormField(
+                            decoration: InputDecoration(labelText: 'Image URL'),
+                            onChanged: (val) => avatarUrl = val,
+                          ),
+                        if (_avatarSelectionOption == AvatarSelectionOption.pickImage)
+                          Column(
+                            children: [
+                              ElevatedButton(
+                                onPressed: _pickImageFromGallery, // Directly invoke the method when the button is pressed.
+                                child: Text('Upload Image'),
+                              ),
+                              if (_image != null) // Check if an image has been picked and display it.
+                                Padding(
+                                  padding: EdgeInsets.only(top: 8.0),
+                                  child: Image.file(File(_image!.path), width: 100, height: 100),
+                                ),
+                            ],
+                          ),
+                        if (_avatarSelectionOption == AvatarSelectionOption.choosePredefined)
+                          Wrap(
+                            spacing: 10,
+                            children: List<Widget>.generate(predefinedAvatars.length, (index) {
+                              return OutlinedButton(
+                                onPressed: () => _selectPredefinedAvatar(index),
+                                child: Image.asset(predefinedAvatars[index], width: 50, height: 50),
+                              );
+                            }),
+                          ),
+                        ElevatedButton(
+                          onPressed: _registerUser,
+                          child: Text('Register'),
+                        ),
+                      ],
                     ),
-                    if (_image != null) // Check if an image has been picked and display it.
-                      Padding(
-                        padding: EdgeInsets.only(top: 8.0),
-                        child: Image.file(File(_image!.path), width: 100, height: 100),
-                      ),
-                  ],
+                  ),
                 ),
-              if (_avatarSelectionOption == AvatarSelectionOption.choosePredefined)
-                Wrap(
-                  spacing: 10,
-                  children: List<Widget>.generate(predefinedAvatars.length, (index) {
-                    return OutlinedButton(
-                      onPressed: () => _selectPredefinedAvatar(index),
-                      child: Image.asset(predefinedAvatars[index], width: 50, height: 50),
-                    );
-                  }),
-                ),
-              ElevatedButton(
-                onPressed: _registerUser,
-                child: Text('Register'),
               ),
-            ],
+            ),
           ),
-        ),
+        ],
       ),
     );
   }
