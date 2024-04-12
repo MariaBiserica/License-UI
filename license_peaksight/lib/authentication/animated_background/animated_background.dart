@@ -12,13 +12,13 @@ class PulsingBackground extends StatefulWidget {
 class _PulsingBackgroundState extends State<PulsingBackground>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
-  late List<Offset> _positions1, _positions2, _positions3;
+  late List<Offset> _positions1, _positions2, _positions3, _positions4, _positions5;
 
   @override
   void initState() {
     super.initState();
     _controller = AnimationController(
-      duration: const Duration(seconds: 4), // Duration for one full cycle
+      duration: const Duration(seconds: 2), // Duration for one full cycle
       vsync: this,
     )..repeat(reverse: true);
   }
@@ -29,6 +29,8 @@ class _PulsingBackgroundState extends State<PulsingBackground>
     _positions1 = generateRandomPositions(15);
     _positions2 = generateRandomPositions(10);
     _positions3 = generateRandomPositions(5);
+    _positions4 = generateRandomPositions(5);
+    _positions5 = generateRandomPositions(5);
   }
 
   List<Offset> generateRandomPositions(int count) {
@@ -61,15 +63,31 @@ class _PulsingBackgroundState extends State<PulsingBackground>
                 painter: CirclePainter(
                   context: context,
                   controllerValue: _controller.value,
-                  color: Color.fromARGB(189, 55, 178, 222).withOpacity(1 - _controller.value),
+                  color: Colors.cyan.withOpacity(1 - _controller.value),
                   positions: _positions2,
                 ),
                 child: CustomPaint(
                   painter: CirclePainter(
                     context: context,
                     controllerValue: _controller.value,
-                    color: Color.fromARGB(122, 236, 22, 233).withOpacity(1 - _controller.value),
+                    color: Color.fromARGB(179, 236, 22, 108).withOpacity(1 - _controller.value),
                     positions: _positions3,
+                  ),
+                  child: CustomPaint(
+                    painter: CirclePainter(
+                      context: context,
+                      controllerValue: _controller.value,
+                      color: Color.fromARGB(226, 247, 97, 4).withOpacity(1 - _controller.value),
+                      positions: _positions4,
+                    ),
+                    child: CustomPaint(
+                      painter: CirclePainter(
+                        context: context,
+                        controllerValue: _controller.value,
+                        color: Color.fromARGB(204, 247, 4, 4).withOpacity(1 - _controller.value),
+                        positions: _positions5,
+                      ),
+                    ),
                   ),
                 ),
               )
