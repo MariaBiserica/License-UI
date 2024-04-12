@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:license_peaksight/authentication/animated_background.dart';
 import 'package:license_peaksight/authentication/register_page.dart';
 import 'package:license_peaksight/authentication/user_model.dart';
 import 'package:license_peaksight/widget_tree.dart';
@@ -21,104 +22,86 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: AnimatedContainer(
-        duration: Duration(seconds: 2),
-        curve: Curves.fastOutSlowIn,
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [Colors.purple, Colors.orange],
-          ),
-        ),
-        child: Center(
-          child: Card(
-            elevation: 5.0, // Adjust elevation for shadow depth
-            child: Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
-                  CircleAvatar(
-                    //backgroundColor: Color.fromARGB(255, 168, 249, 212),
-                    radius: 100,
-                    child: Image.asset("images/logo.png"),
-                  ),
-                  SizedBox(height: 20),
-                  Form(
-                    key: _formKey,
-                    child: Column(
-                      children: <Widget>[
-                        TextFormField(
-                          controller: _emailController,
-                          decoration: InputDecoration(labelText: 'Email'),
-                          validator: (val) =>
-                              val!.isEmpty ? 'Enter an email' : null,
-                          onChanged: (val) {
-                            // No need to set state here since we're using a controller
-                          },
-                        ),
-                        SizedBox(height: 20.0),
-                        TextFormField(
-                          controller: _passwordController,
-                          obscureText: true,
-                          decoration: InputDecoration(labelText: 'Password'),
-                          validator: (val) => val!.length < 6
-                              ? 'Enter a password 6+ chars long'
-                              : null,
-                          onChanged: (val) {
-                            // No need to set state here since we're using a controller
-                          },
-                        ),
-                        SizedBox(height: 20.0),
-                        ElevatedButton(
-                          child: Text('Login'),
-                          onPressed: () async {
-                            if (_formKey.currentState!.validate()) {
-                              dynamic result =
-                                  await _authService.signInWithEmailAndPassword(
-                                _emailController.text,
-                                _passwordController.text,
-                              );
-                              if (result == null) {
-                                setState(() =>
-                                    error = 'Could not sign in with those credentials');
-                              } else {
-                                UserModel? userModel = await fetchUserData();
-                                Navigator.pushReplacement(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => WidgetTree(
-                                        userAvatarUrl: userModel?.avatarUrl),
-                                  ),
-                                );
-                              }
-                            }
-                          },
-                        ),
-                        SizedBox(height: 12.0),
-                        Text(
-                          error,
-                          style: TextStyle(color: Colors.red, fontSize: 14.0),
-                        ),
-                        TextButton(
-                          child: Text('Register'),
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => RegisterPage()),
+      body: Stack(
+        children: [
+          PulsingBackground(), // Animated background
+          Center(
+            child: Card(
+              elevation: 5.0,
+              margin: EdgeInsets.symmetric(horizontal: 400),// Increase the margin for smaller fields
+              child: Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: Form(
+                  key: _formKey,
+                  child: ListView(
+                    shrinkWrap: true,
+                    padding: EdgeInsets.symmetric(horizontal: 20),
+                    children: <Widget>[
+                      CircleAvatar(
+                        radius: 100,
+                        child: Image.asset("images/logo.png"),
+                      ),
+                      SizedBox(height: 20),
+                      TextFormField(
+                        controller: _emailController,
+                        decoration: InputDecoration(labelText: 'Email'),
+                        validator: (val) => val!.isEmpty ? 'Enter an email' : null,
+                      ),
+                      SizedBox(height: 20.0),
+                      TextFormField(
+                        controller: _passwordController,
+                        obscureText: true,
+                        decoration: InputDecoration(labelText: 'Password'),
+                        validator: (val) => val!.length < 6 ? 'Enter a password 6+ chars long' : null,
+                      ),
+                      SizedBox(height: 20.0),
+                      ElevatedButton(
+                        child: Text('Login'),
+                        onPressed: () async {
+                          if (_formKey.currentState!.validate()) {
+                            dynamic result =
+                                await _authService.signInWithEmailAndPassword(
+                              _emailController.text,
+                              _passwordController.text,
                             );
-                          },
-                        ),
-                      ],
-                    ),
+                            if (result == null) {
+                              setState(() =>
+                                  error = 'Could not sign in with those credentials');
+                            } else {
+                              UserModel? userModel = await fetchUserData();
+                              Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => WidgetTree(
+                                      userAvatarUrl: userModel?.avatarUrl),
+                                ),
+                              );
+                            }
+                          }
+                        },
+                      ),
+                      SizedBox(height: 12.0),
+                      Text(
+                        error,
+                        style: TextStyle(color: Colors.red, fontSize: 14.0),
+                      ),
+                      TextButton(
+                        child: Text('Register'),
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => RegisterPage()),
+                          );
+                        },
+                      ),
+                    ],
                   ),
-                ],
+                ),
               ),
             ),
           ),
-        ),
+        ],
       ),
     );
   }
