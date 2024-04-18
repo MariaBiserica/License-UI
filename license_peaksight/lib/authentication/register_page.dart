@@ -226,6 +226,20 @@ class _RegisterPageState extends State<RegisterPage> {
                         ElevatedButton(
                           onPressed: _registerUser,
                           child: Text('Register'),
+                          style: ButtonStyle(
+                            minimumSize: MaterialStateProperty.all(Size(200, 36)), // Minimum size
+                            padding: MaterialStateProperty.all(EdgeInsets.symmetric(horizontal: 16)), // Padding inside the button
+                          ),
+                        ),
+                        SizedBox(height: 20),
+                        ElevatedButton(
+                          onPressed: () => Navigator.of(context).pop(),
+                          child: Text('Back to Login'),
+                          style: ButtonStyle(
+                            minimumSize: MaterialStateProperty.all(Size(200, 36)), // Minimum size
+                            padding: MaterialStateProperty.all(EdgeInsets.symmetric(horizontal: 16)), // Padding inside the button
+                            backgroundColor: MaterialStateProperty.all(Color.fromARGB(255, 239, 219, 255)),
+                          ),
                         ),
                       ],
                     ),
