@@ -1,5 +1,7 @@
 import 'dart:io';
 
+import 'package:carousel_slider/carousel_controller.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:license_peaksight/authentication/animated_background/animated_background.dart';
@@ -25,6 +27,7 @@ class _RegisterPageState extends State<RegisterPage> {
   String? avatarUrl; // URL for the uploaded or selected avatar
   XFile? _image; // Selected image file
   AvatarSelectionOption? _avatarSelectionOption;
+  bool _showCarouselArrows = false; // Controls the visibility of carousel arrows
 
   // Predefined avatar images (assuming these are local assets)
   List<String> predefinedAvatars = [
@@ -38,7 +41,8 @@ class _RegisterPageState extends State<RegisterPage> {
     'https://firebasestorage.googleapis.com/v0/b/peak-sight.appspot.com/o/predefined_avatars%2Favatar2.png?alt=media&token=f2314594-e2e2-4036-be30-64dff9ce0c27',
   ];
 
-  int selectedAvatarIndex = -1; // No avatar selected by default
+  CarouselController _carouselController = CarouselController();
+  int _currentAvatarIndex = -1; // No avatar selected by default
 
   @override
   Widget build(BuildContext context) {
@@ -115,17 +119,29 @@ class _RegisterPageState extends State<RegisterPage> {
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
                             ElevatedButton(
-                              onPressed: () => setState(() => _avatarSelectionOption = AvatarSelectionOption.enterUrl),
+                              onPressed: () {
+                                setState(() {
+                                  _avatarSelectionOption = AvatarSelectionOption.enterUrl;
+                                  _showCarouselArrows = false;
+                                });
+                              },
                               child: Text('Enter Image URL'),
                             ),
                             ElevatedButton(
-                              onPressed: () => setState(() => _avatarSelectionOption = AvatarSelectionOption.pickImage),
+                              onPressed: () {
+                                setState(() {
+                                  _avatarSelectionOption = AvatarSelectionOption.pickImage;
+                                  _showCarouselArrows = false;
+                                });
+                              },
                               child: Text('Pick Image from Gallery'),
                             ),
-                            ElevatedButton(
-                              onPressed: () => setState(() => _avatarSelectionOption = AvatarSelectionOption.choosePredefined),
-                              child: Text('Choose Predefined'),
-                            ),
+                            ElevatedButton(onPressed: () {
+                              setState(() {
+                                _avatarSelectionOption = AvatarSelectionOption.choosePredefined;
+                                _showCarouselArrows = true;
+                              });
+                            }, child: Text('Choose Predefined')),
                           ],
                         ),
                         if (_avatarSelectionOption == AvatarSelectionOption.enterUrl)
@@ -150,14 +166,28 @@ class _RegisterPageState extends State<RegisterPage> {
                             ],
                           ),
                         if (_avatarSelectionOption == AvatarSelectionOption.choosePredefined)
-                          Wrap(
-                            spacing: 10,
-                            children: List<Widget>.generate(predefinedAvatars.length, (index) {
-                              return OutlinedButton(
-                                onPressed: () => _selectPredefinedAvatar(index),
-                                child: Image.asset(predefinedAvatars[index], width: 50, height: 50),
-                              );
-                            }),
+                          Column(
+                            children: [
+                              CarouselSlider.builder(
+                                itemCount: predefinedAvatars.length,
+                                itemBuilder: (context, index, realIndex) => Image.asset(predefinedAvatars[index], width: 100, height: 100),
+                                carouselController: _carouselController,
+                                options: CarouselOptions(autoPlay: false, enlargeCenterPage: true, onPageChanged: (index, reason) {
+                                  setState(() {
+                                    _currentAvatarIndex = index;
+                                    avatarUrl = predefinedAvatarUrls[index];
+                                  });
+                                }),
+                              ),
+                              if (_showCarouselArrows)
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    IconButton(icon: Icon(Icons.arrow_back), onPressed: () => _carouselController.previousPage()),
+                                    IconButton(icon: Icon(Icons.arrow_forward), onPressed: () => _carouselController.nextPage()),
+                                  ],
+                                ),
+                            ],
                           ),
                         SizedBox(height: 20),
                         ElevatedButton(
@@ -181,17 +211,9 @@ class _RegisterPageState extends State<RegisterPage> {
     if (image != null) {
       setState(() {
         _image = image;
-        selectedAvatarIndex = -1; // Reset the predefined avatar selection
+        _currentAvatarIndex = -1; // Reset the predefined avatar selection
       });
     }
-  }
-
-  void _selectPredefinedAvatar(int index) {
-    setState(() {
-      selectedAvatarIndex = index;
-      _image = null; // Clear the image picked from the gallery
-      avatarUrl = predefinedAvatarUrls[index]; // Use predefined avatar URL
-    });
   }
 
   Future<void> _registerUser() async {
