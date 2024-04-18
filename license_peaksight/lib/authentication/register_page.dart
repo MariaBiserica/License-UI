@@ -49,15 +49,33 @@ class _RegisterPageState extends State<RegisterPage> {
           Center(
             child: Card(
               elevation: 5.0,
-              margin: EdgeInsets.symmetric(horizontal: 300),// Increase the margin for smaller fields
+              margin: EdgeInsets.symmetric(horizontal: 300), // Increase the margin for smaller fields
               child: Padding(
-                padding: EdgeInsets.all(20),
+                padding: EdgeInsets.all(30),
                 child: Form(
                   key: _formKey,
                   child: SingleChildScrollView(
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: <Widget>[
+                        Text(
+                          'Register',
+                          style: TextStyle(
+                            fontSize: 28, // Slightly larger for more prominence
+                            fontWeight: FontWeight.bold,
+                            color: Colors.deepPurple[800],
+                            shadows: [
+                              Shadow(
+                                offset: Offset(1.0, 1.0), // Soft shadow for depth
+                                blurRadius: 3.0,
+                                color: Color.fromARGB(150, 0, 0, 0),
+                              ),
+                            ],
+                            fontFamily: 'OpenSans', // Make sure this font is included in your pubspec.yaml
+                            letterSpacing: 1.2, // Space out the letters slightly
+                          ),
+                        ),
+                        SizedBox(height: 20), // Add some spacing between the title and form fields
                         TextFormField(
                           decoration: InputDecoration(labelText: 'Email'),
                           validator: (val) => val!.isEmpty ? 'Enter an email' : null,
@@ -74,7 +92,25 @@ class _RegisterPageState extends State<RegisterPage> {
                           validator: (val) => val!.isEmpty ? 'Enter a username' : null,
                           onChanged: (val) => setState(() => username = val),
                         ),
-                        // UI for selecting avatar option
+                        SizedBox(height: 20),
+                        Text(
+                          'Choose your avatar:',
+                          style: TextStyle(
+                            fontSize: 16, 
+                            fontWeight: FontWeight.bold,
+                            color: Color.fromARGB(255, 60, 56, 71),
+                            shadows: [
+                              Shadow(
+                                offset: Offset(1.0, 1.0), // Soft shadow for depth
+                                blurRadius: 3.0,
+                                color: Color.fromARGB(150, 0, 0, 0),
+                              ),
+                            ],
+                            fontFamily: 'OpenSans', // Make sure this font is included in your pubspec.yaml
+                            letterSpacing: 1.2, // Space out the letters slightly
+                          ),
+                        ),
+                        SizedBox(height: 20),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
@@ -100,10 +136,12 @@ class _RegisterPageState extends State<RegisterPage> {
                         if (_avatarSelectionOption == AvatarSelectionOption.pickImage)
                           Column(
                             children: [
+                              SizedBox(height: 20),
                               ElevatedButton(
                                 onPressed: _pickImageFromGallery, // Directly invoke the method when the button is pressed.
                                 child: Text('Upload Image'),
                               ),
+                              SizedBox(height: 20),
                               if (_image != null) // Check if an image has been picked and display it.
                                 Padding(
                                   padding: EdgeInsets.only(top: 8.0),
@@ -121,6 +159,7 @@ class _RegisterPageState extends State<RegisterPage> {
                               );
                             }),
                           ),
+                        SizedBox(height: 20),
                         ElevatedButton(
                           onPressed: _registerUser,
                           child: Text('Register'),
