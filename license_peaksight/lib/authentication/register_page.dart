@@ -28,6 +28,7 @@ class _RegisterPageState extends State<RegisterPage> {
   XFile? _image; // Selected image file
   AvatarSelectionOption? _avatarSelectionOption;
   bool _showCarouselArrows = false; // Controls the visibility of carousel arrows
+  int _hoverIndex = -1; // To keep track of which image is hovered in the carousel
 
   // Predefined avatar images (assuming these are local assets)
   List<String> predefinedAvatars = [
@@ -170,14 +171,46 @@ class _RegisterPageState extends State<RegisterPage> {
                             children: [
                               CarouselSlider.builder(
                                 itemCount: predefinedAvatars.length,
-                                itemBuilder: (context, index, realIndex) => Image.asset(predefinedAvatars[index], width: 100, height: 100),
+                                itemBuilder: (context, index, realIndex) {
+                                  return MouseRegion(
+                                    onEnter: (event) => _hovering(index),
+                                    onExit: (event) => _notHovering(index),
+                                    child: AnimatedContainer(
+                                      duration: Duration(milliseconds: 200),
+                                      curve: Curves.easeInOut,
+                                      margin: EdgeInsets.symmetric(vertical: 10),
+                                      decoration: BoxDecoration(
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: Colors.black.withOpacity(0.3),
+                                            spreadRadius: 1,
+                                            blurRadius: 5,
+                                            offset: Offset(0, 3),
+                                          ),
+                                        ],
+                                        borderRadius: BorderRadius.circular(15),
+                                      ),
+                                      child: Transform.scale(
+                                        scale: _hoverIndex == index ? 1.05 : 1,
+                                        child: ClipRRect(
+                                          borderRadius: BorderRadius.circular(15),
+                                          child: Image.asset(predefinedAvatars[index], fit: BoxFit.cover),
+                                        ),
+                                      ),
+                                    ),
+                                  );
+                                },
                                 carouselController: _carouselController,
-                                options: CarouselOptions(autoPlay: false, enlargeCenterPage: true, onPageChanged: (index, reason) {
-                                  setState(() {
-                                    _currentAvatarIndex = index;
-                                    avatarUrl = predefinedAvatarUrls[index];
-                                  });
-                                }),
+                                options: CarouselOptions(
+                                  autoPlay: false,
+                                  enlargeCenterPage: true,
+                                  onPageChanged: (index, reason) {
+                                    setState(() {
+                                      _currentAvatarIndex = index;
+                                      avatarUrl = predefinedAvatarUrls[index];
+                                    });
+                                  },
+                                ),
                               ),
                               if (_showCarouselArrows)
                                 Row(
@@ -204,6 +237,20 @@ class _RegisterPageState extends State<RegisterPage> {
         ],
       ),
     );
+  }
+
+  void _hovering(int index) {
+    setState(() {
+      _hoverIndex = index;
+    });
+  }
+
+  void _notHovering(int index) {
+    setState(() {
+      if (_hoverIndex == index) {
+        _hoverIndex = -1;
+      }
+    });
   }
 
   void _pickImageFromGallery() async {
