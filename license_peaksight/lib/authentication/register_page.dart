@@ -5,6 +5,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:license_peaksight/authentication/animated_background/animated_background.dart';
+import 'package:license_peaksight/authentication/faded_irregular_header_painter.dart';
 import 'authentication_service.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:firebase_auth/firebase_auth.dart';
@@ -63,22 +64,31 @@ class _RegisterPageState extends State<RegisterPage> {
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: <Widget>[
-                        Text(
-                          'Register',
-                          style: TextStyle(
-                            fontSize: 28, // Slightly larger for more prominence
-                            fontWeight: FontWeight.bold,
-                            color: Colors.deepPurple[800],
-                            shadows: [
-                              Shadow(
-                                offset: Offset(1.0, 1.0), // Soft shadow for depth
-                                blurRadius: 3.0,
-                                color: Color.fromARGB(150, 0, 0, 0),
+                        Stack(
+                          alignment: Alignment.center,
+                          children: [
+                            CustomPaint(
+                              size: Size(double.infinity, 130),
+                              painter: FadedIrregularHeaderPainter(),
+                            ),
+                            Text(
+                              'Register',
+                              style: TextStyle(
+                                fontSize: 28,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white, // Ensure contrast for readability
+                                shadows: [
+                                  Shadow(
+                                    offset: Offset(1.0, 1.0),
+                                    blurRadius: 3.0,
+                                    color: Color.fromARGB(150, 0, 0, 0),
+                                  ),
+                                ],
+                                fontFamily: 'OpenSans',
+                                letterSpacing: 1.2,
                               ),
-                            ],
-                            fontFamily: 'OpenSans', // Make sure this font is included in your pubspec.yaml
-                            letterSpacing: 1.2, // Space out the letters slightly
-                          ),
+                            ),
+                          ],
                         ),
                         SizedBox(height: 20), // Add some spacing between the title and form fields
                         TextFormField(
