@@ -20,6 +20,7 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
   String error = '';
   late AnimationController _animationController;
   late Animation<double> _positionAnimation;
+  bool _isPasswordVisible = false;
 
   @override
   void initState() {
@@ -132,8 +133,23 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
                               SizedBox(height: 20.0),
                               TextFormField(
                                 controller: _passwordController,
-                                obscureText: true,
-                                decoration: InputDecoration(labelText: 'Password'),
+                                decoration: InputDecoration(
+                                  labelText: 'Password',
+                                  suffixIcon: IconButton(
+                                    icon: Icon(
+                                      // Toggle between icons based on the state
+                                      _isPasswordVisible ? Icons.visibility_off : Icons.visibility,
+                                      color: Theme.of(context).colorScheme.primary.withOpacity(0.6),
+                                    ),
+                                    onPressed: () {
+                                      // Toggle the state on icon press
+                                      setState(() {
+                                        _isPasswordVisible = !_isPasswordVisible;
+                                      });
+                                    },
+                                  ),
+                                ),
+                                obscureText: !_isPasswordVisible, // Toggle visibility
                                 validator: (val) => val!.length < 6 ? 'Enter a password 6+ chars long' : null,
                               ),
                               SizedBox(height: 20.0),

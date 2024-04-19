@@ -24,6 +24,7 @@ class _RegisterPageState extends State<RegisterPage> {
   
   String email = '';
   String password = '';
+  bool _isPasswordVisible = false; // State to toggle password visibility
   String username = '';
   String? avatarUrl; // URL for the uploaded or selected avatar
   XFile? _image; // Selected image file
@@ -105,8 +106,23 @@ class _RegisterPageState extends State<RegisterPage> {
                           onChanged: (val) => setState(() => email = val),
                         ),
                         TextFormField(
-                          decoration: InputDecoration(labelText: 'Password'),
-                          obscureText: true,
+                          decoration: InputDecoration(
+                            labelText: 'Password',
+                            suffixIcon: IconButton(
+                              icon: Icon(
+                                // Change the icon based on the state
+                                _isPasswordVisible ? Icons.visibility_off : Icons.visibility,
+                                color: Theme.of(context).colorScheme.primary.withOpacity(0.6),
+                              ),
+                              onPressed: () {
+                                // Update the state to toggle password visibility
+                                setState(() {
+                                  _isPasswordVisible = !_isPasswordVisible;
+                                });
+                              },
+                            ),
+                          ),
+                          obscureText: !_isPasswordVisible, // Use the state to toggle visibility
                           validator: (val) => val!.length < 6 ? 'Enter a password 6+ chars long' : null,
                           onChanged: (val) => setState(() => password = val),
                         ),
