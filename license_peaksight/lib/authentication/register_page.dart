@@ -30,6 +30,14 @@ class _RegisterPageState extends State<RegisterPage> {
   AvatarSelectionOption? _avatarSelectionOption;
   bool _showCarouselArrows = false; // Controls the visibility of carousel arrows
   int _hoverIndex = -1; // To keep track of which image is hovered in the carousel
+  String? currentAvatarOption; // Holds the current selection from the dropdown
+
+  // Dropdown menu options
+  final List<DropdownMenuItem<String>> avatarOptions = [
+    DropdownMenuItem(value: "enterUrl", child: Text("Enter Image URL")),
+    DropdownMenuItem(value: "pickImage", child: Text("Pick Image from Gallery")),
+    DropdownMenuItem(value: "choosePredefined", child: Text("Choose Predefined")),
+  ];
 
   // Predefined avatar images (assuming these are local assets)
   List<String> predefinedAvatars = [
@@ -113,7 +121,7 @@ class _RegisterPageState extends State<RegisterPage> {
                           style: TextStyle(
                             fontSize: 16, 
                             fontWeight: FontWeight.bold,
-                            color: Color.fromARGB(255, 60, 56, 71),
+                            color: Color.fromARGB(255, 83, 2, 150),
                             shadows: [
                               Shadow(
                                 offset: Offset(1.0, 1.0), // Soft shadow for depth
@@ -122,38 +130,41 @@ class _RegisterPageState extends State<RegisterPage> {
                               ),
                             ],
                             fontFamily: 'OpenSans', // Make sure this font is included in your pubspec.yaml
-                            letterSpacing: 1.2, // Space out the letters slightly
+                            letterSpacing: 1.0, // Space out the letters slightly
                           ),
                         ),
                         SizedBox(height: 20),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            ElevatedButton(
-                              onPressed: () {
-                                setState(() {
+                        DropdownButtonFormField<String>(
+                          value: currentAvatarOption,
+                          decoration: InputDecoration(
+                            enabledBorder: OutlineInputBorder(
+                              borderSide: BorderSide(color: Color.fromARGB(255, 200, 200, 210), width: 2),
+                              borderRadius: BorderRadius.circular(15),
+                            ),
+                            filled: true,
+                            fillColor: Colors.white,
+                          ),
+                          onChanged: (String? newValue) {
+                            setState(() {
+                              currentAvatarOption = newValue;
+                              switch (newValue) {
+                                case "enterUrl":
                                   _avatarSelectionOption = AvatarSelectionOption.enterUrl;
                                   _showCarouselArrows = false;
-                                });
-                              },
-                              child: Text('Enter Image URL'),
-                            ),
-                            ElevatedButton(
-                              onPressed: () {
-                                setState(() {
+                                  break;
+                                case "pickImage":
                                   _avatarSelectionOption = AvatarSelectionOption.pickImage;
                                   _showCarouselArrows = false;
-                                });
-                              },
-                              child: Text('Pick Image from Gallery'),
-                            ),
-                            ElevatedButton(onPressed: () {
-                              setState(() {
-                                _avatarSelectionOption = AvatarSelectionOption.choosePredefined;
-                                _showCarouselArrows = true;
-                              });
-                            }, child: Text('Choose Predefined')),
-                          ],
+                                  break;
+                                case "choosePredefined":
+                                  _avatarSelectionOption = AvatarSelectionOption.choosePredefined;
+                                  _showCarouselArrows = true;
+                                  break;
+                              }
+                            });
+                          },
+                          items: getDropdownItems(), // Use the method for styling dropdown items
+                          dropdownColor: Colors.white,
                         ),
                         if (_avatarSelectionOption == AvatarSelectionOption.enterUrl)
                           TextFormField(
@@ -261,6 +272,30 @@ class _RegisterPageState extends State<RegisterPage> {
         ],
       ),
     );
+  }
+
+  // Method to style dropdown items
+  List<DropdownMenuItem<String>> getDropdownItems() {
+    return [
+      DropdownMenuItem(
+        value: "enterUrl", 
+        child: Container(
+          child: Text("Enter Image URL"),
+        )
+      ),
+      DropdownMenuItem(
+        value: "pickImage", 
+        child: Container(
+          child: Text("Pick Image from Gallery"),
+        )
+      ),
+      DropdownMenuItem(
+        value: "choosePredefined", 
+        child: Container(
+          child: Text("Choose Predefined"),
+        )
+      ),
+    ];
   }
 
   void _hovering(int index) {
