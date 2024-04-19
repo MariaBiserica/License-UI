@@ -116,26 +116,9 @@ class _RegisterPageState extends State<RegisterPage> {
                           onChanged: (val) => setState(() => username = val),
                         ),
                         SizedBox(height: 20),
-                        Text(
-                          'Choose your avatar:',
-                          style: TextStyle(
-                            fontSize: 16, 
-                            fontWeight: FontWeight.bold,
-                            color: Color.fromARGB(255, 83, 2, 150),
-                            shadows: [
-                              Shadow(
-                                offset: Offset(1.0, 1.0), // Soft shadow for depth
-                                blurRadius: 3.0,
-                                color: Color.fromARGB(150, 0, 0, 0),
-                              ),
-                            ],
-                            fontFamily: 'OpenSans', // Make sure this font is included in your pubspec.yaml
-                            letterSpacing: 1.0, // Space out the letters slightly
-                          ),
-                        ),
-                        SizedBox(height: 20),
                         DropdownButtonFormField<String>(
                           value: currentAvatarOption,
+                          hint: Text('Choose your avatar'),
                           decoration: InputDecoration(
                             enabledBorder: OutlineInputBorder(
                               borderSide: BorderSide(color: Color.fromARGB(255, 200, 200, 210), width: 2),
