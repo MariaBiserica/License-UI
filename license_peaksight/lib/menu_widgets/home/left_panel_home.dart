@@ -1,22 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-
-// Constants class to manage colors and paddings
-class Constants {
-  static const Color purpleLight = Color(0xFF7C4DFF);
-  static const Color purpleDark = Color(0xFF4A148C);
-  static const double kPadding = 20;
-  static const double borderRadius = 20; // Added for rounded corners
-}
+import 'package:license_peaksight/constants.dart';
 
 class LeftPanelHome extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(Constants.kPadding / 2),
-      margin: EdgeInsets.all(Constants.kPadding), // Adds margin around the container
+      padding: EdgeInsets.all(Constants.kPaddingHome / 2),
+      margin: EdgeInsets.all(Constants.kPaddingHome), // Adds margin around the container
       decoration: BoxDecoration(
-        color: Constants.purpleLight,
+        color: Constants.purpleLightHome,
         borderRadius: BorderRadius.circular(Constants.borderRadius), // Rounded corners
         boxShadow: [
           BoxShadow(
@@ -30,12 +23,12 @@ class LeftPanelHome extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          SizedBox(height: Constants.kPadding),
+          SizedBox(height: Constants.kPaddingHome),
           Text(
             'Quick Access',
             style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white),
           ),
-          SizedBox(height: Constants.kPadding),
+          SizedBox(height: Constants.kPaddingHome),
           _buildStatsOverview(),
         ],
       ),
@@ -44,14 +37,14 @@ class LeftPanelHome extends StatelessWidget {
 
   Widget _buildStatsOverview() {
     return Card(
-      color: Constants.purpleDark,
+      color: Constants.purpleDarkHome,
       elevation: 3,
-      margin: EdgeInsets.all(Constants.kPadding / 2),
+      margin: EdgeInsets.all(Constants.kPaddingHome / 2),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(Constants.borderRadius),
       ),
       child: Padding(
-        padding: const EdgeInsets.all(Constants.kPadding / 2),
+        padding: const EdgeInsets.all(Constants.kPaddingHome / 2),
         child: Column(
           children: [
             Text(
@@ -85,7 +78,7 @@ class LeftPanelHome extends StatelessWidget {
           Container(
             padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
             decoration: BoxDecoration(
-              color: Constants.purpleDark, // Slightly darker background for the value
+              color: Constants.purpleDarkHome, // Slightly darker background for the value
               borderRadius: BorderRadius.circular(10), // Rounded corners
               boxShadow: [
                 BoxShadow(

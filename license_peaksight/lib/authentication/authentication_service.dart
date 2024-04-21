@@ -56,4 +56,9 @@ class AuthService {
         .get();
     return result.docs.isNotEmpty;
   }
+
+  // Method to get current user's ID
+  String? getCurrentUserId() {
+    return _auth.currentUser?.uid;
+  }
 }

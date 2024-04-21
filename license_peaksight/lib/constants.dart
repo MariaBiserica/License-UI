@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 
  class Constants{
     static const double kPadding = 10.0;
+    static const double kPaddingHome = 20;
+    static const double borderRadius = 20; 
     static const Color purpleLight = Color(0xff1e224c);
     static const Color purpleDark = Color(0xff0d193e);
     static const Color orangeDark = Color(0xffec8d2f);
@@ -11,4 +13,6 @@ import 'package:flutter/material.dart';
     static const Color blueLight = Color(0xff0293ee);
     static const Color blue = Color.fromARGB(255, 113, 147, 247);
     static const Color greenLight = Color(0xff13d38e);
+    static const Color purpleLightHome = Color(0xFF7C4DFF);
+    static const Color purpleDarkHome = Color(0xFF4A148C);
 }
