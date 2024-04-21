@@ -10,7 +10,7 @@ class FadedIrregularHeaderPainter extends CustomPainter {
       end: Alignment.topCenter,
       colors: [
         Colors.deepPurple[800]!.withOpacity(0.7),
-        Color.fromARGB(255, 239, 0, 100)!.withOpacity(0.7),
+        Color.fromARGB(255, 239, 0, 100).withOpacity(0.7),
         Colors.transparent
       ],
       stops: [0.1, 0.7, 1.0], // Adjust stops to control the transition points

@@ -5,7 +5,7 @@ import 'package:license_peaksight/drawer/drawer_page.dart';
 // import 'package:license_peaksight/panel_left/panel_left_page.dart';
 // import 'package:license_peaksight/panel_right/panel_right_page.dart';
 import 'package:license_peaksight/responsive_layout.dart';
-import 'package:license_peaksight/menu_widgets/home_widget.dart';
+import 'package:license_peaksight/menu_widgets/home/home_widget.dart';
 import 'package:license_peaksight/menu_widgets/image_quality_widget.dart';
 
 class WidgetTree extends StatefulWidget {

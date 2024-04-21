@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:license_peaksight/drawer/drawer_page.dart';
-import 'package:license_peaksight/panel_left/panel_left_home.dart';
+import 'package:license_peaksight/menu_widgets/home/panel_left_home.dart';
 import 'package:license_peaksight/panel_center/panel_center_page.dart';
 import 'package:license_peaksight/panel_right/panel_right_page.dart';
 import 'package:license_peaksight/responsive_layout.dart';
