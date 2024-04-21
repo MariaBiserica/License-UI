@@ -74,10 +74,33 @@ class LeftPanelHome extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
-          Text(title, style: TextStyle(color: Colors.white)),
-          Text(value, style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+          Expanded(  // Makes the title flexible, wrapping text if needed
+            child: Text(
+              title,
+              style: TextStyle(color: Colors.white),
+              overflow: TextOverflow.fade,  // Prevents text from overflowing
+            ),
+          ),
+          SizedBox(width: 10), // Adds space between title and value
+          Container(
+            padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+            decoration: BoxDecoration(
+              color: Constants.purpleDark, // Slightly darker background for the value
+              borderRadius: BorderRadius.circular(10), // Rounded corners
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.5), // Shadow with some opacity
+                  spreadRadius: 1,
+                  blurRadius: 2,
+                  offset: Offset(0, 1), // Position of shadow
+                ),
+              ],
+            ),
+            child: Text(value, style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold,),),
+          ),
         ],
       ),
     );
   }
+
 }
