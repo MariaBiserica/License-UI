@@ -3,12 +3,14 @@ class Task {
   String title;
   String status; // completed, queued, in progress, new
   String category; // Daily, Weekly, Monthly
+  String description; // Description of the task
 
   Task({
     required this.id,
     required this.title,
     required this.status,
     required this.category,
+    this.description = '', // Default to an empty string if not provided
   });
 
   Map<String, dynamic> toMap() {
@@ -16,6 +18,7 @@ class Task {
       'title': title,
       'status': status,
       'category': category,
+      'description': description,
     };
   }
 
@@ -25,6 +28,7 @@ class Task {
       title: map['title'],
       status: map['status'],
       category: map['category'],
+      description: map['description'] ?? '', // Handle nulls from the database
     );
   }
 }

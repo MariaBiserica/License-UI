@@ -38,8 +38,10 @@ class _RightPanelHomeState extends State<RightPanelHome> {
 
   void _addOrEditTask({Task? task}) {
     final TextEditingController titleController = TextEditingController(text: task?.title ?? '');
+    final TextEditingController descriptionController = TextEditingController(text: task?.description ?? '');
     final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
     String category = task?.category ?? 'Daily'; // Default to Daily if not specified
+
     showDialog(
       context: context,
       builder: (context) {
@@ -54,6 +56,10 @@ class _RightPanelHomeState extends State<RightPanelHome> {
                   controller: titleController,
                   validator: (value) => value!.isEmpty ? 'Please enter a task title' : null,
                   decoration: InputDecoration(hintText: 'Task Title'),
+                ),
+                TextFormField(
+                  controller: descriptionController,
+                  decoration: InputDecoration(hintText: 'Description'),
                 ),
                 DropdownButtonFormField<String>(
                   dropdownColor: Colors.white,
@@ -74,7 +80,7 @@ class _RightPanelHomeState extends State<RightPanelHome> {
           actions: <Widget>[
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop(); // close the dialog
+                Navigator.of(context).pop();
               },
               child: Text('Cancel'),
             ),
@@ -82,9 +88,10 @@ class _RightPanelHomeState extends State<RightPanelHome> {
               onPressed: () {
                 if (_formKey.currentState!.validate()) {
                   if (task == null) {
-                    _addTask(titleController.text, 'new', category);
+                    _addTask(titleController.text, 'new', category, descriptionController.text);
                   } else {
                     task.title = titleController.text;
+                    task.description = descriptionController.text;
                     task.category = category;
                     _editTask(task);
                   }
@@ -99,15 +106,15 @@ class _RightPanelHomeState extends State<RightPanelHome> {
     );
   }
 
-  void _addTask(String title, String status, String category) async {
+  void _addTask(String title, String status, String category, String description) async {
     String? userId = _authService.getCurrentUserId();
     if (userId != null) {
-      var newTask = Task(id: '', title: title, status: status, category: category);
+      var newTask = Task(id: '', title: title, status: status, category: category, description: description);
       var docRef = await FirebaseFirestore.instance.collection('tasks').add({
         ...newTask.toMap(),
         'userId': userId,
       });
-      newTask.id = docRef.id; // Update the local task id with the new document ID
+      newTask.id = docRef.id;  // Update the local task id with the new document ID
       setState(() {
         tasks.add(newTask);
       });
@@ -204,7 +211,12 @@ class _RightPanelHomeState extends State<RightPanelHome> {
       ),
       child: ListTile(
         title: Text(task.title, style: TextStyle(color: Colors.white)),
-        subtitle: Text('Category: ${task.category}', style: TextStyle(color: Colors.white70)),
+        subtitle: Text(
+          'Category: ${task.category}\n${task.description}',
+          style: TextStyle(color: Colors.white70),
+          maxLines: 3,
+          overflow: TextOverflow.fade,
+        ),
         trailing: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -215,4 +227,5 @@ class _RightPanelHomeState extends State<RightPanelHome> {
       ),
     );
   }
+
 }
