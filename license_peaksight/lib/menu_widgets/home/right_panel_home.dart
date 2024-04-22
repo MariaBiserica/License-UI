@@ -47,40 +47,43 @@ class _RightPanelHomeState extends State<RightPanelHome> {
       builder: (context) {
         return AlertDialog(
           title: Text(task == null ? 'Add Task' : 'Edit Task'),
-          content: Form(
-            key: _formKey,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                TextFormField(
-                  controller: titleController,
-                  validator: (value) => value!.isEmpty ? 'Please enter a task title' : null,
-                  decoration: InputDecoration(hintText: 'Task Title'),
-                ),
-                TextFormField(
-                  controller: descriptionController,
-                  decoration: InputDecoration(hintText: 'Description'),
-                ),
-                DropdownButtonFormField<String>(
-                  dropdownColor: Colors.white,
-                  value: category,
-                  onChanged: (newValue) {
-                    category = newValue!;
-                  },
-                  items: ['Daily', 'Weekly', 'Monthly']
-                      .map((label) => DropdownMenuItem(
-                            child: Text(label),
-                            value: label,
-                          ))
-                      .toList(),
-                ),
-              ],
+          content: Container(
+            width: double.minPositive, // This ensures the dialog is only as wide as the content needs it to be
+            child: Form(
+              key: _formKey,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  TextFormField(
+                    controller: titleController,
+                    validator: (value) => value!.isEmpty ? 'Please enter a task title' : null,
+                    decoration: InputDecoration(hintText: 'Task Title'),
+                  ),
+                  TextFormField(
+                    controller: descriptionController,
+                    decoration: InputDecoration(hintText: 'Description'),
+                  ),
+                  DropdownButtonFormField<String>(
+                    dropdownColor: Colors.white,
+                    value: category,
+                    onChanged: (newValue) {
+                      category = newValue!;
+                    },
+                    items: ['Daily', 'Weekly', 'Monthly']
+                        .map((label) => DropdownMenuItem(
+                              child: Text(label),
+                              value: label,
+                            ))
+                        .toList(),
+                  ),
+                ],
+              ),
             ),
           ),
           actions: <Widget>[
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop();
+                Navigator.of(context).pop(); // Close the dialog
               },
               child: Text('Cancel'),
             ),
