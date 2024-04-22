@@ -163,16 +163,16 @@ class _RightPanelHomeState extends State<RightPanelHome> {
   Widget build(BuildContext context) {
     return Container(
       padding: EdgeInsets.all(Constants.kPaddingHome / 2),
-      margin: EdgeInsets.all(Constants.kPaddingHome), // Adds margin around the container
+      margin: EdgeInsets.all(Constants.kPaddingHome),
       decoration: BoxDecoration(
         color: Constants.purpleLightHome,
-        borderRadius: BorderRadius.circular(Constants.borderRadius), // Rounded corners
+        borderRadius: BorderRadius.circular(Constants.borderRadius),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.2),
             spreadRadius: 1,
             blurRadius: 20,
-            offset: Offset(0, 10), // Changes position of shadow
+            offset: Offset(0, 10),
           ),
         ],
       ),
@@ -185,12 +185,9 @@ class _RightPanelHomeState extends State<RightPanelHome> {
             style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white),
           ),
           SizedBox(height: Constants.kPaddingHome),
-          Expanded(
-            child: ListView.builder(
-              itemCount: tasks.length,
-              itemBuilder: (context, index) => _buildTaskCard(tasks[index], context),
-            ),
-          ),
+          _buildCategoryTasks("Daily"),
+          _buildCategoryTasks("Weekly"),
+          _buildCategoryTasks("Monthly"),
           Align(
             alignment: Alignment.bottomRight,
             child: FloatingActionButton(
@@ -201,6 +198,14 @@ class _RightPanelHomeState extends State<RightPanelHome> {
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildCategoryTasks(String category) {
+    List<Task> categoryTasks = tasks.where((task) => task.category == category).toList();
+    return ExpansionTile(
+      title: Text("$category Goals", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+      children: categoryTasks.map((task) => _buildTaskCard(task, context)).toList(),
     );
   }
 
@@ -215,7 +220,7 @@ class _RightPanelHomeState extends State<RightPanelHome> {
       child: ListTile(
         title: Text(task.title, style: TextStyle(color: Colors.white)),
         subtitle: Text(
-          'Category: ${task.category}\n${task.description}',
+          '${task.description}',
           style: TextStyle(color: Colors.white70),
           maxLines: 3,
           overflow: TextOverflow.fade,
