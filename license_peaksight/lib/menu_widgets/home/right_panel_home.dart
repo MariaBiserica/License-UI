@@ -1,11 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:license_peaksight/constants.dart';
 import 'package:license_peaksight/authentication/authentication_service.dart';
 import 'package:license_peaksight/menu_widgets/home/task.dart';
-
 
 class RightPanelHome extends StatefulWidget {
   @override
@@ -38,10 +36,73 @@ class _RightPanelHomeState extends State<RightPanelHome> {
     }
   }
 
-  void _addTask(String title, String status) async {
+  void _addOrEditTask({Task? task}) {
+    final TextEditingController titleController = TextEditingController(text: task?.title ?? '');
+    final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+    String category = task?.category ?? 'Daily'; // Default to Daily if not specified
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text(task == null ? 'Add Task' : 'Edit Task'),
+          content: Form(
+            key: _formKey,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                TextFormField(
+                  controller: titleController,
+                  validator: (value) => value!.isEmpty ? 'Please enter a task title' : null,
+                  decoration: InputDecoration(hintText: 'Task Title'),
+                ),
+                DropdownButtonFormField<String>(
+                  dropdownColor: Colors.white,
+                  value: category,
+                  onChanged: (newValue) {
+                    category = newValue!;
+                  },
+                  items: ['Daily', 'Weekly', 'Monthly']
+                      .map((label) => DropdownMenuItem(
+                            child: Text(label),
+                            value: label,
+                          ))
+                      .toList(),
+                ),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // close the dialog
+              },
+              child: Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () {
+                if (_formKey.currentState!.validate()) {
+                  if (task == null) {
+                    _addTask(titleController.text, 'new', category);
+                  } else {
+                    task.title = titleController.text;
+                    task.category = category;
+                    _editTask(task);
+                  }
+                  Navigator.of(context).pop();
+                }
+              },
+              child: Text('Save'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _addTask(String title, String status, String category) async {
     String? userId = _authService.getCurrentUserId();
     if (userId != null) {
-      var newTask = Task(id: '', title: title, status: status);
+      var newTask = Task(id: '', title: title, status: status, category: category);
       var docRef = await FirebaseFirestore.instance.collection('tasks').add({
         ...newTask.toMap(),
         'userId': userId,
@@ -59,6 +120,28 @@ class _RightPanelHomeState extends State<RightPanelHome> {
         .doc(task.id)
         .update(task.toMap());
     _fetchTasks();
+  }
+
+  void _deleteTaskPrompt(String taskId) async {
+    bool confirm = await showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+              title: Text('Confirm Delete'),
+              content: Text('Are you sure you want to delete this task?'),
+              actions: <Widget>[
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(false),
+                  child: Text('No'),
+                ),
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(true),
+                  child: Text('Yes'),
+                ),
+              ],
+            ));
+    if (confirm) {
+      _deleteTask(taskId);
+    }
   }
 
   void _deleteTask(String taskId) async {
@@ -92,17 +175,17 @@ class _RightPanelHomeState extends State<RightPanelHome> {
             style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white),
           ),
           SizedBox(height: Constants.kPaddingHome),
-          _buildTaskCard('Daily Goals', context),
-          _buildTaskCard('Weekly Goals', context),
-          _buildTaskCard('Monthly Goals', context),
-          Spacer(),
+          Expanded(
+            child: ListView.builder(
+              itemCount: tasks.length,
+              itemBuilder: (context, index) => _buildTaskCard(tasks[index], context),
+            ),
+          ),
           Align(
             alignment: Alignment.bottomRight,
             child: FloatingActionButton(
               backgroundColor: Constants.purpleDarkHome,
-              onPressed: () {
-                // Add new task logic
-              },
+              onPressed: () => _addOrEditTask(),
               child: Icon(Icons.add, color: Colors.white),
             ),
           ),
@@ -111,7 +194,7 @@ class _RightPanelHomeState extends State<RightPanelHome> {
     );
   }
 
-  Widget _buildTaskCard(String title, BuildContext context) {
+  Widget _buildTaskCard(Task task, BuildContext context) {
     return Card(
       color: Constants.purpleDarkHome,
       elevation: 3,
@@ -119,21 +202,16 @@ class _RightPanelHomeState extends State<RightPanelHome> {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(Constants.borderRadius),
       ),
-      child: ExpansionTile(
-        title: Text(title, style: TextStyle(color: Colors.white)),
-        children: [
-          ListTile(
-            title: Text('Task 1', style: TextStyle(color: Colors.white)),
-            trailing: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                IconButton(icon: Icon(Icons.edit, color: Colors.white), onPressed: () {}),
-                IconButton(icon: Icon(Icons.delete, color: Colors.white), onPressed: () {}),
-              ],
-            ),
-          ),
-          // Add more ListTiles as needed
-        ],
+      child: ListTile(
+        title: Text(task.title, style: TextStyle(color: Colors.white)),
+        subtitle: Text('Category: ${task.category}', style: TextStyle(color: Colors.white70)),
+        trailing: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            IconButton(icon: Icon(Icons.edit, color: Colors.white), onPressed: () => _addOrEditTask(task: task)),
+            IconButton(icon: Icon(Icons.delete, color: Colors.white), onPressed: () => _deleteTaskPrompt(task.id)),
+          ],
+        ),
       ),
     );
   }
