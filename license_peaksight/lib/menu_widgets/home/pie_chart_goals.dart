@@ -2,53 +2,75 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:license_peaksight/menu_widgets/home/chart_data.dart';
 
-class PieChartGoals extends StatelessWidget {
+class PieChartGoals extends StatefulWidget {
   final List<ChartData> chartsData;
 
   PieChartGoals(this.chartsData);
 
   @override
+  _PieChartGoalsState createState() => _PieChartGoalsState();
+}
+
+class _PieChartGoalsState extends State<PieChartGoals> {
+  int touchedIndex = -1;
+
+  @override
   Widget build(BuildContext context) {
     return Column(
-      children: chartsData.map((data) => _buildChartWithLegend(data)).toList(),
+      children: widget.chartsData.map((data) => _buildChartWithLegend(data)).toList(),
     );
   }
 
   Widget _buildChartWithLegend(ChartData data) {
-    return Row(
-      children: [
-        Expanded(
-          flex: 1, // Adjust size ratio as needed
-          child: _buildPieChart(data),
-        ),
-        Expanded(
-          flex: 1, // Adjust size ratio as needed
-          child: _buildLegend(data),
-        ),
-      ],
+    return Container(
+      height: 200, // Define a fixed height for the row containing the pie chart and legend
+      child: Row(
+        children: [
+          Expanded(
+            flex: 1, // Proportion for the pie chart
+            child: _buildPieChart(data),
+          ),
+          Expanded(
+            flex: 1, // Proportion for the legend
+            child: _buildLegend(data),
+          ),
+        ],
+      ),
     );
   }
 
   Widget _buildPieChart(ChartData data) {
     List<PieChartSectionData> sections = data.statusCounts.entries.map((entry) {
+      final isTouched = touchedIndex == data.statusCounts.keys.toList().indexOf(entry.key);
+      final fontSize = isTouched ? 18.0 : 16.0;
+      final radius = isTouched ? 50.0 : 40.0;
+
       return PieChartSectionData(
         color: _getStatusColor(entry.key),
         value: entry.value.toDouble(),
         title: '${entry.value}',
-        radius: 40,
-        titleStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: const Color(0xffffffff)),
+        radius: radius,
+        titleStyle: TextStyle(fontSize: fontSize, fontWeight: FontWeight.bold, color: const Color(0xffffffff)),
       );
     }).toList();
 
-    return Container(
-      height: 200, // Set height to avoid sizing issues
-      child: PieChart(
-        PieChartData(
-          sections: sections,
-          borderData: FlBorderData(show: false),
-          centerSpaceRadius: 0,
-          sectionsSpace: 2,
+    return PieChart(
+      PieChartData(
+        pieTouchData: PieTouchData(
+          touchCallback: (FlTouchEvent event, pieTouchResponse) {
+            setState(() {
+              if (event is FlLongPressEnd || event is FlPanEndEvent) {
+                touchedIndex = -1;
+              } else {
+                touchedIndex = pieTouchResponse?.touchedSection?.touchedSectionIndex ?? -1;
+              }
+            });
+          },
         ),
+        borderData: FlBorderData(show: false),
+        sectionsSpace: 2,
+        centerSpaceRadius: 0,
+        sections: sections,
       ),
     );
   }
@@ -63,9 +85,9 @@ class PieChartGoals extends StatelessWidget {
   Widget _legendItem(String status, Color color) {
     return Row(
       children: [
-        Icon(Icons.circle, color: color, size: 12), // Circle icon to represent color
+        Icon(Icons.circle, color: color, size: 12),
         SizedBox(width: 8),
-        Text(status, style: TextStyle(color: Colors.white)), // Status text
+        Text(status, style: TextStyle(color: Colors.white)),
       ],
     );
   }
