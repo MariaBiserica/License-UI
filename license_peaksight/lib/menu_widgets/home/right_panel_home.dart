@@ -200,9 +200,18 @@ class _RightPanelHomeState extends State<RightPanelHome> {
             style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white),
           ),
           SizedBox(height: Constants.kPaddingHome),
-          _buildCategoryTasks("Daily"),
-          _buildCategoryTasks("Weekly"),
-          _buildCategoryTasks("Monthly"),
+          Expanded( // This will contain the scrollable part
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  _buildCategoryTasks("Daily"),
+                  _buildCategoryTasks("Weekly"),
+                  _buildCategoryTasks("Monthly"),
+                ],
+              ),
+            ),
+          ),
+          SizedBox(height: Constants.kPaddingHome),
           Align(
             alignment: Alignment.bottomRight,
             child: FloatingActionButton(
