@@ -197,7 +197,12 @@ class _RightPanelHomeState extends State<RightPanelHome> {
           SizedBox(height: Constants.kPaddingHome),
           Text(
             'Tasks & Goals',
-            style: TextStyle(fontFamily: 'MOXABestine', fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white),
+            style: TextStyle(
+              fontFamily: 'MOXABestine', 
+              fontSize: 20, 
+              fontWeight: FontWeight.bold, 
+              color: Colors.white
+            ),
           ),
           SizedBox(height: Constants.kPaddingHome),
           Expanded( // This will contain the scrollable part
@@ -250,7 +255,7 @@ class _RightPanelHomeState extends State<RightPanelHome> {
             "$category Goals",
             style: TextStyle(
               color: Colors.white,
-              fontWeight: FontWeight.bold,
+              //fontWeight: FontWeight.bold,
               shadows: [
                 Shadow( // Text shadow for better readability
                   offset: Offset(1.0, 1.0),
@@ -258,8 +263,8 @@ class _RightPanelHomeState extends State<RightPanelHome> {
                   color: Color.fromARGB(150, 0, 0, 0),
                 ),
               ],
-              fontFamily: 'TellMeAJoke',  // Custom font applied
-              fontSize: 25,  // Slightly larger font size
+              fontFamily: 'Rastaglion',  // Custom font applied
+              fontSize: 20,  // Slightly larger font size
             ),
           ),
           children: categoryTasks.map((task) => _buildTaskCard(task, context)).toList(),

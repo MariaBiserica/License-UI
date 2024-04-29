@@ -49,6 +49,15 @@ class _DrawerPageState extends State<DrawerPage> {
                     'Menu',
                     style: TextStyle(
                       color: Colors.white,
+                      shadows: [
+                        Shadow( // Text shadow for better readability
+                          offset: Offset(1.0, 1.0),
+                          blurRadius: 3.0,
+                          color: Color.fromARGB(150, 0, 0, 0),
+                        ),
+                      ],
+                      fontFamily: 'MOXABestine',
+                      fontSize: 40,
                     ),
                   ),
                   trailing: ResponsiveLayout.isComputer(context)
@@ -80,6 +89,7 @@ class _DrawerPageState extends State<DrawerPage> {
                         title: Text(_buttonNames[index].title,
                         style:TextStyle(
                           color: Colors.white,
+                          fontFamily: 'Rastaglion',
                           shadows: [
                             Shadow( // Text shadow for better readability
                               offset: Offset(1.0, 1.0),

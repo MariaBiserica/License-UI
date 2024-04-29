@@ -26,7 +26,12 @@ class LeftPanelHome extends StatelessWidget {
           SizedBox(height: Constants.kPaddingHome),
           Text(
             'Quick Access',
-            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white),
+            style: TextStyle(
+              fontFamily: 'MOXABestine', 
+              fontSize: 20, 
+              fontWeight: FontWeight.bold, 
+              color: Colors.white
+            ),
           ),
           SizedBox(height: Constants.kPaddingHome),
           _buildStatsOverview(),
@@ -49,7 +54,12 @@ class LeftPanelHome extends StatelessWidget {
           children: [
             Text(
               'Stats Overview',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
+              style: TextStyle(
+                fontFamily: 'Rastaglion',
+                fontSize: 18, 
+                fontWeight: FontWeight.bold, 
+                color: Colors.white
+              ),
             ),
             Divider(color: Colors.white54),
             _buildStatItem("Images Processed", "1234"),
@@ -70,7 +80,11 @@ class LeftPanelHome extends StatelessWidget {
           Expanded(  // Makes the title flexible, wrapping text if needed
             child: Text(
               title,
-              style: TextStyle(color: Colors.white),
+              style: TextStyle(
+                fontFamily: 'Voguella',
+                fontSize: 16,
+                color: Colors.white
+              ),
               overflow: TextOverflow.fade,  // Prevents text from overflowing
             ),
           ),
