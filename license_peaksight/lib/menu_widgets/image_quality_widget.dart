@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:license_peaksight/drawer/drawer_page.dart';
+import 'package:license_peaksight/panel_left/panel_left_page.dart';
 import 'package:license_peaksight/responsive_layout.dart';
 import 'package:license_peaksight/panel_center/panel_center_page.dart'; // Assuming this is used for displaying the main content
 import 'package:license_peaksight/panel_right/panel_right_page.dart'; // Assuming this is used for image upload
@@ -38,6 +39,7 @@ class ImageQualityWidget extends StatelessWidget {
       computer: Row(
         children: [
           Expanded(flex: 2, child: DrawerPage(onSectionSelected: onSectionSelected)),
+          Expanded(flex: 2, child: PanelLeftPage()),
           // Expanded(flex: 2, child: ModelSelectionWidget()),
           // Expanded(flex: 2, child: PanelCenterPage(imagePath: imagePath)),
           Expanded(flex: 4, child: PanelRightPage(onImageSelected: onImageSelected)),
