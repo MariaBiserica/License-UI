@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:license_peaksight/constants.dart';
 import 'package:license_peaksight/authentication/authentication_service.dart';
@@ -12,45 +11,6 @@ class LeftPanelHome extends StatefulWidget {
 
 class _LeftPanelHomeState extends State<LeftPanelHome> {
   final AuthService _authService = AuthService();
-  int completedTasks = 0;
-  int inProgressTasks = 0;
-  int queuedTasks = 0;
-
-  @override
-  void initState() {
-    super.initState();
-    _fetchTasks();
-  }
-
-  void _fetchTasks() async {
-    String? userId = _authService.getCurrentUserId();
-    if (userId != null) {
-      var snapshot = await FirebaseFirestore.instance
-          .collection('tasks')
-          .where('userId', isEqualTo: userId)
-          .get();
-
-      int completedCount = 0;
-      int inProgressCount = 0;
-      int queuedCount = 0;
-      snapshot.docs.forEach((doc) {
-        var task = Task.fromMap(doc.data() as Map<String, dynamic>, doc.id);
-        if (task.status == 'completed') {
-          completedCount++;
-        } else if (task.status == 'in progress') {
-          inProgressCount++;
-        } else if (task.status == 'queued') {
-          queuedCount++;
-        }
-      });
-
-      setState(() {
-        completedTasks = completedCount;
-        inProgressTasks = inProgressCount;
-        queuedTasks = queuedCount;
-      });
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -83,13 +43,46 @@ class _LeftPanelHomeState extends State<LeftPanelHome> {
             ),
           ),
           SizedBox(height: Constants.kPaddingHome),
-          _buildStatsOverview(),
+          StreamBuilder(
+            stream: _taskStream(),
+            builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+              if (snapshot.hasData) {
+                int completedTasks = 0;
+                int inProgressTasks = 0;
+                int queuedTasks = 0;
+
+                snapshot.data!.docs.forEach((doc) {
+                  Task task = Task.fromMap(doc.data() as Map<String, dynamic>, doc.id);
+                  if (task.status == 'completed') {
+                    completedTasks++;
+                  } else if (task.status == 'in progress') {
+                    inProgressTasks++;
+                  } else if (task.status == 'queued') {
+                    queuedTasks++;
+                  }
+                });
+
+                return _buildStatsOverview(completedTasks, inProgressTasks, queuedTasks);
+              } else if (snapshot.hasError) {
+                return Text("Error: ${snapshot.error}");
+              }
+              return CircularProgressIndicator();
+            },
+          ),
         ],
       ),
     );
   }
 
-  Widget _buildStatsOverview() {
+  Stream<QuerySnapshot> _taskStream() {
+    String? userId = _authService.getCurrentUserId();
+    return FirebaseFirestore.instance
+        .collection('tasks')
+        .where('userId', isEqualTo: userId)
+        .snapshots();
+  }
+
+  Widget _buildStatsOverview(int completedTasks, int inProgressTasks, int queuedTasks) {
     return Card(
       color: Constants.panelForeground,
       elevation: 3,
@@ -111,7 +104,6 @@ class _LeftPanelHomeState extends State<LeftPanelHome> {
               ),
             ),
             Divider(color: Colors.white54),
-            //_buildStatItem("Images Processed", "1234"),
             _buildStatItem("Tasks Completed", completedTasks.toString()),
             _buildStatItem("Tasks In Progress", inProgressTasks.toString()),
             _buildStatItem("Tasks Queued", queuedTasks.toString()),
