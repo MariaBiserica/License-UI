@@ -218,7 +218,28 @@ class _RightPanelHomeState extends State<RightPanelHome> {
         borderRadius: BorderRadius.circular(Constants.borderRadius),
       ),
       child: ListTile(
-        title: Text(task.title, style: TextStyle(color: Colors.white)),
+        title: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Text(task.title, style: TextStyle(color: Colors.white)),
+            Container(
+              margin: EdgeInsets.only(top: 4), // Space between title and status
+              padding: EdgeInsets.symmetric(vertical: 2, horizontal: 8),
+              decoration: BoxDecoration(
+                color: _statusColor(task.status), // Use status color
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Text(
+                task.status.toUpperCase(), // Display status in uppercase
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 12,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ],
+        ),
         subtitle: Text(
           '${task.description}',
           style: TextStyle(color: Colors.white70),
@@ -234,6 +255,21 @@ class _RightPanelHomeState extends State<RightPanelHome> {
         ),
       ),
     );
+  }
+
+  Color _statusColor(String status) {
+    switch (status) {
+      case 'completed':
+        return Colors.green;
+      case 'queued':
+        return Colors.orange;
+      case 'in progress':
+        return Colors.blue;
+      case 'new':
+        return Colors.grey;
+      default:
+        return Colors.black; // Default color if none of the statuses match
+    }
   }
 
 }
