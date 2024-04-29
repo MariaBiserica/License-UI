@@ -218,9 +218,30 @@ class _RightPanelHomeState extends State<RightPanelHome> {
 
   Widget _buildCategoryTasks(String category) {
     List<Task> categoryTasks = tasks.where((task) => task.category == category).toList();
-    return ExpansionTile(
-      title: Text("$category Goals", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
-      children: categoryTasks.map((task) => _buildTaskCard(task, context)).toList(),
+    return Container(
+      margin: EdgeInsets.symmetric(vertical: 8.0),  // Adds some space between the category tiles
+      decoration: BoxDecoration(
+        color: Constants.purpleDarkHome,  // Darker background color
+        borderRadius: BorderRadius.circular(Constants.borderRadius),  // Rounded corners
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.1),
+            spreadRadius: 1,
+            blurRadius: 6,
+            offset: Offset(0, 2),  // Shadow effect
+          ),
+        ],
+      ),
+      child: Theme(
+        data: Theme.of(context).copyWith(
+          dividerColor: Colors.transparent,
+          unselectedWidgetColor: Colors.white,  // Color of the icon when not expanded
+        ),
+        child: ExpansionTile(
+          title: Text("$category Goals", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+          children: categoryTasks.map((task) => _buildTaskCard(task, context)).toList(),
+        ),
+      ),
     );
   }
 
