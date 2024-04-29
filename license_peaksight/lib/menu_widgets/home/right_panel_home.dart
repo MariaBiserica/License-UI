@@ -180,7 +180,7 @@ class _RightPanelHomeState extends State<RightPanelHome> {
       padding: EdgeInsets.all(Constants.kPaddingHome / 2),
       margin: EdgeInsets.all(Constants.kPaddingHome),
       decoration: BoxDecoration(
-        color: Constants.purpleLightHome,
+        color: Constants.panelBackground,
         borderRadius: BorderRadius.circular(Constants.borderRadius),
         boxShadow: [
           BoxShadow(
@@ -197,7 +197,7 @@ class _RightPanelHomeState extends State<RightPanelHome> {
           SizedBox(height: Constants.kPaddingHome),
           Text(
             'Tasks & Goals',
-            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white),
+            style: TextStyle(fontFamily: 'MOXABestine', fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white),
           ),
           SizedBox(height: Constants.kPaddingHome),
           Expanded( // This will contain the scrollable part
@@ -215,7 +215,7 @@ class _RightPanelHomeState extends State<RightPanelHome> {
           Align(
             alignment: Alignment.bottomRight,
             child: FloatingActionButton(
-              backgroundColor: Constants.purpleDarkHome,
+              backgroundColor: Constants.panelForeground,
               onPressed: () => _addOrEditTask(),
               child: Icon(Icons.add, color: Colors.white),
             ),
@@ -228,9 +228,9 @@ class _RightPanelHomeState extends State<RightPanelHome> {
   Widget _buildCategoryTasks(String category) {
     List<Task> categoryTasks = tasks.where((task) => task.category == category).toList();
     return Container(
-      margin: EdgeInsets.symmetric(vertical: 8.0),  // Adds some space between the category tiles
+      margin: EdgeInsets.symmetric(vertical: 8.0),  // Adds space between category tiles
       decoration: BoxDecoration(
-        color: Constants.purpleDarkHome,  // Darker background color
+        color: Constants.panelForeground,  // Darker background color
         borderRadius: BorderRadius.circular(Constants.borderRadius),  // Rounded corners
         boxShadow: [
           BoxShadow(
@@ -244,10 +244,24 @@ class _RightPanelHomeState extends State<RightPanelHome> {
       child: Theme(
         data: Theme.of(context).copyWith(
           dividerColor: Colors.transparent,
-          unselectedWidgetColor: Colors.white,  // Color of the icon when not expanded
         ),
         child: ExpansionTile(
-          title: Text("$category Goals", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+          title: Text(
+            "$category Goals",
+            style: TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+              shadows: [
+                Shadow( // Text shadow for better readability
+                  offset: Offset(1.0, 1.0),
+                  blurRadius: 3.0,
+                  color: Color.fromARGB(150, 0, 0, 0),
+                ),
+              ],
+              fontFamily: 'TellMeAJoke',  // Custom font applied
+              fontSize: 25,  // Slightly larger font size
+            ),
+          ),
           children: categoryTasks.map((task) => _buildTaskCard(task, context)).toList(),
         ),
       ),
@@ -256,7 +270,7 @@ class _RightPanelHomeState extends State<RightPanelHome> {
 
   Widget _buildTaskCard(Task task, BuildContext context) {
     return Card(
-      color: Constants.purpleDarkHome,
+      color: Constants.panelForeground,
       elevation: 3,
       margin: EdgeInsets.only(top: Constants.kPaddingHome / 2),
       shape: RoundedRectangleBorder(

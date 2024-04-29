@@ -9,7 +9,7 @@ class LeftPanelHome extends StatelessWidget {
       padding: EdgeInsets.all(Constants.kPaddingHome / 2),
       margin: EdgeInsets.all(Constants.kPaddingHome), // Adds margin around the container
       decoration: BoxDecoration(
-        color: Constants.purpleLightHome,
+        color: Constants.panelBackground,
         borderRadius: BorderRadius.circular(Constants.borderRadius), // Rounded corners
         boxShadow: [
           BoxShadow(
@@ -37,7 +37,7 @@ class LeftPanelHome extends StatelessWidget {
 
   Widget _buildStatsOverview() {
     return Card(
-      color: Constants.purpleDarkHome,
+      color: Constants.panelForeground,
       elevation: 3,
       margin: EdgeInsets.all(Constants.kPaddingHome / 2),
       shape: RoundedRectangleBorder(
@@ -78,7 +78,7 @@ class LeftPanelHome extends StatelessWidget {
           Container(
             padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
             decoration: BoxDecoration(
-              color: Constants.purpleDarkHome, // Slightly darker background for the value
+              color: Constants.panelForeground, // Slightly darker background for the value
               borderRadius: BorderRadius.circular(10), // Rounded corners
               boxShadow: [
                 BoxShadow(

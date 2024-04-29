@@ -61,6 +61,23 @@ dev_dependencies:
 # The following section is specific to Flutter packages.
 flutter:
 
+  fonts:
+    - family: IndieFlower
+      fonts:
+        - asset: assets/fonts/IndieFlower.ttf
+    - family: SugarCream
+      fonts:
+        - asset: assets/fonts/Sugar Cream.otf
+    - family: Beqiner
+      fonts:
+        - asset: assets/fonts/BEQINER.ttf
+    - family: TellMeAJoke
+      fonts:
+        - asset: assets/fonts/Tell Me A Joke.ttf
+    - family: MOXABestine
+      fonts:
+        - asset: assets/fonts/MOXA Bestine.ttf
+
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.
