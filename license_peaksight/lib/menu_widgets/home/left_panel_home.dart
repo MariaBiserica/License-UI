@@ -1,8 +1,57 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:license_peaksight/constants.dart';
+import 'package:license_peaksight/authentication/authentication_service.dart';
+import 'package:license_peaksight/menu_widgets/home/task.dart';
 
-class LeftPanelHome extends StatelessWidget {
+class LeftPanelHome extends StatefulWidget {
+  @override
+  _LeftPanelHomeState createState() => _LeftPanelHomeState();
+}
+
+class _LeftPanelHomeState extends State<LeftPanelHome> {
+  final AuthService _authService = AuthService();
+  int completedTasks = 0;
+  int inProgressTasks = 0;
+  int queuedTasks = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchTasks();
+  }
+
+  void _fetchTasks() async {
+    String? userId = _authService.getCurrentUserId();
+    if (userId != null) {
+      var snapshot = await FirebaseFirestore.instance
+          .collection('tasks')
+          .where('userId', isEqualTo: userId)
+          .get();
+
+      int completedCount = 0;
+      int inProgressCount = 0;
+      int queuedCount = 0;
+      snapshot.docs.forEach((doc) {
+        var task = Task.fromMap(doc.data() as Map<String, dynamic>, doc.id);
+        if (task.status == 'completed') {
+          completedCount++;
+        } else if (task.status == 'in progress') {
+          inProgressCount++;
+        } else if (task.status == 'queued') {
+          queuedCount++;
+        }
+      });
+
+      setState(() {
+        completedTasks = completedCount;
+        inProgressTasks = inProgressCount;
+        queuedTasks = queuedCount;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -62,9 +111,10 @@ class LeftPanelHome extends StatelessWidget {
               ),
             ),
             Divider(color: Colors.white54),
-            _buildStatItem("Images Processed", "1234"),
-            _buildStatItem("Tasks Completed", "112"),
-            _buildStatItem("Tasks In Progress", "47"),
+            //_buildStatItem("Images Processed", "1234"),
+            _buildStatItem("Tasks Completed", completedTasks.toString()),
+            _buildStatItem("Tasks In Progress", inProgressTasks.toString()),
+            _buildStatItem("Tasks Queued", queuedTasks.toString()),
           ],
         ),
       ),
@@ -109,5 +159,4 @@ class LeftPanelHome extends StatelessWidget {
       ),
     );
   }
-
 }

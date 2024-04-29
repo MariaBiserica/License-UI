@@ -23,7 +23,7 @@ class _PieChartGoalsState extends State<PieChartGoals> {
 
   Widget _buildChartWithLegend(ChartData data) {
     return Container(
-      height: 300, // Set a fixed height for the chart and legend container
+      height: 200, // Set a fixed height for the chart and legend container
       child: Column(
         children: [
           Padding(
@@ -75,7 +75,18 @@ class _PieChartGoalsState extends State<PieChartGoals> {
         value: entry.value.toDouble(),
         title: '${entry.value}',
         radius: radius,
-        titleStyle: TextStyle(fontSize: fontSize, fontWeight: FontWeight.bold, color: const Color(0xffffffff)),
+        titleStyle: TextStyle(
+          fontSize: fontSize, 
+          fontWeight: FontWeight.bold, 
+          color: const Color(0xffffffff),
+          shadows: [
+            Shadow( // Text shadow for better readability
+              offset: Offset(1.0, 1.0),
+              blurRadius: 3.0,
+              color: Color.fromARGB(150, 0, 0, 0),
+            ),
+          ],
+        ),
       );
     }).toList();
 
