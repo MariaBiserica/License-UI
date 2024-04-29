@@ -23,16 +23,41 @@ class _PieChartGoalsState extends State<PieChartGoals> {
 
   Widget _buildChartWithLegend(ChartData data) {
     return Container(
-      height: 200, // Define a fixed height for the row containing the pie chart and legend
-      child: Row(
+      height: 300, // Set a fixed height for the chart and legend container
+      child: Column(
         children: [
-          Expanded(
-            flex: 1, // Proportion for the pie chart
-            child: _buildPieChart(data),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 8.0),
+            child: Text(
+              data.category + " Goals",
+              style: TextStyle(
+                fontFamily: 'Voguella',
+                color: Colors.white,
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                shadows: [
+                  Shadow( // Text shadow for better readability
+                    offset: Offset(1.0, 1.0),
+                    blurRadius: 3.0,
+                    color: Color.fromARGB(150, 0, 0, 0),
+                  ),
+                ],
+              ),
+            ),
           ),
           Expanded(
-            flex: 1, // Proportion for the legend
-            child: _buildLegend(data),
+            child: Row(
+              children: [
+                Expanded(
+                  flex: 1, // Adjust size ratio as needed for the chart
+                  child: _buildPieChart(data),
+                ),
+                Expanded(
+                  flex: 1, // Adjust size ratio as needed for the legend
+                  child: _buildLegend(data),
+                ),
+              ],
+            ),
           ),
         ],
       ),
