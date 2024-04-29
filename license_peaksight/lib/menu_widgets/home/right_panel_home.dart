@@ -41,6 +41,7 @@ class _RightPanelHomeState extends State<RightPanelHome> {
     final TextEditingController descriptionController = TextEditingController(text: task?.description ?? '');
     final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
     String category = task?.category ?? 'Daily'; // Default to Daily if not specified
+    String status = task?.status ?? 'new'; // Default to 'new' if not specified
 
     showDialog(
       context: context,
@@ -48,7 +49,7 @@ class _RightPanelHomeState extends State<RightPanelHome> {
         return AlertDialog(
           title: Text(task == null ? 'Add Task' : 'Edit Task'),
           content: Container(
-            width: double.minPositive, // This ensures the dialog is only as wide as the content needs it to be
+            width: double.minPositive, // Ensures the dialog is only as wide as the content needs it to be
             child: Form(
               key: _formKey,
               child: Column(
@@ -76,6 +77,19 @@ class _RightPanelHomeState extends State<RightPanelHome> {
                             ))
                         .toList(),
                   ),
+                  DropdownButtonFormField<String>(
+                    dropdownColor: Colors.white,
+                    value: status,
+                    onChanged: (newValue) {
+                      status = newValue!;
+                    },
+                    items: ['new', 'in progress', 'queued', 'completed']
+                        .map((label) => DropdownMenuItem(
+                              child: Text(label),
+                              value: label,
+                            ))
+                        .toList(),
+                  ),
                 ],
               ),
             ),
@@ -91,11 +105,12 @@ class _RightPanelHomeState extends State<RightPanelHome> {
               onPressed: () {
                 if (_formKey.currentState!.validate()) {
                   if (task == null) {
-                    _addTask(titleController.text, 'new', category, descriptionController.text);
+                    _addTask(titleController.text, status, category, descriptionController.text);
                   } else {
                     task.title = titleController.text;
                     task.description = descriptionController.text;
                     task.category = category;
+                    task.status = status;
                     _editTask(task);
                   }
                   Navigator.of(context).pop();
