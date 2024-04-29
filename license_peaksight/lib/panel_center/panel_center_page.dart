@@ -29,8 +29,8 @@ class _PanelCenterPageState extends State<PanelCenterPage> {
   double? chromaticScore;
 
   List<Person> _persons = [
-    Person(name: "John Doe", color: Constants.orangeDark),
-    Person(name: "Jane Doe", color: Constants.redDark),
+    Person(name: "John Doe", color: Constants.endGradient),
+    Person(name: "Jane Doe", color: Constants.beginGradient),
     Person(name: "John Smith", color: Constants.redLight),
     Person(name: "Gilbert Smith", color: Constants.greenLight),
     Person(name: "Jane Smith", color: Constants.orangeLight),

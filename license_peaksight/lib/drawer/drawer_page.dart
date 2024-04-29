@@ -71,8 +71,8 @@ class _DrawerPageState extends State<DrawerPage> {
                       borderRadius: BorderRadius.circular(20),
                       gradient: LinearGradient(
                         colors: [
-                          Constants.redDark.withOpacity(0.9),
-                          Constants.orangeDark.withOpacity(0.9),
+                          Constants.beginGradient.withOpacity(0.9),
+                          Constants.endGradient.withOpacity(0.9),
                         ],
                         ),
                       ) : null,
@@ -80,6 +80,13 @@ class _DrawerPageState extends State<DrawerPage> {
                         title: Text(_buttonNames[index].title,
                         style:TextStyle(
                           color: Colors.white,
+                          shadows: [
+                            Shadow( // Text shadow for better readability
+                              offset: Offset(1.0, 1.0),
+                              blurRadius: 3.0,
+                              color: Color.fromARGB(150, 0, 0, 0),
+                            ),
+                          ],
                         ),
                         ),
                         leading: Padding(

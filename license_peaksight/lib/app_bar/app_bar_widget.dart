@@ -84,8 +84,8 @@ class _AppBarWidgetState extends State<AppBarWidget> {
                             gradient: _currentSelectedButton == index
                             ? LinearGradient(
                               colors: [
-                                Constants.redDark,
-                                Constants.orangeDark,
+                                Constants.beginGradient,
+                                Constants.endGradient,
                               ],
                             )
                             : null,
@@ -116,8 +116,8 @@ class _AppBarWidgetState extends State<AppBarWidget> {
                           decoration: BoxDecoration(
                             gradient: LinearGradient(
                               colors: [
-                                Constants.redDark,
-                                Constants.orangeDark,
+                                Constants.beginGradient,
+                                Constants.endGradient,
                               ],
                             ),
                           ),
@@ -172,7 +172,7 @@ class _AppBarWidgetState extends State<AppBarWidget> {
                 shape: BoxShape.circle,
               ),
               child: CircleAvatar(
-                backgroundColor: Constants.orangeDark,
+                backgroundColor: Constants.endGradient,
                 radius: 30,
                 backgroundImage: widget.avatarUrl != null ? NetworkImage(widget.avatarUrl!) : AssetImage("images/profile.png") as ImageProvider,
               ),
