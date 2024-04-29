@@ -266,7 +266,21 @@ class _RightPanelHomeState extends State<RightPanelHome> {
         title: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            Text(task.title, style: TextStyle(color: Colors.white)),
+            Text(
+              task.title,
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 16, // Larger font size for better visibility
+                fontWeight: FontWeight.bold, // Make text bold
+                shadows: [
+                  Shadow( // Text shadow for better readability
+                    offset: Offset(1.0, 1.0),
+                    blurRadius: 3.0,
+                    color: Color.fromARGB(150, 0, 0, 0),
+                  ),
+                ],
+              ),
+            ),
             Container(
               margin: EdgeInsets.only(top: 4), // Space between title and status
               padding: EdgeInsets.symmetric(vertical: 2, horizontal: 8),
@@ -286,10 +300,12 @@ class _RightPanelHomeState extends State<RightPanelHome> {
           ],
         ),
         subtitle: Text(
-          '${task.description}',
-          style: TextStyle(color: Colors.white70),
-          maxLines: 3,
-          overflow: TextOverflow.fade,
+          task.description,
+          style: TextStyle(
+            color: Colors.white70,
+            overflow: TextOverflow.ellipsis, // Use ellipsis for text overflow
+          ),
+          maxLines: 3, // Limit the number of lines for the description
         ),
         trailing: Row(
           mainAxisSize: MainAxisSize.min,
