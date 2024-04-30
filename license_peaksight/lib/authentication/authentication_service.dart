@@ -61,4 +61,30 @@ class AuthService {
   String? getCurrentUserId() {
     return _auth.currentUser?.uid;
   }
+
+  // Update user profile details
+  Future<void> updateUserProfile(String email, String username, [String? avatarUrl]) async {
+    User? user = _auth.currentUser;
+    if (user != null) {
+      // Update email if it has changed
+      if (user.email != email) {
+        await user.updateEmail(email).catchError((error) {
+          print("Failed to update email: $error");
+          throw error;
+        });
+      }
+
+      // Update Firestore document
+      await _firestore.collection('users').doc(user.uid).update({
+        'username': username,
+        'email': email,
+        'avatarUrl': avatarUrl ?? user.photoURL ?? '',
+      }).catchError((error) {
+        print("Failed to update Firestore user document: $error");
+        throw error;
+      });
+    } else {
+      throw Exception("No user logged in");
+    }
+  }
 }

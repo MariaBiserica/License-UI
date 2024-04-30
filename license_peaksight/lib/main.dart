@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:license_peaksight/authentication/edit_page.dart';
 import 'package:license_peaksight/authentication/login_page.dart';
 import 'package:license_peaksight/constants.dart';
 import 'package:license_peaksight/firebase_options.dart';
@@ -48,7 +49,7 @@ class MyApp extends StatelessWidget {
       initialRoute: '/',  // Set the initial route
       routes: {
         '/': (context) => LoginPage(),  // Home page
-        //'/edit': (context) => EditPage(),  // Edit page (assuming EditPage() is your edit screen widget)
+        '/edit': (context) => EditPage(),  // Edit page
         '/login': (context) => LoginPage(),  // Login page
         // Add other routes as needed
       },

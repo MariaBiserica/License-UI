@@ -135,7 +135,7 @@ class _AppBarWidgetState extends State<AppBarWidget> {
                     break;
                   case 'Edit':
                     // Navigate to the edit page
-                    //Navigator.pushNamed(context, '/edit');
+                    Navigator.pushNamed(context, '/edit');
                     break;
                   default:
                     print("Not a valid selection");
