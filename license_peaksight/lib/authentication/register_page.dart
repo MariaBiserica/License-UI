@@ -101,13 +101,31 @@ class _RegisterPageState extends State<RegisterPage> {
                         ),
                         SizedBox(height: 20), // Add some spacing between the title and form fields
                         TextFormField(
-                          decoration: InputDecoration(labelText: 'Email'),
-                          validator: (val) => val!.isEmpty ? 'Enter an email' : null,
+                          decoration: InputDecoration(
+                            labelText: 'Email',
+                            hintText: 'Enter your email address',
+                            border: OutlineInputBorder(), // Adds a border to the input field
+                            prefixIcon: Icon(Icons.email), // Adds an email icon before the text field
+                          ),
+                          validator: (val) {
+                            if (val == null || val.isEmpty) {
+                              return 'Please enter an email';
+                            } else if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(val)) {
+                              return 'Enter a valid email address';
+                            }
+                            return null;
+                          },
                           onChanged: (val) => setState(() => email = val),
+                          keyboardType: TextInputType.emailAddress, // Optimizes the keyboard for email input
+                          autocorrect: false, // Disables autocorrect
                         ),
+                        SizedBox(height: 20),
                         TextFormField(
                           decoration: InputDecoration(
                             labelText: 'Password',
+                            hintText: 'Enter a password',
+                            border: OutlineInputBorder(), // Adds a border to the input field
+                            prefixIcon: Icon(Icons.password), // Adds a password icon before the text field
                             suffixIcon: IconButton(
                               icon: Icon(
                                 // Change the icon based on the state
@@ -126,8 +144,14 @@ class _RegisterPageState extends State<RegisterPage> {
                           validator: (val) => val!.length < 6 ? 'Enter a password 6+ chars long' : null,
                           onChanged: (val) => setState(() => password = val),
                         ),
+                        SizedBox(height: 20),
                         TextFormField(
-                          decoration: InputDecoration(labelText: 'Username'),
+                          decoration: InputDecoration(
+                            labelText: 'Username',
+                            hintText: 'Enter a username',
+                            border: OutlineInputBorder(), // Adds a border to the input field
+                            prefixIcon: Icon(Icons.supervised_user_circle), // Adds an username icon before the text field
+                          ),
                           validator: (val) => val!.isEmpty ? 'Enter a username' : null,
                           onChanged: (val) => setState(() => username = val),
                         ),
@@ -138,7 +162,7 @@ class _RegisterPageState extends State<RegisterPage> {
                           decoration: InputDecoration(
                             enabledBorder: OutlineInputBorder(
                               borderSide: BorderSide(color: Color.fromARGB(255, 200, 200, 210), width: 2),
-                              borderRadius: BorderRadius.circular(15),
+                              borderRadius: BorderRadius.circular(10),
                             ),
                             filled: true,
                             fillColor: Colors.white,
@@ -165,9 +189,15 @@ class _RegisterPageState extends State<RegisterPage> {
                           items: getDropdownItems(), // Use the method for styling dropdown items
                           dropdownColor: Colors.white,
                         ),
+                        SizedBox(height: 20),
                         if (_avatarSelectionOption == AvatarSelectionOption.enterUrl)
                           TextFormField(
-                            decoration: InputDecoration(labelText: 'Image URL'),
+                            decoration: InputDecoration(
+                              labelText: 'Image URL',
+                              hintText: 'Enter an image URL',
+                              border: OutlineInputBorder(), // Adds a border to the input field
+                              prefixIcon: Icon(Icons.image), // Adds an username icon before the text field
+                            ),
                             onChanged: (val) => avatarUrl = val,
                           ),
                         if (_avatarSelectionOption == AvatarSelectionOption.pickImage)

@@ -128,7 +128,14 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
                               TextFormField(
                                 controller: _emailController,
                                 decoration: InputDecoration(labelText: 'Email'),
-                                validator: (val) => val!.isEmpty ? 'Enter an email' : null,
+                                validator: (val) {
+                                  if (val == null || val.isEmpty) {
+                                    return 'Please enter an email';
+                                  } else if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(val)) {
+                                    return 'Enter a valid email address';
+                                  }
+                                  return null;
+                                },
                               ),
                               SizedBox(height: 20.0),
                               TextFormField(
