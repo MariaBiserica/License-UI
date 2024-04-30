@@ -65,7 +65,7 @@ class _WidgetTreeState extends State<WidgetTree> {
         child: (ResponsiveLayout.isTinyLimit(context) ||
                 ResponsiveLayout.isTinyHeightLimit(context)
                 ? Container() 
-                : AppBarWidget(currentSection: _currentSection, avatarUrl: widget.userAvatarUrl)),
+                : AppBarWidget()), //AppBarWidget(currentSection: _currentSection, avatarUrl: widget.userAvatarUrl)),
       ),
       body: _getSectionWidget(),
       // ResponsiveLayout(

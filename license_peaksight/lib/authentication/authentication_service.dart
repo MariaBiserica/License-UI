@@ -63,28 +63,24 @@ class AuthService {
   }
 
   // Update user profile details
-  Future<void> updateUserProfile(String email, String username, [String? avatarUrl]) async {
+  Future<void> updateUserProfile({required String email, required String username, String? avatarUrl}) async {
     User? user = _auth.currentUser;
     if (user != null) {
-      // Update email if it has changed
-      if (user.email != email) {
-        await user.updateEmail(email).catchError((error) {
-          print("Failed to update email: $error");
-          throw error;
+      try {
+        if (user.email != email) {
+          await user.verifyBeforeUpdateEmail(email);
+        }
+        await user.updateProfile(displayName: username, photoURL: avatarUrl);
+        await _firestore.collection('users').doc(user.uid).update({
+          'username': username,
+          'email': email,
+          'avatarUrl': avatarUrl,
         });
+      } catch (e) {
+        print("Error updating user profile: $e");
+        throw e;  // Re-throw to handle it in the UI
       }
-
-      // Update Firestore document
-      await _firestore.collection('users').doc(user.uid).update({
-        'username': username,
-        'email': email,
-        'avatarUrl': avatarUrl ?? user.photoURL ?? '',
-      }).catchError((error) {
-        print("Failed to update Firestore user document: $error");
-        throw error;
-      });
-    } else {
-      throw Exception("No user logged in");
     }
   }
+
 }
