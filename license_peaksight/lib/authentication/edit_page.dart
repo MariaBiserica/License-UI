@@ -355,7 +355,8 @@ class _EditPageState extends State<EditPage> {
       await _authService.updateUserProfile(
         email: email, 
         username: username, 
-        avatarUrl: avatarUrl
+        avatarUrl: avatarUrl,
+        password: password.isNotEmpty ? password : null,
       );
       Navigator.pop(context); // Go back or show success message
     } catch (e) {

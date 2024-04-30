@@ -63,23 +63,35 @@ class AuthService {
   }
 
   // Update user profile details
-  Future<void> updateUserProfile({required String email, required String username, String? avatarUrl}) async {
+  Future<void> updateUserProfile({
+    required String email, 
+    required String username, 
+    String? avatarUrl, 
+    String? password
+  }) async {
     User? user = _auth.currentUser;
     if (user != null) {
-      try {
-        if (user.email != email) {
-          await user.verifyBeforeUpdateEmail(email);
-        }
-        await user.updateProfile(displayName: username, photoURL: avatarUrl);
-        await _firestore.collection('users').doc(user.uid).update({
-          'username': username,
-          'email': email,
-          'avatarUrl': avatarUrl,
-        });
-      } catch (e) {
-        print("Error updating user profile: $e");
-        throw e;  // Re-throw to handle it in the UI
+      // Update email if it has changed
+      if (user.email != email) {
+        await user.updateEmail(email);
       }
+
+      // Update password if a new one is provided
+      if (password != null && password.isNotEmpty) {
+        await user.updatePassword(password);
+      }
+
+      // Update the display name and photo URL
+      await user.updateProfile(displayName: username, photoURL: avatarUrl);
+
+      // Update Firestore document
+      await _firestore.collection('users').doc(user.uid).update({
+        'username': username,
+        'email': email,
+        'avatarUrl': avatarUrl,
+      });
+
+      // You might want to re-authenticate the user here if you're updating sensitive information
     }
   }
 
