@@ -45,7 +45,13 @@ class MyApp extends StatelessWidget {
         scaffoldBackgroundColor: Constants.purpleDark,
         canvasColor: Constants.purpleLight
       ),
-      home: LoginPage(), // Set LoginPage as the home widget
+      initialRoute: '/',  // Set the initial route
+      routes: {
+        '/': (context) => LoginPage(),  // Home page
+        //'/edit': (context) => EditPage(),  // Edit page (assuming EditPage() is your edit screen widget)
+        '/login': (context) => LoginPage(),  // Login page
+        // Add other routes as needed
+      },
     );
   }
 }

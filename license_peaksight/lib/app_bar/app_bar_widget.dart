@@ -53,7 +53,7 @@ class _AppBarWidgetState extends State<AppBarWidget> {
                 width: Constants.kPadding,
               ),
               Spacer(),
-              if(ResponsiveLayout.isComputer(context))
+              if(ResponsiveLayout.isComputer(context)) // If the screen is a computer, display the buttons
                 ...List.generate(
                   _buttonNames.length, 
                   (index) => TextButton(
@@ -126,13 +126,40 @@ class _AppBarWidgetState extends State<AppBarWidget> {
                   ),
               ),
             Spacer(),
-            IconButton(
-              color: Colors.white,
-              iconSize: 30,
-              onPressed: () {},
-              icon: Icon(Icons.search),
+            PopupMenuButton<String>( // Popup menu button for settings
+              onSelected: (value) {
+                switch (value) {
+                  case 'Logout':
+                    // Navigate to the login page
+                    Navigator.pushReplacementNamed(context, '/login');
+                    break;
+                  case 'Edit':
+                    // Navigate to the edit page
+                    //Navigator.pushNamed(context, '/edit');
+                    break;
+                  default:
+                    print("Not a valid selection");
+                }
+              },
+              itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+                const PopupMenuItem<String>(
+                  value: 'Edit',
+                  child: ListTile(
+                    leading: Icon(Icons.edit),
+                    title: Text('Edit'),
+                  ),
+                ),
+                const PopupMenuItem<String>(
+                  value: 'Logout',
+                  child: ListTile(
+                    leading: Icon(Icons.logout),
+                    title: Text('Logout'),
+                  ),
+                ),
+              ],
+              icon: Icon(Icons.settings, color: Colors.white, size: 30),
             ),
-            Stack(children: [
+            Stack(children: [ // Stack to display the notification icon and the number of notifications
               IconButton(
                 color: Colors.white,
                 iconSize: 30,
