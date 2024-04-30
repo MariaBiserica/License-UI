@@ -186,9 +186,10 @@ class _CenterPanelHomeState extends State<CenterPanelHome> {
         return Text(
           "No recent tasks found",
           style: TextStyle(
+            fontFamily: 'TellMeAJoke',
             fontSize: 20, 
             fontWeight: FontWeight.bold, 
-            color: Colors.white
+            color: const Color.fromARGB(255, 255, 255, 255)
           ),
         );
       },

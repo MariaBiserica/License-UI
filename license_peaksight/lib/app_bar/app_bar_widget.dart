@@ -134,7 +134,7 @@ class _AppBarWidgetState extends State<AppBarWidget> {
                 onSelected: (value) {
                   switch (value) {
                     case 'Logout':
-                      _auth.signOut();
+                      Navigator.pushNamed(context, '/login');
                       break;
                     case 'Edit':
                       Navigator.pushNamed(context, '/edit');
