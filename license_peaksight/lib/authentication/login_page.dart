@@ -121,7 +121,7 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
                             shrinkWrap: true,
                             children: <Widget>[
                               CircleAvatar(
-                                radius: 100,
+                                radius: 80,
                                 child: Image.asset("images/logo.png"),
                               ),
                               SizedBox(height: 20),
@@ -193,6 +193,12 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
                                   );
                                 },
                               ),
+                              TextButton(
+                                onPressed: () {
+                                  _showResetPasswordDialog(context);
+                                },
+                                child: Text('Forgot Password?'),
+                              ),
                             ],
                           ),
                         ),
@@ -236,4 +242,41 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
     _animationController.dispose();
     super.dispose();
   }
+
+  void _showResetPasswordDialog(BuildContext context) {
+    final TextEditingController _resetEmailController = TextEditingController();
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('Reset Password'),
+          content: TextField(
+            controller: _resetEmailController,
+            decoration: InputDecoration(
+              hintText: 'Email',
+            ),
+            keyboardType: TextInputType.emailAddress,
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text('Cancel'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: Text('Send'),
+              onPressed: () async {
+                if (_resetEmailController.text.isNotEmpty) {
+                  await _authService.sendPasswordResetEmail(_resetEmailController.text);
+                  Navigator.of(context).pop();
+                }
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
 }
