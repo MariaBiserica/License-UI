@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:license_peaksight/app_bar/custom_avatar.dart';
 import 'package:license_peaksight/constants.dart';
 import 'package:license_peaksight/responsive_layout.dart';
 
@@ -7,6 +8,10 @@ List<String> _buttonNames = ["Overview", "Revenue", "Sales", "Control"];
 int _currentSelectedButton = 0;
 
 class AppBarWidget extends StatefulWidget {
+  final String? avatarUrl;
+
+  AppBarWidget({this.avatarUrl});
+
   @override
   _AppBarWidgetState createState() => _AppBarWidgetState();
 }
@@ -20,7 +25,11 @@ class _AppBarWidgetState extends State<AppBarWidget> {
       stream: _auth.authStateChanges(),
       builder: (context, snapshot) {
         User? user = snapshot.data;
-        String? avatarUrl = user?.photoURL ?? "images/profile.png";
+        // Use the user's photo URL if available, otherwise use the avatar URL provided in the widget
+        String avatarUrl = widget.avatarUrl ?? "images/profile.png"; // user?.photoURL ?? widget.avatarUrl ?? "images/profile.png";
+        if (user?.photoURL != "" && user?.photoURL != null) {
+          avatarUrl = user!.photoURL!;
+        }
 
         return Container(
           color: Constants.purpleLight,
@@ -55,75 +64,50 @@ class _AppBarWidgetState extends State<AppBarWidget> {
                   color: Colors.white,
                   icon: Icon(Icons.menu),
                 ),
-              SizedBox(
-                width: Constants.kPadding,
-              ),
+              SizedBox(width: Constants.kPadding),
               Spacer(),
               if (ResponsiveLayout.isComputer(context))
-                ...List.generate(
-                  _buttonNames.length,
-                  (index) => TextButton(
-                    onPressed: () {
-                      setState(() {
-                        _currentSelectedButton = index;
-                      });
-                    },
-                    child: Padding(
-                      padding: EdgeInsets.all(Constants.kPadding * 2),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Text(
-                            _buttonNames[index],
-                            style: TextStyle(
-                              color: _currentSelectedButton == index ? Colors.white : Colors.white60,
-                            ),
+                ..._buttonNames.map((name) => TextButton(
+                  onPressed: () {
+                    setState(() {
+                      _currentSelectedButton = _buttonNames.indexOf(name);
+                    });
+                  },
+                  child: Padding(
+                    padding: EdgeInsets.all(Constants.kPadding * 2),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Text(name, style: TextStyle(color: _currentSelectedButton == _buttonNames.indexOf(name) ? Colors.white : Colors.white60)),
+                        Container(
+                          margin: EdgeInsets.all(Constants.kPadding / 2),
+                          width: 60,
+                          height: 2,
+                          decoration: BoxDecoration(
+                            gradient: _currentSelectedButton == _buttonNames.indexOf(name)
+                                ? LinearGradient(colors: [Constants.beginGradient, Constants.endGradient])
+                                : null,
                           ),
-                          Container(
-                            margin: EdgeInsets.all(Constants.kPadding / 2),
-                            width: 60,
-                            height: 2,
-                            decoration: BoxDecoration(
-                              gradient: _currentSelectedButton == index
-                                  ? LinearGradient(
-                                      colors: [
-                                        Constants.beginGradient,
-                                        Constants.endGradient,
-                                      ],
-                                    )
-                                  : null,
-                            ),
-                          ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
                   ),
-                )
+                )).toList()
               else
                 Padding(
-                  padding: const EdgeInsets.all(Constants.kPadding * 2),
+                  padding: EdgeInsets.all(Constants.kPadding * 2),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Text(
-                        _buttonNames[_currentSelectedButton],
-                        style: TextStyle(
-                          color: Colors.white,
-                        ),
-                      ),
+                      Text(_buttonNames[_currentSelectedButton], style: TextStyle(color: Colors.white)),
                       Container(
                         margin: EdgeInsets.all(Constants.kPadding / 2),
                         width: 60,
                         height: 2,
                         decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            colors: [
-                              Constants.beginGradient,
-                              Constants.endGradient,
-                            ],
-                          ),
+                          gradient: LinearGradient(colors: [Constants.beginGradient, Constants.endGradient]),
                         ),
                       ),
                     ],
@@ -139,35 +123,21 @@ class _AppBarWidgetState extends State<AppBarWidget> {
                     case 'Edit':
                       Navigator.pushNamed(context, '/edit');
                       break;
-                    default:
-                      print("Not a valid selection");
                   }
                 },
-                itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
-                  const PopupMenuItem<String>(
-                    value: 'Edit',
-                    child: ListTile(
-                      leading: Icon(Icons.edit),
-                      title: Text('Edit'),
-                    ),
-                  ),
-                  const PopupMenuItem<String>(
-                    value: 'Logout',
-                    child: ListTile(
-                      leading: Icon(Icons.logout),
-                      title: Text('Logout'),
-                    ),
-                  ),
+                itemBuilder: (BuildContext context) => [
+                  PopupMenuItem(value: 'Edit', child: ListTile(leading: Icon(Icons.edit), title: Text('Edit'))),
+                  PopupMenuItem(value: 'Logout', child: ListTile(leading: Icon(Icons.logout), title: Text('Logout')))
                 ],
                 icon: Icon(Icons.settings, color: Colors.white, size: 30),
               ),
               Stack(
                 children: [
                   IconButton(
-                    color: Colors.white,
-                    iconSize: 30,
                     onPressed: () {},
                     icon: Icon(Icons.notifications_none_outlined),
+                    color: Colors.white,
+                    iconSize: 30,
                   ),
                   Positioned(
                     right: 6,
@@ -175,13 +145,7 @@ class _AppBarWidgetState extends State<AppBarWidget> {
                     child: CircleAvatar(
                       backgroundColor: Colors.pink,
                       radius: 8,
-                      child: Text(
-                        "3",
-                        style: TextStyle(
-                          fontSize: 10,
-                          color: Colors.white,
-                        ),
-                      ),
+                      child: Text("3", style: TextStyle(fontSize: 10, color: Colors.white)),
                     ),
                   ),
                 ],
@@ -192,19 +156,17 @@ class _AppBarWidgetState extends State<AppBarWidget> {
                   height: double.infinity,
                   decoration: BoxDecoration(
                     boxShadow: [
-                      BoxShadow(
-                        color: Colors.black45,
-                        offset: Offset(0, 0),
-                        spreadRadius: 1,
-                        blurRadius: 10,
-                      ),
+                      BoxShadow(color: Colors.black45, offset: Offset(0, 0), spreadRadius: 1, blurRadius: 10),
                     ],
                     shape: BoxShape.circle,
                   ),
                   child: CircleAvatar(
                     backgroundColor: Constants.endGradient,
                     radius: 30,
-                    backgroundImage: NetworkImage(avatarUrl),
+                    child: CustomAvatar(
+                      imageUrl: avatarUrl,
+                      fallbackAsset: "images/profile.png" // Specify a default local asset image
+                    ),
                   ),
                 ),
             ],
