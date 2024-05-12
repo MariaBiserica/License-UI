@@ -3,7 +3,7 @@ import 'package:license_peaksight/drawer/drawer_page.dart';
 import 'package:license_peaksight/panel_left/panel_left_page.dart';
 import 'package:license_peaksight/responsive_layout.dart';
 import 'package:license_peaksight/panel_center/panel_center_page.dart'; // Assuming this is used for displaying the main content
-import 'package:license_peaksight/menu_widgets/image_quality_assessment/panel_right_page.dart'; // Assuming this is used for image upload
+import 'package:license_peaksight/menu_widgets/image_quality_assessment/panel_right_iqa.dart'; // Assuming this is used for image upload
 
 class ImageQualityWidget extends StatelessWidget {
   final String imagePath;
