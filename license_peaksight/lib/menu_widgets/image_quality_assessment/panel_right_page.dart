@@ -82,26 +82,39 @@ class _PanelRightPageState extends State<PanelRightPage> with SingleTickerProvid
     }
   }
 
+  void viewImage(BuildContext context, String imagePath) {
+    Navigator.of(context).push(PageRouteBuilder(
+      opaque: false,
+      pageBuilder: (BuildContext context, _, __) {
+        return ImageDetailView(imagePath: imagePath);
+      },
+    ));
+  }
+
   Widget buildImage() {
-  // Use a Container with BoxDecoration to ensure the rounded corners are maintained.
-  return ScaleTransition(
-    scale: _scaleAnimation!,
-    child: FadeTransition(
-      opacity: _animationController!,
-      child: Container(
-        padding: EdgeInsets.all(20),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20),
-          // Use a DecorationImage to display the image within the Container.
-          image: DecorationImage(
-            image: FileImage(File(images[currentIndex])),
-            fit: BoxFit.fill,
+    return GestureDetector(
+      onTap: () => viewImage(context, images[currentIndex]),
+      child: Hero(
+        tag: images[currentIndex],
+        child: ScaleTransition(
+          scale: _scaleAnimation!,
+          child: FadeTransition(
+            opacity: _animationController!,
+            child: Container(
+              padding: EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20),
+                image: DecorationImage(
+                  image: FileImage(File(images[currentIndex])),
+                  fit: BoxFit.cover,
+                ),
+              ),
+            ),
           ),
         ),
       ),
-    ),
-  );
-}
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -122,7 +135,7 @@ class _PanelRightPageState extends State<PanelRightPage> with SingleTickerProvid
                   child: Text('Upload Images'),
                   style: ElevatedButton.styleFrom(
                     foregroundColor: Colors.white, 
-                    backgroundColor: Constants.blue,
+                    backgroundColor: Constants.panelForeground,
                   ),
                 ),
                 SizedBox(height: 20), // Adjust the space as needed
@@ -137,16 +150,41 @@ class _PanelRightPageState extends State<PanelRightPage> with SingleTickerProvid
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     IconButton(
-                      icon: Icon(Icons.arrow_left, color: Constants.blue),
+                      icon: Icon(Icons.arrow_left, color: Constants.panelForeground),
                       onPressed: images.isEmpty ? null : previousImage,
                     ),
                     IconButton(
-                      icon: Icon(Icons.arrow_right, color: Constants.blue),
+                      icon: Icon(Icons.arrow_right, color: Constants.panelForeground),
                       onPressed: images.isEmpty ? null : nextImage,
                     ),
                   ],
                 ),
               ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+
+class ImageDetailView extends StatelessWidget {
+  final String imagePath;
+
+  ImageDetailView({required this.imagePath});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.black45,
+      body: GestureDetector(
+        onTap: () => Navigator.of(context).pop(),
+        child: Center(
+          child: Hero(
+            tag: imagePath,
+            child: InteractiveViewer(
+              child: Image.file(File(imagePath)),
             ),
           ),
         ),
