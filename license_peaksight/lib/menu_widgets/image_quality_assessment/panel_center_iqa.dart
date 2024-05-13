@@ -16,28 +16,90 @@ class PanelCenterPage extends StatefulWidget {
 
 class _PanelCenterPageState extends State<PanelCenterPage> {
   Map<String, double?> scoreMap = {};
+  double progress = 0.0;
+  Map<String, String> metricTiming = {};
 
   @override
   void didUpdateWidget(covariant PanelCenterPage oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (widget.selectedMetrics != oldWidget.selectedMetrics) {
+      // Reset progress and initiate a new calculation
+      progress = 0.0;
+      metricTiming.clear();
       calculateQualityScores();  // Recalculate scores if selected metrics change
     }
   }
 
   void calculateQualityScores() async {
-    if (widget.imagePath.isNotEmpty) {
+    if (widget.imagePath.isNotEmpty && widget.selectedMetrics.isNotEmpty) {
+      DateTime startTime, endTime;
+      final totalMetrics = widget.selectedMetrics.length;
+      int completedMetrics = 0;
+
       final scores = await predictImageQuality(File(widget.imagePath), widget.selectedMetrics);
-      setState(() {
-        // Update scores based on the selected metrics
-        scoreMap = {
-          'Noise': scores.noiseScore,
-          'Contrast': scores.contrastScore,
-          'Brightness': scores.brightnessScore,
-          'Sharpness': scores.sharpnessScore,
-          'Chromatic Quality': scores.chromaticScore,
-        };
-      });
+      endTime = DateTime.now();
+
+      if (scores != null) {
+        setState(() {
+          // Assigning values directly based on whether they were requested
+          if (widget.selectedMetrics.contains('Noise')) {
+            startTime = DateTime.now();
+            scoreMap['Noise'] = scores.noiseScore;
+            endTime = DateTime.now();
+            metricTiming['Noise'] = "${endTime.difference(startTime).inMilliseconds} ms";
+            completedMetrics++;        
+          }
+          if (widget.selectedMetrics.contains('Contrast')) {
+            startTime = DateTime.now();
+            scoreMap['Contrast'] = scores.contrastScore;
+            endTime = DateTime.now();
+            metricTiming['Contrast'] = "${endTime.difference(startTime).inMilliseconds} ms";
+            completedMetrics++;
+          }
+          if (widget.selectedMetrics.contains('Brightness')) {
+            startTime = DateTime.now();
+            scoreMap['Brightness'] = scores.brightnessScore;
+            endTime = DateTime.now();
+            metricTiming['Brightness'] = "${endTime.difference(startTime).inMilliseconds} ms";
+            completedMetrics++;
+          }
+          if (widget.selectedMetrics.contains('Sharpness')) {
+            startTime = DateTime.now();
+            scoreMap['Sharpness'] = scores.sharpnessScore;
+            endTime = DateTime.now();
+            metricTiming['Sharpness'] = "${endTime.difference(startTime).inMilliseconds} ms";
+            completedMetrics++;
+          }
+          if (widget.selectedMetrics.contains('Chromatic Quality')) {
+            startTime = DateTime.now();
+            scoreMap['Chromatic Quality'] = scores.chromaticScore;
+            endTime = DateTime.now();
+            metricTiming['Chromatic Quality'] = "${endTime.difference(startTime).inMilliseconds} ms";
+            completedMetrics++;
+          }
+          
+          progress = completedMetrics / totalMetrics;
+        });
+      } else {
+        // Show a dialog if the scores are null
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text("Error"),
+              content: Text("Failed to load quality scores. Please try again."),
+              actions: <Widget>[
+                TextButton(
+                  child: Text("OK"),
+                  onPressed: () {
+                    Navigator.of(context).pop();  // Close the dialog
+                  },
+                ),
+              ],
+            );
+          },
+        );
+      }
     }
   }
 
@@ -69,10 +131,7 @@ class _PanelCenterPageState extends State<PanelCenterPage> {
 
   Widget buildOverviewCard() {
     return Padding(
-      padding: const EdgeInsets.only(
-        left: Constants.kPadding / 2,
-        top: Constants.kPadding / 2,
-        right: Constants.kPadding / 2),
+      padding: const EdgeInsets.symmetric(horizontal: Constants.kPadding / 2, vertical: Constants.kPadding / 2),
       child: Card(
         color: Constants.purpleLight,
         elevation: 3,
@@ -80,21 +139,38 @@ class _PanelCenterPageState extends State<PanelCenterPage> {
           borderRadius: BorderRadius.circular(30),
         ),
         child: Container(
-          width: double.infinity,
-          child: ListTile(
-            title: Text(
-              "Analysis Overview",
-              style: TextStyle(
-                fontFamily: 'MOXABestine',
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-                color: Colors.white
-              ), 
-            ),
-            subtitle: Text(
-              "Image quality assessment scores",
-              style: TextStyle(color: Color.fromARGB(156, 158, 158, 158)),
-            ),
+          padding: const EdgeInsets.all(Constants.kPadding),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                "Analysis Overview",
+                style: TextStyle(
+                  fontFamily: 'MOXABestine',
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white
+                ),
+              ),
+              SizedBox(height: 8),  // Space between title and subtitle
+              Text(
+                "Image quality assessment scores",
+                style: TextStyle(color: Color.fromARGB(156, 158, 158, 158)),
+              ),
+              SizedBox(height: 16),  // Space between subtitle and progress bar
+              LinearProgressIndicator(
+                value: progress,
+                backgroundColor: Colors.grey[300],
+                valueColor: AlwaysStoppedAnimation<Color>(Constants.panelForeground),
+                minHeight: 10,  // Increase the height for better visibility
+                borderRadius: BorderRadius.circular(10),
+              ),
+              SizedBox(height: 8),  // Space after progress bar
+              if (progress > 0) Text(
+                "Progress: ${(progress * 100).toStringAsFixed(0)}%",
+                style: TextStyle(color: Color.fromARGB(156, 158, 158, 158)),
+              ),
+            ],
           ),
         ),
       ),
@@ -121,14 +197,19 @@ class _PanelCenterPageState extends State<PanelCenterPage> {
 
   Widget buildMetricTile(String metric, double? score) {
     return ListTile(
-      title: Text(
-        "Image $metric Score",
-        style: TextStyle(color: Colors.white),
-      ),
-      subtitle: Text(
-        score != null ? "$score - ${getQualityLevelMessage(score)}" : "No score calculated",
-        style: TextStyle(color: Colors.white),
-      ),
+        title: Text(
+            "Image $metric Score",
+            style: TextStyle(color: Colors.white),
+        ),
+        subtitle: Text(
+            score != null ? "$score - ${getQualityLevelMessage(score)}" : "No score calculated",
+            style: TextStyle(color: Colors.white),
+        ),
+        trailing: Text(
+            metricTiming[metric] ?? "Calculating...",  // Display timing or a placeholder
+            style: TextStyle(color: Colors.grey[400]),
+        ),
     );
   }
+
 }

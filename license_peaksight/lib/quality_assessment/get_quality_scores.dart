@@ -19,28 +19,31 @@ class QualityScores {
   });
 }
 
-Future<QualityScores> predictImageQuality(File imageFile, Set<String> selectedMetrics) async {
-  var uri = Uri.parse('http://127.0.0.1:5000/predict'); // Adjust the URI as needed
-  var request = http.MultipartRequest('POST', uri)
-    ..fields['metrics'] = json.encode(selectedMetrics.toList())
-    ..files.add(await http.MultipartFile.fromPath('image', imageFile.path));
-  
-  print("Sending request to server...");
-  var response = await request.send().timeout(Duration(seconds: 30));
-  print("Received response from server");
+Future<QualityScores?> predictImageQuality(File imageFile, Set<String> selectedMetrics) async {
+  try {
+    var uri = Uri.parse('http://127.0.0.1:5000/predict'); // Adjust the URI as needed
+    var request = http.MultipartRequest('POST', uri)
+      ..fields['metrics'] = json.encode(selectedMetrics.toList())
+      ..files.add(await http.MultipartFile.fromPath('image', imageFile.path));
+    
+    print("Sending request to server...");
+    var response = await request.send().timeout(Duration(seconds: 30));
+    print("Received response from server");
 
-  if (response.statusCode == 200) {
-    var responseData = await response.stream.toBytes();
-    var responseString = String.fromCharCodes(responseData);
-    var jsonResponse = json.decode(responseString);
-    return QualityScores(
-      noiseScore: selectedMetrics.contains('Noise') ? jsonResponse['noise_score']?.toDouble() : null,
-      contrastScore: selectedMetrics.contains('Contrast') ? jsonResponse['contrast_score']?.toDouble() : null,
-      brightnessScore: selectedMetrics.contains('Brightness') ? jsonResponse['brightness_score']?.toDouble() : null,
-      sharpnessScore: selectedMetrics.contains('Sharpness') ? jsonResponse['sharpness_score']?.toDouble() : null,
-      chromaticScore: selectedMetrics.contains('Chromatic Quality') ? jsonResponse['chromatic_score']?.toDouble() : null,
-    );
-  } else {
-    throw Exception('Failed to load quality scores');
+    if (response.statusCode == 200) {
+      var responseData = await response.stream.toBytes();
+      var responseString = String.fromCharCodes(responseData);
+      var jsonResponse = json.decode(responseString);
+      return QualityScores(
+        noiseScore: jsonResponse['noise_score']?.toDouble(),
+        contrastScore: jsonResponse['contrast_score']?.toDouble(),
+        brightnessScore: jsonResponse['brightness_score']?.toDouble(),
+        sharpnessScore: jsonResponse['sharpness_score']?.toDouble(),
+        chromaticScore: jsonResponse['chromatic_score']?.toDouble(),
+      );
+    }
+  } catch (e) {
+    print("Error fetching data: $e");
   }
+  return null; // Return null if there's an error
 }
