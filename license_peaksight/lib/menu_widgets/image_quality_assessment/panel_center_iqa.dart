@@ -70,6 +70,11 @@ class _PanelCenterPageState extends State<PanelCenterPage> {
             metricTiming['BRISQUE'] = "${scores.brisqueTime}";
             completedMetrics++;
           }
+          if (widget.selectedMetrics.contains('NIQE')) {
+            scoreMap['NIQE'] = scores.niqeScore;
+            metricTiming['NIQE'] = "${scores.niqeTime}";
+            completedMetrics++;
+          }
           if (widget.selectedMetrics.contains('ILNIQE')) {
             scoreMap['ILNIQE'] = scores.ilniqeScore;
             metricTiming['ILNIQE'] = "${scores.ilniqeTime}";
