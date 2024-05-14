@@ -32,62 +32,46 @@ class _PanelCenterPageState extends State<PanelCenterPage> {
 
   void calculateQualityScores() async {
     if (widget.imagePath.isNotEmpty && widget.selectedMetrics.isNotEmpty) {
-      DateTime startTime, endTime;
       final totalMetrics = widget.selectedMetrics.length;
       int completedMetrics = 0;
 
       final scores = await predictImageQuality(File(widget.imagePath), widget.selectedMetrics);
-      endTime = DateTime.now();
 
       if (scores != null) {
         setState(() {
           // Assigning values directly based on whether they were requested
           if (widget.selectedMetrics.contains('Noise')) {
-            startTime = DateTime.now();
             scoreMap['Noise'] = scores.noiseScore;
-            endTime = DateTime.now();
-            metricTiming['Noise'] = "${endTime.difference(startTime).inMilliseconds} ms";
+            metricTiming['Noise'] = "${scores.noiseTime}";
             completedMetrics++;        
           }
           if (widget.selectedMetrics.contains('Contrast')) {
-            startTime = DateTime.now();
             scoreMap['Contrast'] = scores.contrastScore;
-            endTime = DateTime.now();
-            metricTiming['Contrast'] = "${endTime.difference(startTime).inMilliseconds} ms";
+            metricTiming['Contrast'] = "${scores.contrastTime}";
             completedMetrics++;
           }
           if (widget.selectedMetrics.contains('Brightness')) {
-            startTime = DateTime.now();
             scoreMap['Brightness'] = scores.brightnessScore;
-            endTime = DateTime.now();
-            metricTiming['Brightness'] = "${endTime.difference(startTime).inMilliseconds} ms";
+            metricTiming['Brightness'] = "${scores.brightnessTime}";
             completedMetrics++;
           }
           if (widget.selectedMetrics.contains('Sharpness')) {
-            startTime = DateTime.now();
             scoreMap['Sharpness'] = scores.sharpnessScore;
-            endTime = DateTime.now();
-            metricTiming['Sharpness'] = "${endTime.difference(startTime).inMilliseconds} ms";
+            metricTiming['Sharpness'] = "${scores.sharpnessTime}";
             completedMetrics++;
           }
           if (widget.selectedMetrics.contains('Chromatic Quality')) {
-            startTime = DateTime.now();
             scoreMap['Chromatic Quality'] = scores.chromaticScore;
-            endTime = DateTime.now();
-            metricTiming['Chromatic Quality'] = "${endTime.difference(startTime).inMilliseconds} ms";
+            metricTiming['Chromatic Quality'] = "${scores.chromaticTime}";
             completedMetrics++;
           }
           if (widget.selectedMetrics.contains('BRISQUE')) {
-            startTime = DateTime.now();
             scoreMap['BRISQUE'] = scores.brisqueScore;
-            endTime = DateTime.now();
-            metricTiming['BRISQUE'] = "${endTime.difference(startTime).inMilliseconds} ms";
+            metricTiming['BRISQUE'] = "${scores.brisqueTime}";
             completedMetrics++;
           }
           if (widget.selectedMetrics.contains('ILNIQE')) {
-            startTime = DateTime.now();
             scoreMap['ILNIQE'] = scores.ilniqeScore;
-            endTime = DateTime.now();
             metricTiming['ILNIQE'] = "${scores.ilniqeTime}";
             completedMetrics++;
           }
@@ -119,12 +103,12 @@ class _PanelCenterPageState extends State<PanelCenterPage> {
 
   String getQualityLevelMessage(double? score) {
     if (score == null) return "No score calculated";
-    if (score > 5) return "Outlier quality, something is wrong";
-    if (score > 4 && score <= 5) return "Excellent quality";
-    if (score > 3 && score <= 4) return "Good quality";
-    if (score > 2 && score <= 3) return "Fair quality";
-    if (score > 1.50 && score <= 2) return "Poor quality";
-    return "Bad quality";
+    if (score > 5) return "Outlier score, image might be corrupted";
+    if (score > 4 && score <= 5) return "Excellent";
+    if (score > 3 && score <= 4) return "Good";
+    if (score > 2 && score <= 3) return "Fair";
+    if (score > 1.50 && score <= 2) return "Poor";
+    return "Bad";
   }
 
   @override

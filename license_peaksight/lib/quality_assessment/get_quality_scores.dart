@@ -4,24 +4,14 @@ import 'dart:convert';
 
 // class to hold the quality scores
 class QualityScores {
-  final double? noiseScore;
-  final double? contrastScore;
-  final double? brightnessScore;
-  final double? sharpnessScore;
-  final double? chromaticScore;
-  final double? brisqueScore;
-  final double? ilniqeScore;
-  final String? ilniqeTime;
+  final double? noiseScore, contrastScore, brightnessScore, sharpnessScore, chromaticScore, brisqueScore, ilniqeScore;
+  final String? noiseTime, contrastTime, brightnessTime, sharpnessTime, chromaticTime, brisqueTime, ilniqeTime;
 
   QualityScores({
-    this.noiseScore, 
-    this.contrastScore,
-    this.brightnessScore,
-    this.sharpnessScore,
-    this.chromaticScore,
-    this.brisqueScore,
-    this.ilniqeScore,
-    this.ilniqeTime,
+    this.noiseScore, this.contrastScore, this.brightnessScore, this.sharpnessScore, this.chromaticScore,
+    this.brisqueScore, this.ilniqeScore,
+    this.noiseTime, this.contrastTime, this.brightnessTime, this.sharpnessTime, this.chromaticTime,
+    this.brisqueTime, this.ilniqeTime,
   });
 
   factory QualityScores.fromJson(Map<String, dynamic> json) {
@@ -33,6 +23,12 @@ class QualityScores {
       chromaticScore: _parseDouble(json['chromatic_score']),
       brisqueScore: _parseDouble(json['brisque_score']),
       ilniqeScore: _parseDouble(json['ilniqe_score']),
+      noiseTime: json['noise_time'],
+      contrastTime: json['contrast_time'],
+      brightnessTime: json['brightness_time'],
+      sharpnessTime: json['sharpness_time'],
+      chromaticTime: json['chromatic_time'],
+      brisqueTime: json['brisque_time'],
       ilniqeTime: json['ilniqe_time'],
     );
   }
