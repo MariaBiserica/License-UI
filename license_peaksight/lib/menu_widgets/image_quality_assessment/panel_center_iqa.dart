@@ -123,38 +123,75 @@ class _PanelCenterPageState extends State<PanelCenterPage> {
 
   Widget buildOverviewCard() {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: Constants.kPadding / 2, vertical: Constants.kPadding / 2),
-      child: Card(
-        color: Constants.purpleLight,
-        elevation: 3,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(30),
-        ),
-        child: Container(
-          padding: const EdgeInsets.all(Constants.kPadding),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                "Analysis Overview",
-                style: TextStyle(
-                  fontFamily: 'MOXABestine',
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white
+        padding: const EdgeInsets.symmetric(horizontal: Constants.kPadding / 2, vertical: Constants.kPadding / 2),
+        child: Card(
+            color: Constants.purpleLight,
+            elevation: 3,
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(30),
+            ),
+            child: Container(
+                padding: const EdgeInsets.all(Constants.kPadding),
+                child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                        Text(
+                            "Analysis Overview",
+                            style: TextStyle(
+                                fontFamily: 'MOXABestine',
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white
+                            ),
+                        ),
+                        SizedBox(height: 8),  // Space between title and subtitle
+                        Text(
+                            "Image quality MOS scale scores",
+                            style: TextStyle(color: Color.fromARGB(156, 158, 158, 158)),
+                        ),
+                        SizedBox(height: 8), // Additional space before the table
+                        Container(
+                            decoration: BoxDecoration(
+                                color: Colors.black54, // Dark background for the table
+                                borderRadius: BorderRadius.circular(10)
+                            ),
+                            child: Padding(
+                                padding: const EdgeInsets.all(8),
+                                child: Column(
+                                    children: [
+                                        buildTableRow("Rating", "Quality Level", true),
+                                        buildTableRow("5", "Excellent", false),
+                                        buildTableRow("4", "Good", false),
+                                        buildTableRow("3", "Fair", false),
+                                        buildTableRow("2", "Poor", false),
+                                        buildTableRow("1", "Bad", false),
+                                    ],
+                                ),
+                            ),
+                        ),
+                        SizedBox(height: 5),
+                    ],
                 ),
-              ),
-              SizedBox(height: 8),  // Space between title and subtitle
-              Text(
-                "Image quality assessment scores",
-                style: TextStyle(color: Color.fromARGB(156, 158, 158, 158)),
-              ),
-              SizedBox(height: 5),
-            ],
-          ),
+            ),
         ),
-      ),
     );
+  }
+
+  Widget buildTableRow(String score, String label, bool isHeader) {
+      return Padding(
+          padding: const EdgeInsets.symmetric(vertical: 3, horizontal: 4),
+          child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                  Text(score, style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: isHeader ? FontWeight.bold : FontWeight.normal)),
+                  Text(label, style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: isHeader ? FontWeight.bold : FontWeight.normal)),
+              ],
+          ),
+      );
   }
 
   Widget buildMetricsList() {
