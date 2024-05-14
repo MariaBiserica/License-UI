@@ -84,6 +84,13 @@ class _PanelCenterPageState extends State<PanelCenterPage> {
             metricTiming['BRISQUE'] = "${endTime.difference(startTime).inMilliseconds} ms";
             completedMetrics++;
           }
+          if (widget.selectedMetrics.contains('ILNIQE')) {
+            startTime = DateTime.now();
+            scoreMap['ILNIQE'] = scores.ilniqeScore;
+            endTime = DateTime.now();
+            metricTiming['ILNIQE'] = "${endTime.difference(startTime).inMilliseconds} ms";
+            completedMetrics++;
+          }
           
           progress = completedMetrics / totalMetrics;
         });

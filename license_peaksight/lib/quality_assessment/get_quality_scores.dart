@@ -10,6 +10,7 @@ class QualityScores {
   final double? sharpnessScore;
   final double? chromaticScore;
   final double? brisqueScore;
+  final double? ilniqeScore;
 
   QualityScores({
     this.noiseScore, 
@@ -18,6 +19,7 @@ class QualityScores {
     this.sharpnessScore,
     this.chromaticScore,
     this.brisqueScore,
+    this.ilniqeScore,
   });
 }
 
@@ -29,7 +31,7 @@ Future<QualityScores?> predictImageQuality(File imageFile, Set<String> selectedM
       ..files.add(await http.MultipartFile.fromPath('image', imageFile.path));
     
     print("Sending request to server...");
-    var response = await request.send().timeout(Duration(seconds: 30));
+    var response = await request.send().timeout(Duration(seconds: 120));
     print("Received response from server");
 
     if (response.statusCode == 200) {
@@ -43,6 +45,7 @@ Future<QualityScores?> predictImageQuality(File imageFile, Set<String> selectedM
         sharpnessScore: jsonResponse['sharpness_score']?.toDouble(),
         chromaticScore: jsonResponse['chromatic_score']?.toDouble(),
         brisqueScore: jsonResponse['brisque_score']?.toDouble(),
+        ilniqeScore: jsonResponse['ilniqe_score']?.toDouble(),
       );
     }
   } catch (e) {
