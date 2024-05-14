@@ -77,6 +77,13 @@ class _PanelCenterPageState extends State<PanelCenterPage> {
             metricTiming['Chromatic Quality'] = "${endTime.difference(startTime).inMilliseconds} ms";
             completedMetrics++;
           }
+          if (widget.selectedMetrics.contains('BRISQUE')) {
+            startTime = DateTime.now();
+            scoreMap['BRISQUE'] = scores.brisqueScore;
+            endTime = DateTime.now();
+            metricTiming['BRISQUE'] = "${endTime.difference(startTime).inMilliseconds} ms";
+            completedMetrics++;
+          }
           
           progress = completedMetrics / totalMetrics;
         });

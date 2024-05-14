@@ -9,6 +9,7 @@ class QualityScores {
   final double? brightnessScore;
   final double? sharpnessScore;
   final double? chromaticScore;
+  final double? brisqueScore;
 
   QualityScores({
     this.noiseScore, 
@@ -16,6 +17,7 @@ class QualityScores {
     this.brightnessScore,
     this.sharpnessScore,
     this.chromaticScore,
+    this.brisqueScore,
   });
 }
 
@@ -40,6 +42,7 @@ Future<QualityScores?> predictImageQuality(File imageFile, Set<String> selectedM
         brightnessScore: jsonResponse['brightness_score']?.toDouble(),
         sharpnessScore: jsonResponse['sharpness_score']?.toDouble(),
         chromaticScore: jsonResponse['chromatic_score']?.toDouble(),
+        brisqueScore: jsonResponse['brisque_score']?.toDouble(),
       );
     }
   } catch (e) {
