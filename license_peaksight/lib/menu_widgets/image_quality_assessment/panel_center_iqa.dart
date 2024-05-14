@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:license_peaksight/constants.dart';
 import '../../quality_assessment/get_quality_scores.dart';
 
@@ -32,9 +33,6 @@ class _PanelCenterPageState extends State<PanelCenterPage> {
 
   void calculateQualityScores() async {
     if (widget.imagePath.isNotEmpty && widget.selectedMetrics.isNotEmpty) {
-      final totalMetrics = widget.selectedMetrics.length;
-      int completedMetrics = 0;
-
       final scores = await predictImageQuality(File(widget.imagePath), widget.selectedMetrics);
 
       if (scores != null) {
@@ -43,45 +41,36 @@ class _PanelCenterPageState extends State<PanelCenterPage> {
           if (widget.selectedMetrics.contains('Noise')) {
             scoreMap['Noise'] = scores.noiseScore;
             metricTiming['Noise'] = "${scores.noiseTime}";
-            completedMetrics++;        
           }
           if (widget.selectedMetrics.contains('Contrast')) {
             scoreMap['Contrast'] = scores.contrastScore;
             metricTiming['Contrast'] = "${scores.contrastTime}";
-            completedMetrics++;
           }
           if (widget.selectedMetrics.contains('Brightness')) {
             scoreMap['Brightness'] = scores.brightnessScore;
             metricTiming['Brightness'] = "${scores.brightnessTime}";
-            completedMetrics++;
           }
           if (widget.selectedMetrics.contains('Sharpness')) {
             scoreMap['Sharpness'] = scores.sharpnessScore;
             metricTiming['Sharpness'] = "${scores.sharpnessTime}";
-            completedMetrics++;
           }
           if (widget.selectedMetrics.contains('Chromatic Quality')) {
             scoreMap['Chromatic Quality'] = scores.chromaticScore;
             metricTiming['Chromatic Quality'] = "${scores.chromaticTime}";
-            completedMetrics++;
           }
           if (widget.selectedMetrics.contains('BRISQUE')) {
             scoreMap['BRISQUE'] = scores.brisqueScore;
             metricTiming['BRISQUE'] = "${scores.brisqueTime}";
-            completedMetrics++;
           }
           if (widget.selectedMetrics.contains('NIQE')) {
             scoreMap['NIQE'] = scores.niqeScore;
             metricTiming['NIQE'] = "${scores.niqeTime}";
-            completedMetrics++;
           }
           if (widget.selectedMetrics.contains('ILNIQE')) {
             scoreMap['ILNIQE'] = scores.ilniqeScore;
             metricTiming['ILNIQE'] = "${scores.ilniqeTime}";
-            completedMetrics++;
           }
           
-          progress = completedMetrics / totalMetrics;
         });
       } else {
         // Show a dialog if the scores are null
@@ -89,8 +78,8 @@ class _PanelCenterPageState extends State<PanelCenterPage> {
           context: context,
           builder: (BuildContext context) {
             return AlertDialog(
-              title: Text("Error"),
-              content: Text("Failed to load quality scores. Please try again."),
+              title: Text("Warning"),
+              content: Text("Caught an exception while fetching data. Please try again if necessary."),
               actions: <Widget>[
                 TextButton(
                   child: Text("OK"),
@@ -160,19 +149,7 @@ class _PanelCenterPageState extends State<PanelCenterPage> {
                 "Image quality assessment scores",
                 style: TextStyle(color: Color.fromARGB(156, 158, 158, 158)),
               ),
-              SizedBox(height: 16),  // Space between subtitle and progress bar
-              LinearProgressIndicator(
-                value: progress,
-                backgroundColor: Colors.grey[300],
-                valueColor: AlwaysStoppedAnimation<Color>(Constants.panelForeground),
-                minHeight: 10,  // Increase the height for better visibility
-                borderRadius: BorderRadius.circular(10),
-              ),
-              SizedBox(height: 8),  // Space after progress bar
-              if (progress > 0) Text(
-                "Progress: ${(progress * 100).toStringAsFixed(0)}%",
-                style: TextStyle(color: Color.fromARGB(156, 158, 158, 158)),
-              ),
+              SizedBox(height: 5),
             ],
           ),
         ),
@@ -199,19 +176,29 @@ class _PanelCenterPageState extends State<PanelCenterPage> {
   }
 
   Widget buildMetricTile(String metric, double? score) {
+    bool isCalculating = score == null;
     return ListTile(
-        title: Text(
-            "Image $metric Score",
-            style: TextStyle(color: Colors.white),
-        ),
-        subtitle: Text(
-            score != null ? "$score - ${getQualityLevelMessage(score)}" : "No score calculated",
+      title: Text(
+        "Image $metric Score",
+        style: TextStyle(color: Colors.white),
+      ),
+      subtitle: Text(
+        score != null ? "$score - ${getQualityLevelMessage(score)}" : "No score calculated",
+        style: TextStyle(color: Colors.grey[400]),
+      ),
+      trailing: isCalculating
+        ? SizedBox(
+            width: 60,  // Set a specific width for the SizedBox
+            height: 20, // Set a specific height for the animation
+            child: SpinKitThreeBounce(
+              color: Colors.white,
+              size: 20.0,
+            ),
+          )
+        : Text(
+            metricTiming[metric] ?? "Done",
             style: TextStyle(color: Colors.grey[400]),
-        ),
-        trailing: Text(
-            metricTiming[metric] ?? "Calculating...",  // Display timing or a placeholder
-            style: TextStyle(color: Colors.grey[400]),
-        ),
+          ),
     );
   }
 
