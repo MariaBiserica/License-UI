@@ -88,7 +88,7 @@ class _PanelCenterPageState extends State<PanelCenterPage> {
             startTime = DateTime.now();
             scoreMap['ILNIQE'] = scores.ilniqeScore;
             endTime = DateTime.now();
-            metricTiming['ILNIQE'] = "${endTime.difference(startTime).inMilliseconds} ms";
+            metricTiming['ILNIQE'] = "${scores.ilniqeTime}";
             completedMetrics++;
           }
           
@@ -217,7 +217,7 @@ class _PanelCenterPageState extends State<PanelCenterPage> {
         ),
         subtitle: Text(
             score != null ? "$score - ${getQualityLevelMessage(score)}" : "No score calculated",
-            style: TextStyle(color: Colors.white),
+            style: TextStyle(color: Colors.grey[400]),
         ),
         trailing: Text(
             metricTiming[metric] ?? "Calculating...",  // Display timing or a placeholder

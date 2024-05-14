@@ -11,6 +11,7 @@ class QualityScores {
   final double? chromaticScore;
   final double? brisqueScore;
   final double? ilniqeScore;
+  final String? ilniqeTime;
 
   QualityScores({
     this.noiseScore, 
@@ -20,7 +21,33 @@ class QualityScores {
     this.chromaticScore,
     this.brisqueScore,
     this.ilniqeScore,
+    this.ilniqeTime,
   });
+
+  factory QualityScores.fromJson(Map<String, dynamic> json) {
+    return QualityScores(
+      noiseScore: _parseDouble(json['noise_score']),
+      contrastScore: _parseDouble(json['contrast_score']),
+      brightnessScore: _parseDouble(json['brightness_score']),
+      sharpnessScore: _parseDouble(json['sharpness_score']),
+      chromaticScore: _parseDouble(json['chromatic_score']),
+      brisqueScore: _parseDouble(json['brisque_score']),
+      ilniqeScore: _parseDouble(json['ilniqe_score']),
+      ilniqeTime: json['ilniqe_time'],
+    );
+  }
+
+  static double? _parseDouble(dynamic value) {
+    if (value == null) {
+      return null;
+    } else if (value is double) {
+      return value;
+    } else if (value is String) {
+      return double.tryParse(value);
+    }
+    throw FormatException('Unable to convert $value to a double');
+  }
+
 }
 
 Future<QualityScores?> predictImageQuality(File imageFile, Set<String> selectedMetrics) async {
@@ -38,15 +65,7 @@ Future<QualityScores?> predictImageQuality(File imageFile, Set<String> selectedM
       var responseData = await response.stream.toBytes();
       var responseString = String.fromCharCodes(responseData);
       var jsonResponse = json.decode(responseString);
-      return QualityScores(
-        noiseScore: jsonResponse['noise_score']?.toDouble(),
-        contrastScore: jsonResponse['contrast_score']?.toDouble(),
-        brightnessScore: jsonResponse['brightness_score']?.toDouble(),
-        sharpnessScore: jsonResponse['sharpness_score']?.toDouble(),
-        chromaticScore: jsonResponse['chromatic_score']?.toDouble(),
-        brisqueScore: jsonResponse['brisque_score']?.toDouble(),
-        ilniqeScore: jsonResponse['ilniqe_score']?.toDouble(),
-      );
+      return QualityScores.fromJson(jsonResponse);  // Use factory constructor to create an instance of QualityScores 
     }
   } catch (e) {
     print("Error fetching data: $e");
