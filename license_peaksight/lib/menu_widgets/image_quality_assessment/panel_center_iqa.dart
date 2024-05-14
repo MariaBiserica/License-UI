@@ -70,6 +70,10 @@ class _PanelCenterPageState extends State<PanelCenterPage> {
             scoreMap['ILNIQE'] = scores.ilniqeScore;
             metricTiming['ILNIQE'] = "${scores.ilniqeTime}";
           }
+          if (widget.selectedMetrics.contains('VGG16')) {
+            scoreMap['VGG16'] = scores.vgg16Score;
+            metricTiming['VGG16'] = "${scores.vgg16Time}";
+          }
           
         });
       } else {
@@ -213,7 +217,7 @@ class _PanelCenterPageState extends State<PanelCenterPage> {
   }
 
   Widget buildMetricTile(String metric, double? score) {
-    bool isCalculating = score == null;
+    bool isCalculating = metricTiming[metric] == null;
     return ListTile(
       title: Text(
         "$metric Score",
@@ -225,12 +229,12 @@ class _PanelCenterPageState extends State<PanelCenterPage> {
         ),
       ),
       subtitle: Text(
-        score != null ? "$score - ${getQualityLevelMessage(score)}" : "No score calculated",
-        style: TextStyle(
-          fontFamily: 'TellMeAJoke',
-          fontSize: 17,
-          color: Colors.grey[400]
-        ),
+          score != null ? (metricTiming[metric] == null ? "Recalculating..." : "$score - ${getQualityLevelMessage(score)}") : "No score calculated",
+          style: TextStyle(
+              fontFamily: 'TellMeAJoke',
+              fontSize: 17,
+              color: Colors.grey[400]
+          ),
       ),
       trailing: isCalculating
         ? SizedBox(
@@ -242,7 +246,7 @@ class _PanelCenterPageState extends State<PanelCenterPage> {
             ),
           )
         : Text(
-            metricTiming[metric] ?? "Done",
+            metricTiming[metric] ?? "Calculating...",
             style: TextStyle(color: Colors.grey[400]),
           ),
     );
