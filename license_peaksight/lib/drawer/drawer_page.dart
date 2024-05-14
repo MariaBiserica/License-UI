@@ -27,7 +27,6 @@ List<ButtonsInfo> _buttonNames = [
   ButtonsInfo(title: 'Image Quality Assessment', icon: Icons.assessment),
   ButtonsInfo(title: 'Image Modifier', icon: Icons.tune),
   ButtonsInfo(title: 'Batch Processing', icon: Icons.batch_prediction),
-  ButtonsInfo(title: 'Statistics', icon: Icons.bar_chart),
   ButtonsInfo(title: 'Settings', icon: Icons.settings),
   ButtonsInfo(title: 'Help & Documentation', icon: Icons.help_outline),
 ];

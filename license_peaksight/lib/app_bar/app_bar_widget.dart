@@ -4,7 +4,7 @@ import 'package:license_peaksight/app_bar/custom_avatar.dart';
 import 'package:license_peaksight/constants.dart';
 import 'package:license_peaksight/responsive_layout.dart';
 
-List<String> _buttonNames = ["Overview", "Revenue", "Sales", "Control"];
+//List<String> _buttonNames = ["Overview", "Revenue", "Sales", "Control"];
 int _currentSelectedButton = 0;
 
 class AppBarWidget extends StatefulWidget {
@@ -35,6 +35,7 @@ class _AppBarWidgetState extends State<AppBarWidget> {
           color: Constants.purpleLight,
           child: Row(
             children: [
+              SizedBox(width: Constants.kPadding),
               if (ResponsiveLayout.isComputer(context))
                 Container(
                   margin: EdgeInsets.all(Constants.kPadding),
@@ -66,54 +67,54 @@ class _AppBarWidgetState extends State<AppBarWidget> {
                 ),
               SizedBox(width: Constants.kPadding),
               Spacer(),
-              if (ResponsiveLayout.isComputer(context))
-                ..._buttonNames.map((name) => TextButton(
-                  onPressed: () {
-                    setState(() {
-                      _currentSelectedButton = _buttonNames.indexOf(name);
-                    });
-                  },
-                  child: Padding(
-                    padding: EdgeInsets.all(Constants.kPadding * 2),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Text(name, style: TextStyle(color: _currentSelectedButton == _buttonNames.indexOf(name) ? Colors.white : Colors.white60)),
-                        Container(
-                          margin: EdgeInsets.all(Constants.kPadding / 2),
-                          width: 60,
-                          height: 2,
-                          decoration: BoxDecoration(
-                            gradient: _currentSelectedButton == _buttonNames.indexOf(name)
-                                ? LinearGradient(colors: [Constants.beginGradient, Constants.endGradient])
-                                : null,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                )).toList()
-              else
-                Padding(
-                  padding: EdgeInsets.all(Constants.kPadding * 2),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Text(_buttonNames[_currentSelectedButton], style: TextStyle(color: Colors.white)),
-                      Container(
-                        margin: EdgeInsets.all(Constants.kPadding / 2),
-                        width: 60,
-                        height: 2,
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(colors: [Constants.beginGradient, Constants.endGradient]),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              Spacer(),
+              // if (ResponsiveLayout.isComputer(context))
+              //   ..._buttonNames.map((name) => TextButton(
+              //     onPressed: () {
+              //       setState(() {
+              //         _currentSelectedButton = _buttonNames.indexOf(name);
+              //       });
+              //     },
+              //     child: Padding(
+              //       padding: EdgeInsets.all(Constants.kPadding * 2),
+              //       child: Column(
+              //         mainAxisAlignment: MainAxisAlignment.center,
+              //         crossAxisAlignment: CrossAxisAlignment.center,
+              //         children: [
+              //           Text(name, style: TextStyle(color: _currentSelectedButton == _buttonNames.indexOf(name) ? Colors.white : Colors.white60)),
+              //           Container(
+              //             margin: EdgeInsets.all(Constants.kPadding / 2),
+              //             width: 60,
+              //             height: 2,
+              //             decoration: BoxDecoration(
+              //               gradient: _currentSelectedButton == _buttonNames.indexOf(name)
+              //                   ? LinearGradient(colors: [Constants.beginGradient, Constants.endGradient])
+              //                   : null,
+              //             ),
+              //           ),
+              //         ],
+              //       ),
+              //     ),
+              //   )).toList()
+              // else
+              //   Padding(
+              //     padding: EdgeInsets.all(Constants.kPadding * 2),
+              //     child: Column(
+              //       mainAxisAlignment: MainAxisAlignment.center,
+              //       crossAxisAlignment: CrossAxisAlignment.center,
+              //       children: [
+              //         Text(_buttonNames[_currentSelectedButton], style: TextStyle(color: Colors.white)),
+              //         Container(
+              //           margin: EdgeInsets.all(Constants.kPadding / 2),
+              //           width: 60,
+              //           height: 2,
+              //           decoration: BoxDecoration(
+              //             gradient: LinearGradient(colors: [Constants.beginGradient, Constants.endGradient]),
+              //           ),
+              //         ),
+              //       ],
+              //     ),
+              //   ),
+              // Spacer(),
               PopupMenuButton<String>(
                 onSelected: (value) {
                   switch (value) {
@@ -169,6 +170,7 @@ class _AppBarWidgetState extends State<AppBarWidget> {
                     ),
                   ),
                 ),
+              SizedBox(width: Constants.kPadding),
             ],
           ),
         );
