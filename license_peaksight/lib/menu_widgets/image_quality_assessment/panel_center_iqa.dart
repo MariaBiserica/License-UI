@@ -179,12 +179,21 @@ class _PanelCenterPageState extends State<PanelCenterPage> {
     bool isCalculating = score == null;
     return ListTile(
       title: Text(
-        "Image $metric Score",
-        style: TextStyle(color: Colors.white),
+        "$metric Score",
+        style: TextStyle(
+          fontFamily: 'Rastaglion',
+          fontSize: 15,
+          fontWeight: FontWeight.bold,
+          color: Colors.white
+        ),
       ),
       subtitle: Text(
         score != null ? "$score - ${getQualityLevelMessage(score)}" : "No score calculated",
-        style: TextStyle(color: Colors.grey[400]),
+        style: TextStyle(
+          fontFamily: 'TellMeAJoke',
+          fontSize: 17,
+          color: Colors.grey[400]
+        ),
       ),
       trailing: isCalculating
         ? SizedBox(
