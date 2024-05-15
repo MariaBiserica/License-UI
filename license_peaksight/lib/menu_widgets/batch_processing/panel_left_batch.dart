@@ -15,6 +15,14 @@ class _PanelLeftBatchProcessingState extends State<PanelLeftBatchProcessing> {
   String? selectedOverallQualityMetric;
   bool isOverallQualitySelected = false;
 
+  void startAnalysis() {
+    if (isOverallQualitySelected && selectedOverallQualityMetric != null) {
+      widget.onMetricSelected(selectedOverallQualityMetric!);
+    } else {
+      widget.onMetricSelected(selectedMetric);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -58,8 +66,7 @@ class _PanelLeftBatchProcessingState extends State<PanelLeftBatchProcessing> {
                 setState(() {
                   selectedMetric = newValue!;
                   isOverallQualitySelected = newValue == 'Overall Quality Score';
-                  selectedOverallQualityMetric = null; // Reset secondary selection
-                  widget.onMetricSelected(selectedMetric);
+                  selectedOverallQualityMetric = null; // Reset secondary selection if metric changes
                 });
               },
               items: getDropdownMenuItems(),
@@ -69,10 +76,12 @@ class _PanelLeftBatchProcessingState extends State<PanelLeftBatchProcessing> {
               Text(
                 "Select detailed quality metric:",
                 style: TextStyle(
-                  fontSize: 14, 
-                  color: Colors.white
+                  fontFamily: 'Voguella',
+                  fontSize: 14,
+                  color: Colors.white,
                 ),
               ),
+              SizedBox(height: 5),
               DropdownButton<String>(
                 value: selectedOverallQualityMetric,
                 icon: Icon(Icons.arrow_downward, color: Colors.white),
@@ -81,13 +90,20 @@ class _PanelLeftBatchProcessingState extends State<PanelLeftBatchProcessing> {
                 onChanged: (String? newValue) {
                   setState(() {
                     selectedOverallQualityMetric = newValue!;
-                    widget.onMetricSelected(selectedOverallQualityMetric!);
                   });
                 },
                 items: getQualityDropdownItems(),
               ),
               SizedBox(height: 10),
-            ]
+            ],
+            ElevatedButton(
+              onPressed: startAnalysis,
+              child: Text('Start Analysis', style: TextStyle(color: Colors.white)),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Constants.panelForeground,
+              ),
+            ),
+            SizedBox(height: 10),
           ],
         ),
       ),
@@ -101,7 +117,7 @@ class _PanelLeftBatchProcessingState extends State<PanelLeftBatchProcessing> {
       'Brightness': Icons.brightness_6,
       'Sharpness': Icons.details,
       'Chromatic Quality': Icons.palette,
-      'Overall Quality Score': Icons.score
+      'Overall Quality Score': Icons.score,
     };
 
     return icons.keys.map((String key) {
