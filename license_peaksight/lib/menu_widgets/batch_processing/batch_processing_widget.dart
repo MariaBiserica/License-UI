@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:license_peaksight/drawer/drawer_page.dart';
 import 'package:license_peaksight/menu_widgets/batch_processing/panel_left_batch.dart';
+import 'package:license_peaksight/menu_widgets/batch_processing/panel_right_batch.dart';
 import 'package:license_peaksight/responsive_layout.dart';
 
 class BatchProcessingWidget extends StatefulWidget {
@@ -41,7 +42,7 @@ class _BatchProcessingWidgetState extends State<BatchProcessingWidget> {
       largeTablet: Row(
         children: [
           //Expanded(flex: 2, child: PanelCenterPage(imagePath: widget.imagePath, selectedMetrics: selectedMetrics)),
-          //Expanded(flex: 3, child: PanelRightPage(onImageSelected: widget.onImageSelected)),  
+          Expanded(flex: 3, child: PanelRightBatchProcessing(onImageSelected: widget.onImageSelected)),  
         ],
       ),
       computer: Row(
@@ -49,7 +50,7 @@ class _BatchProcessingWidgetState extends State<BatchProcessingWidget> {
           Expanded(flex: 2, child: DrawerPage(onSectionSelected: widget.onSectionSelected)),
           Expanded(flex: 2, child: PanelLeftBatchProcessing(onMetricSelected: handleMetricSelected)),
           //Expanded(flex: 2, child: PanelCenterPage(imagePath: widget.imagePath, selectedMetrics: selectedMetrics)),
-          //Expanded(flex: 4, child: PanelRightPage(onImageSelected: widget.onImageSelected)),
+          Expanded(flex: 4, child: PanelRightBatchProcessing(onImageSelected: widget.onImageSelected)),
         ],
       ),
     );
