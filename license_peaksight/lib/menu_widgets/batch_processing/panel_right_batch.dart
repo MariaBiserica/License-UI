@@ -32,8 +32,11 @@ class _PanelRightBatchProcessingState extends State<PanelRightBatchProcessing> {
   }
 
   void viewImage(BuildContext context, File image) {
-    Navigator.of(context).push(MaterialPageRoute(
-      builder: (context) => ImageDetailView(imageFile: image),
+    Navigator.of(context).push(PageRouteBuilder(
+      opaque: false,
+      barrierDismissible: true,
+      barrierColor: Colors.black45, // Slightly darken the background
+      pageBuilder: (_, __, ___) => ImageDetailView(imageFile: image),
     ));
   }
 
@@ -131,7 +134,7 @@ class ImageDetailView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black.withOpacity(0.7), // Darken the background slightly
+      backgroundColor: Colors.transparent,
       body: GestureDetector(
         onTap: () => Navigator.of(context).pop(),
         child: Center(
