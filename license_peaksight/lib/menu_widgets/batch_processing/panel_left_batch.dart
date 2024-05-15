@@ -62,27 +62,17 @@ class _PanelLeftBatchProcessingState extends State<PanelLeftBatchProcessing> {
                   widget.onMetricSelected(selectedMetric);
                 });
               },
-              items: <String>[
-                'Noise', 'Contrast', 'Brightness', 'Sharpness', 'Chromatic Quality', 'Overall Quality Score'
-              ].map<DropdownMenuItem<String>>((String value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(value, style: TextStyle(color: Colors.white)),
-                );
-              }).toList(),
+              items: getDropdownMenuItems(),
             ),
-            SizedBox(height: 15),
+            SizedBox(height: 10),
             if (isOverallQualitySelected) ...[
-              SizedBox(height: 10),
               Text(
                 "Select detailed quality metric:",
                 style: TextStyle(
-                  fontFamily: 'Voguella',
                   fontSize: 14, 
                   color: Colors.white
                 ),
               ),
-              SizedBox(height: 10),
               DropdownButton<String>(
                 value: selectedOverallQualityMetric,
                 icon: Icon(Icons.arrow_downward, color: Colors.white),
@@ -94,19 +84,59 @@ class _PanelLeftBatchProcessingState extends State<PanelLeftBatchProcessing> {
                     widget.onMetricSelected(selectedOverallQualityMetric!);
                   });
                 },
-                items: <String>['BRISQUE', 'NIQE', 'ILNIQE', 'VGG16']
-                    .map<DropdownMenuItem<String>>((String value) {
-                  return DropdownMenuItem<String>(
-                    value: value,
-                    child: Text(value, style: TextStyle(color: Colors.white)),
-                  );
-                }).toList(),
+                items: getQualityDropdownItems(),
               ),
-              SizedBox(height: 15),
+              SizedBox(height: 10),
             ]
           ],
         ),
       ),
     );
+  }
+
+  List<DropdownMenuItem<String>> getDropdownMenuItems() {
+    Map<String, IconData> icons = {
+      'Noise': Icons.waves,
+      'Contrast': Icons.tonality,
+      'Brightness': Icons.brightness_6,
+      'Sharpness': Icons.details,
+      'Chromatic Quality': Icons.palette,
+      'Overall Quality Score': Icons.score
+    };
+
+    return icons.keys.map((String key) {
+      return DropdownMenuItem<String>(
+        value: key,
+        child: Row(
+          children: [
+            Icon(icons[key], color: Colors.white),
+            SizedBox(width: 8),
+            Text(key, style: TextStyle(color: Colors.white)),
+          ],
+        ),
+      );
+    }).toList();
+  }
+
+  List<DropdownMenuItem<String>> getQualityDropdownItems() {
+    Map<String, IconData> icons = {
+      'BRISQUE': Icons.filter_1,
+      'NIQE': Icons.filter_2,
+      'ILNIQE': Icons.filter_3,
+      'VGG16': Icons.filter_4,
+    };
+
+    return icons.keys.map((String key) {
+      return DropdownMenuItem<String>(
+        value: key,
+        child: Row(
+          children: [
+            Icon(icons[key], color: Colors.white),
+            SizedBox(width: 8),
+            Text(key, style: TextStyle(color: Colors.white)),
+          ],
+        ),
+      );
+    }).toList();
   }
 }
