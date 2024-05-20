@@ -21,6 +21,16 @@ class _PanelCenterBatchProcessingState extends State<PanelCenterBatchProcessing>
   Map<String, String> metricTiming = {};
   bool showTop10 = false;
 
+  List<String> excellentImages = [];
+  List<String> goodImages = [];
+  List<String> fairImages = [];
+  List<String> poorImages = [];
+  List<String> badImages = [];
+  List<String> outlierImages = [];
+
+  String? selectedQualityFilter;
+  bool showDropdown = false;
+
   @override
   void didUpdateWidget(covariant PanelCenterBatchProcessing oldWidget) {
     super.didUpdateWidget(oldWidget);
@@ -120,30 +130,128 @@ class _PanelCenterBatchProcessingState extends State<PanelCenterBatchProcessing>
     return sortedEntries.take(top10Count).map((entry) => entry.key).toList();
   }
 
+  void classifyBatch() {
+    excellentImages.clear();
+    goodImages.clear();
+    fairImages.clear();
+    poorImages.clear();
+    badImages.clear();
+    outlierImages.clear();
+
+    scoreMap.forEach((imagePath, score) {
+      String qualityLabel = getQualityLevelMessage(score);
+      switch (qualityLabel) {
+        case 'Excellent':
+          excellentImages.add(imagePath);
+          break;
+        case 'Good':
+          goodImages.add(imagePath);
+          break;
+        case 'Fair':
+          fairImages.add(imagePath);
+          break;
+        case 'Poor':
+          poorImages.add(imagePath);
+          break;
+        case 'Bad':
+          badImages.add(imagePath);
+          break;
+        case 'Outlier score, image might be corrupted':
+          outlierImages.add(imagePath);
+          break;
+      }
+    });
+    setState(() {
+      showDropdown = true; // Show the dropdown after classifying the batch
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     List<String> displayImagePaths = showTop10 ? getTop10PercentImages() : widget.imagePaths;
+    if (selectedQualityFilter != null) {
+      displayImagePaths = filterImagesByQuality(selectedQualityFilter!);
+    }
     return Scaffold(
       body: SingleChildScrollView(
         child: Column(
           children: [
             // Top overview card
             buildOverviewCard(),
-            // "Show top 10%" button
+            // "Show top 10%" button and "Classify Batch" button
             Padding(
               padding: const EdgeInsets.all(Constants.kPadding),
-              child: ElevatedButton(
-                onPressed: () {
-                  setState(() {
-                    showTop10 = !showTop10;
-                  });
-                },
-                child: Text(showTop10 ? 'Show All' : 'Show Best Picks', style: TextStyle(color: Colors.white)),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Constants.panelForeground,
-                ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  ElevatedButton(
+                    onPressed: () {
+                      setState(() {
+                        showTop10 = !showTop10;
+                      });
+                    },
+                    child: Text(showTop10 ? 'Show All' : 'Show Best Picks', style: TextStyle(color: Colors.white)),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Constants.panelForeground,
+                    ),
+                  ),
+                  ElevatedButton(
+                    onPressed: classifyBatch,
+                    child: Text('Classify Batch', style: TextStyle(color: Colors.white)),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Constants.panelForeground,
+                    ),
+                  ),
+                ],
               ),
             ),
+            // Quality Filter Dropdown (only visible after classifying batch)
+            if (showDropdown)
+              Padding(
+                padding: const EdgeInsets.all(Constants.kPadding),
+                child: DropdownButton<String>(
+                  value: selectedQualityFilter,
+                  hint: Text("Select Quality", style: TextStyle(color: Colors.white)),
+                  dropdownColor: Constants.purpleLight,
+                  iconEnabledColor: Colors.white,
+                  underline: Container(height: 2, color: Colors.white),
+                  items: [
+                    DropdownMenuItem(
+                      child: Text("All", style: TextStyle(color: Colors.white)),
+                      value: null,
+                    ),
+                    DropdownMenuItem(
+                      child: Text("Excellent", style: TextStyle(color: Colors.white)),
+                      value: "Excellent",
+                    ),
+                    DropdownMenuItem(
+                      child: Text("Good", style: TextStyle(color: Colors.white)),
+                      value: "Good",
+                    ),
+                    DropdownMenuItem(
+                      child: Text("Fair", style: TextStyle(color: Colors.white)),
+                      value: "Fair",
+                    ),
+                    DropdownMenuItem(
+                      child: Text("Poor", style: TextStyle(color: Colors.white)),
+                      value: "Poor",
+                    ),
+                    DropdownMenuItem(
+                      child: Text("Bad", style: TextStyle(color: Colors.white)),
+                      value: "Bad",
+                    ),
+                    DropdownMenuItem(
+                      child: Text("Outlier", style: TextStyle(color: Colors.white)),
+                      value: "Outlier score, image might be corrupted",
+                    ),
+                  ],
+                  onChanged: (String? newValue) {
+                    setState(() {
+                      selectedQualityFilter = newValue;
+                    });
+                  },
+                ),
+              ),
             // Dynamic list of metric scores with image thumbnails
             buildMetricsList(displayImagePaths),
           ],
@@ -152,77 +260,92 @@ class _PanelCenterBatchProcessingState extends State<PanelCenterBatchProcessing>
     );
   }
 
+  List<String> filterImagesByQuality(String quality) {
+    switch (quality) {
+      case 'Excellent':
+        return excellentImages;
+      case 'Good':
+        return goodImages;
+      case 'Fair':
+        return fairImages;
+      case 'Poor':
+        return poorImages;
+      case 'Bad':
+        return badImages;
+      case 'Outlier score, image might be corrupted':
+        return outlierImages;
+      default:
+        return widget.imagePaths;
+    }
+  }
+
   Widget buildOverviewCard() {
     return Padding(
-        padding: const EdgeInsets.symmetric(horizontal: Constants.kPadding / 2, vertical: Constants.kPadding / 2),
-        child: Card(
-            color: Constants.purpleLight,
-            elevation: 3,
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(30),
-            ),
-            child: Container(
-                padding: const EdgeInsets.all(Constants.kPadding),
-                child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                        Text(
-                            "Analysis Overview",
-                            style: TextStyle(
-                                fontFamily: 'MOXABestine',
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white
-                            ),
-                        ),
-                        SizedBox(height: 8),  // Space between title and subtitle
-                        Text(
-                            "Image quality MOS scale scores",
-                            style: TextStyle(color: Color.fromARGB(156, 158, 158, 158)),
-                        ),
-                        SizedBox(height: 8), // Additional space before the table
-                        Container(
-                            decoration: BoxDecoration(
-                                color: Colors.black54, // Dark background for the table
-                                borderRadius: BorderRadius.circular(10)
-                            ),
-                            child: Padding(
-                                padding: const EdgeInsets.all(8),
-                                child: Column(
-                                    children: [
-                                        buildTableRow("Rating", "Quality Level", true),
-                                        buildTableRow("5", "Excellent", false),
-                                        buildTableRow("4", "Good", false),
-                                        buildTableRow("3", "Fair", false),
-                                        buildTableRow("2", "Poor", false),
-                                        buildTableRow("1", "Bad", false),
-                                    ],
-                                ),
-                            ),
-                        ),
-                        SizedBox(height: 5),
-                    ],
-                ),
-            ),
+      padding: const EdgeInsets.symmetric(horizontal: Constants.kPadding / 2, vertical: Constants.kPadding / 2),
+      child: Card(
+        color: Constants.purpleLight,
+        elevation: 3,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(30),
         ),
+        child: Container(
+          padding: const EdgeInsets.all(Constants.kPadding),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                "Analysis Overview",
+                style: TextStyle(
+                  fontFamily: 'MOXABestine',
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
+              ),
+              SizedBox(height: 8), // Space between title and subtitle
+              Text(
+                "Image quality MOS scale scores",
+                style: TextStyle(color: Color.fromARGB(156, 158, 158, 158)),
+              ),
+              SizedBox(height: 8), // Additional space before the table
+              Container(
+                decoration: BoxDecoration(
+                  color: Colors.black54, // Dark background for the table
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(8),
+                  child: Column(
+                    children: [
+                      buildTableRow("Rating", "Quality Level", true),
+                      buildTableRow("5", "Excellent", false),
+                      buildTableRow("4", "Good", false),
+                      buildTableRow("3", "Fair", false),
+                      buildTableRow("2", "Poor", false),
+                      buildTableRow("1", "Bad", false),
+                    ],
+                  ),
+                ),
+              ),
+              SizedBox(height: 5),
+            ],
+          ),
+        ),
+      ),
     );
   }
 
   Widget buildTableRow(String score, String label, bool isHeader) {
-      return Padding(
-          padding: const EdgeInsets.symmetric(vertical: 3, horizontal: 4),
-          child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                  Text(score, style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: isHeader ? FontWeight.bold : FontWeight.normal)),
-                  Text(label, style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: isHeader ? FontWeight.bold : FontWeight.normal)),
-              ],
-          ),
-      );
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 3, horizontal: 4),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(score, style: TextStyle(color: Colors.white, fontWeight: isHeader ? FontWeight.bold : FontWeight.normal)),
+          Text(label, style: TextStyle(color: Colors.white, fontWeight: isHeader ? FontWeight.bold : FontWeight.normal)),
+        ],
+      ),
+    );
   }
 
   Widget buildMetricsList(List<String> displayImagePaths) {
@@ -231,8 +354,7 @@ class _PanelCenterBatchProcessingState extends State<PanelCenterBatchProcessing>
       child: Card(
         color: Constants.purpleLight,
         elevation: 3,
-        shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         child: Padding(
           padding: const EdgeInsets.all(Constants.kPadding),
           child: Column(
@@ -270,7 +392,7 @@ class _PanelCenterBatchProcessingState extends State<PanelCenterBatchProcessing>
       ),
       trailing: isCalculating
           ? SizedBox(
-              width: 60,  // Set a specific width for the SizedBox
+              width: 60, // Set a specific width for the SizedBox
               height: 20, // Set a specific height for the animation
               child: SpinKitThreeBounce(
                 color: Colors.white,
