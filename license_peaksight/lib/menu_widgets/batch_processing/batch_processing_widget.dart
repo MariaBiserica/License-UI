@@ -45,6 +45,7 @@ class _BatchProcessingWidgetState extends State<BatchProcessingWidget> {
       phone: PanelLeftBatchProcessing(
         onMetricSelected: handleMetricSelected,
         scores: scores, // Pass the scores to PanelLeftBatchProcessing
+        imagePaths: widget.imagePaths, // Pass the image paths
       ),
       tablet: Row(
         children: [
@@ -84,6 +85,7 @@ class _BatchProcessingWidgetState extends State<BatchProcessingWidget> {
             child: PanelLeftBatchProcessing(
               onMetricSelected: handleMetricSelected,
               scores: scores, // Pass the scores to PanelLeftBatchProcessing
+              imagePaths: widget.imagePaths, // Pass the image paths
             ),
           ),
           Expanded(

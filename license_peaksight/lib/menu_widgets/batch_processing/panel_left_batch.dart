@@ -1,5 +1,5 @@
 import 'dart:math';
-
+import 'package:path/path.dart' as path;
 import 'package:flutter/material.dart';
 import 'package:license_peaksight/constants.dart';
 import 'package:fl_chart/fl_chart.dart';
@@ -7,8 +7,13 @@ import 'package:fl_chart/fl_chart.dart';
 class PanelLeftBatchProcessing extends StatefulWidget {
   final Function(String) onMetricSelected;
   final List<double> scores;
+  final List<String> imagePaths;
 
-  PanelLeftBatchProcessing({required this.onMetricSelected, required this.scores});
+  PanelLeftBatchProcessing({
+    required this.onMetricSelected,
+    required this.scores,
+    required this.imagePaths,
+  });
 
   @override
   _PanelLeftBatchProcessingState createState() => _PanelLeftBatchProcessingState();
@@ -225,13 +230,13 @@ class _PanelLeftBatchProcessingState extends State<PanelLeftBatchProcessing> {
           scrollDirection: Axis.horizontal, // Enable horizontal scrolling
           controller: _scrollController,
           child: Container(
-            width: widget.scores.length * 30.0, // Adjust width based on number of scores
+            width: widget.scores.length * 50.0, // Adjust width based on number of scores
             child: Card(
               color: Constants.purpleLight,
               elevation: 3,
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
               child: Padding(
-                padding: const EdgeInsets.fromLTRB(Constants.kPadding, Constants.kPadding * 6, Constants.kPadding, Constants.kPadding),
+                padding: const EdgeInsets.fromLTRB(Constants.kPadding, Constants.kPadding * 6, Constants.kPadding * 3, Constants.kPadding),
                 child: LineChart(
                   LineChartData(
                     gridData: FlGridData(
@@ -253,23 +258,21 @@ class _PanelLeftBatchProcessingState extends State<PanelLeftBatchProcessing> {
                       bottomTitles: AxisTitles(
                         sideTitles: SideTitles(
                           showTitles: true,
-                          reservedSize: 30,
+                          reservedSize: 50,
                           interval: 1,
                           getTitlesWidget: (double value, TitleMeta meta) {
-                            const style = TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16);
-                            switch (value.toInt()) {
-                              case 1:
-                                return SideTitleWidget(axisSide: meta.axisSide, child: Text('1', style: style));
-                              case 2:
-                                return SideTitleWidget(axisSide: meta.axisSide, child: Text('2', style: style));
-                              case 3:
-                                return SideTitleWidget(axisSide: meta.axisSide, child: Text('3', style: style));
-                              case 4:
-                                return SideTitleWidget(axisSide: meta.axisSide, child: Text('4', style: style));
-                              case 5:
-                                return SideTitleWidget(axisSide: meta.axisSide, child: Text('5', style: style));
-                              default:
-                                return Container();
+                            const style = TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 10);
+                            if (value.toInt() < widget.imagePaths.length) {
+                              return SideTitleWidget(
+                                axisSide: meta.axisSide,
+                                space: 10, // Add space above the text
+                                child: Transform.rotate(
+                                  angle: -pi / 7, // Rotate the text by 45 degrees
+                                  child: Text(path.basename(widget.imagePaths[value.toInt()]), style: style),
+                                ),
+                              );
+                            } else {
+                              return Container();
                             }
                           },
                         ),
@@ -304,7 +307,7 @@ class _PanelLeftBatchProcessingState extends State<PanelLeftBatchProcessing> {
                       border: Border.all(color: const Color(0xff37434d)),
                     ),
                     minX: 0,
-                    maxX: widget.scores.length.toDouble(),
+                    maxX: widget.scores.length.toDouble() - 1,
                     minY: 0,
                     maxY: 5,
                     lineBarsData: [
