@@ -102,7 +102,7 @@ class _PanelCenterBatchProcessingState extends State<PanelCenterBatchProcessing>
 
   String getQualityLevelMessage(double? score) {
     if (score == null) return "No score calculated";
-    if (score > 5) return "Outlier score, image might be corrupted";
+    if (score > 5 || score < 1) return "Outlier score, image might be corrupted";
     if (score > 4 && score <= 5) return "Excellent";
     if (score > 3 && score <= 4) return "Good";
     if (score > 2 && score <= 3) return "Fair";
@@ -118,7 +118,7 @@ class _PanelCenterBatchProcessingState extends State<PanelCenterBatchProcessing>
           children: [
             // Top overview card
             buildOverviewCard(),
-            // Dynamic list of metric scores
+            // Dynamic list of metric scores with image thumbnails
             buildMetricsList(),
           ],
         ),
@@ -210,7 +210,10 @@ class _PanelCenterBatchProcessingState extends State<PanelCenterBatchProcessing>
         child: Padding(
           padding: const EdgeInsets.all(Constants.kPadding),
           child: Column(
-            children: widget.imagePaths.map((imagePath) => buildMetricTile(imagePath, scoreMap[imagePath])).toList(),
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              ...widget.imagePaths.map((imagePath) => buildMetricTile(imagePath, scoreMap[imagePath])).toList(),
+            ],
           ),
         ),
       ),
@@ -220,36 +223,38 @@ class _PanelCenterBatchProcessingState extends State<PanelCenterBatchProcessing>
   Widget buildMetricTile(String imagePath, double? score) {
     bool isCalculating = metricTiming[imagePath] == null;
     return ListTile(
-      title: Text(
-        "Score for $imagePath",
-        style: TextStyle(
-          fontFamily: 'Rastaglion',
-          fontSize: 15,
-          fontWeight: FontWeight.bold,
-          color: Colors.white
+      leading: ClipRRect(
+        borderRadius: BorderRadius.circular(8.0),
+        child: Image.file(
+          File(imagePath),
+          width: 50,
+          height: 50,
+          fit: BoxFit.cover,
         ),
       ),
       subtitle: Text(
-          score != null ? (metricTiming[imagePath] == null ? "Recalculating..." : "$score - ${getQualityLevelMessage(score)}") : "No score calculated",
-          style: TextStyle(
-              fontFamily: 'TellMeAJoke',
-              fontSize: 17,
-              color: Colors.grey[400]
-          ),
+        score != null
+            ? (metricTiming[imagePath] == null ? "Recalculating..." : "$score ${getQualityLevelMessage(score)}")
+            : "No score calculated",
+        style: TextStyle(
+          fontFamily: 'TellMeAJoke',
+          fontSize: 17,
+          color: Colors.grey[400],
+        ),
       ),
       trailing: isCalculating
-        ? SizedBox(
-            width: 60,  // Set a specific width for the SizedBox
-            height: 20, // Set a specific height for the animation
-            child: SpinKitThreeBounce(
-              color: Colors.white,
-              size: 20.0,
+          ? SizedBox(
+              width: 60,  // Set a specific width for the SizedBox
+              height: 20, // Set a specific height for the animation
+              child: SpinKitThreeBounce(
+                color: Colors.white,
+                size: 20.0,
+              ),
+            )
+          : Text(
+              metricTiming[imagePath] ?? "Calculating...",
+              style: TextStyle(color: Colors.grey[400]),
             ),
-          )
-        : Text(
-            metricTiming[imagePath] ?? "Calculating...",
-            style: TextStyle(color: Colors.grey[400]),
-          ),
     );
   }
 }
