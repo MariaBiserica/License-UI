@@ -19,6 +19,7 @@ class _PanelCenterBatchProcessingState extends State<PanelCenterBatchProcessing>
   Map<String, double?> scoreMap = {};
   double progress = 0.0;
   Map<String, String> metricTiming = {};
+  bool showTop10 = false;
 
   @override
   void didUpdateWidget(covariant PanelCenterBatchProcessing oldWidget) {
@@ -110,16 +111,41 @@ class _PanelCenterBatchProcessingState extends State<PanelCenterBatchProcessing>
     return "Bad";
   }
 
+  List<String> getTop10PercentImages() {
+    List<MapEntry<String, double?>> sortedEntries = scoreMap.entries
+        .where((entry) => entry.value != null)
+        .toList()
+        ..sort((a, b) => b.value!.compareTo(a.value!));
+    int top10Count = (sortedEntries.length * 0.1).ceil();
+    return sortedEntries.take(top10Count).map((entry) => entry.key).toList();
+  }
+
   @override
   Widget build(BuildContext context) {
+    List<String> displayImagePaths = showTop10 ? getTop10PercentImages() : widget.imagePaths;
     return Scaffold(
       body: SingleChildScrollView(
         child: Column(
           children: [
             // Top overview card
             buildOverviewCard(),
+            // "Show top 10%" button
+            Padding(
+              padding: const EdgeInsets.all(Constants.kPadding),
+              child: ElevatedButton(
+                onPressed: () {
+                  setState(() {
+                    showTop10 = !showTop10;
+                  });
+                },
+                child: Text(showTop10 ? 'Show All' : 'Show Best Picks', style: TextStyle(color: Colors.white)),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Constants.panelForeground,
+                ),
+              ),
+            ),
             // Dynamic list of metric scores with image thumbnails
-            buildMetricsList(),
+            buildMetricsList(displayImagePaths),
           ],
         ),
       ),
@@ -199,7 +225,7 @@ class _PanelCenterBatchProcessingState extends State<PanelCenterBatchProcessing>
       );
   }
 
-  Widget buildMetricsList() {
+  Widget buildMetricsList(List<String> displayImagePaths) {
     return Padding(
       padding: const EdgeInsets.all(Constants.kPadding),
       child: Card(
@@ -212,7 +238,7 @@ class _PanelCenterBatchProcessingState extends State<PanelCenterBatchProcessing>
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              ...widget.imagePaths.map((imagePath) => buildMetricTile(imagePath, scoreMap[imagePath])).toList(),
+              ...displayImagePaths.map((imagePath) => buildMetricTile(imagePath, scoreMap[imagePath])).toList(),
             ],
           ),
         ),
@@ -234,7 +260,7 @@ class _PanelCenterBatchProcessingState extends State<PanelCenterBatchProcessing>
       ),
       subtitle: Text(
         score != null
-            ? (metricTiming[imagePath] == null ? "Recalculating..." : "$score ${getQualityLevelMessage(score)}")
+            ? (metricTiming[imagePath] == null ? "Recalculating..." : "$score - ${getQualityLevelMessage(score)}")
             : "No score calculated",
         style: TextStyle(
           fontFamily: 'TellMeAJoke',

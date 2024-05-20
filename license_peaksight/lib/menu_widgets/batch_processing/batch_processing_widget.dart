@@ -52,8 +52,8 @@ class _BatchProcessingWidgetState extends State<BatchProcessingWidget> {
         children: [
           Expanded(flex: 2, child: DrawerPage(onSectionSelected: widget.onSectionSelected)),
           Expanded(flex: 2, child: PanelLeftBatchProcessing(onMetricSelected: handleMetricSelected)),
-          Expanded(flex: 2, child: PanelCenterBatchProcessing(imagePaths: widget.imagePaths, selectedMetric: selectedMetric)),
-          Expanded(flex: 4, child: PanelRightBatchProcessing(onImagesSelected: widget.onImagesSelected)),
+          Expanded(flex: 3, child: PanelCenterBatchProcessing(imagePaths: widget.imagePaths, selectedMetric: selectedMetric)),
+          Expanded(flex: 2, child: PanelRightBatchProcessing(onImagesSelected: widget.onImagesSelected)),
         ],
       ),
     );
