@@ -6,9 +6,9 @@ import 'dart:async';
 import 'dart:ui' as ui;
 
 class PanelRightBatchProcessing extends StatefulWidget {
-  final Function(String imagePath)? onImageSelected;
+  final Function(List<File>)? onImagesSelected;  // Changed to handle a list of File
 
-  PanelRightBatchProcessing({this.onImageSelected});
+  PanelRightBatchProcessing({this.onImagesSelected});
 
   @override
   _PanelRightBatchProcessingState createState() => _PanelRightBatchProcessingState();
@@ -26,8 +26,12 @@ class _PanelRightBatchProcessingState extends State<PanelRightBatchProcessing> {
     if (result != null) {
       List<File> newImages = result.paths.map((path) => File(path!)).toList();
       setState(() {
-        images.addAll(newImages);
+          images.addAll(newImages);
+          print("Images added to state: ${images.map((file) => file.path).join(', ')}");
       });
+      if (images.isNotEmpty) {  // Check if the callback is not null
+        //widget.onImagesSelected?.call(images);  // Call the callback with the list of images
+      }
     }
   }
 
@@ -62,14 +66,16 @@ class _PanelRightBatchProcessingState extends State<PanelRightBatchProcessing> {
               ),
               SizedBox(height: 10),
               Expanded(
-                child: ListView.builder(
+                child: images.isEmpty
+                  ? Center(child: Text("No images uploaded."))
+                  : ListView.builder(
                   itemCount: images.length,
                   itemBuilder: (context, index) {
                     File image = images[index];
-                    return FutureBuilder<ui.Image>(
-                      future: _getImageSize(FileImage(image)),
-                      builder: (BuildContext context, AsyncSnapshot<ui.Image> snapshot) {
-                        final imageSize = snapshot.data != null ? "${snapshot.data!.width} x ${snapshot.data!.height}" : "Loading...";
+                     return FutureBuilder<ui.Image>(
+                       future: _getImageSize(FileImage(image)),
+                       builder: (BuildContext context, AsyncSnapshot<ui.Image> snapshot) {
+                         final imageSize = snapshot.data != null ? "${snapshot.data!.width} x ${snapshot.data!.height}" : "Loading...";
                         return ListTile(
                           leading: GestureDetector(
                             onTap: () => viewImage(context, image),

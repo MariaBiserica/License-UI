@@ -54,14 +54,14 @@ class _WidgetTreeState extends State<WidgetTree> {
         ); // My widget for Image Quality Assessment
       case 'Batch Processing':
         return BatchProcessingWidget(
-            imagePath: _imagePath, 
             onImageSelected: _onImageSelected, 
             onSectionSelected: _onSectionSelected,
         ); // My widget for Batch Processing
       // Add other cases for different sections here
       default:
         return HomeWidget(
-            imagePath: _imagePath, onImageSelected: _onImageSelected,
+            imagePath: _imagePath, 
+            onImageSelected: _onImageSelected,
             onSectionSelected: _onSectionSelected,
         ); // Default to HomeWidget
     }

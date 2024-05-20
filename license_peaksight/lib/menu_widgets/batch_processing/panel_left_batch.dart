@@ -17,8 +17,10 @@ class _PanelLeftBatchProcessingState extends State<PanelLeftBatchProcessing> {
 
   void startAnalysis() {
     if (isOverallQualitySelected && selectedOverallQualityMetric != null) {
+      print("Selected overall quality metric: $selectedOverallQualityMetric");
       widget.onMetricSelected(selectedOverallQualityMetric!);
     } else {
+      print("Selected metric: $selectedMetric");
       widget.onMetricSelected(selectedMetric);
     }
   }
