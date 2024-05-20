@@ -2,6 +2,9 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:path/path.dart' as path;
+import 'package:file_picker/file_picker.dart';
 import 'package:license_peaksight/constants.dart';
 import '../../quality_assessment/get_quality_scores.dart';
 
@@ -30,6 +33,7 @@ class _PanelCenterBatchProcessingState extends State<PanelCenterBatchProcessing>
 
   String? selectedQualityFilter;
   bool showDropdown = false;
+  bool showSaveButton = false;
 
   @override
   void didUpdateWidget(covariant PanelCenterBatchProcessing oldWidget) {
@@ -166,7 +170,55 @@ class _PanelCenterBatchProcessingState extends State<PanelCenterBatchProcessing>
       if (!showDropdown) {
         selectedQualityFilter = null; // Reset the filter when hiding the dropdown
       }
+      showSaveButton = true; // Show the save button after classifying the batch
     });
+  }
+
+  Future<void> saveClassification() async {
+    String? selectedDirectory = await FilePicker.platform.getDirectoryPath();
+
+    if (selectedDirectory == null) {
+      // User canceled the picker
+      return;
+    }
+
+    final folders = {
+      'Excellent': excellentImages,
+      'Good': goodImages,
+      'Fair': fairImages,
+      'Poor': poorImages,
+      'Bad': badImages,
+      'Outlier': outlierImages,
+    };
+
+    for (var entry in folders.entries) {
+      final folderPath = path.join(selectedDirectory, entry.key);
+      await Directory(folderPath).create(recursive: true);
+      for (var imagePath in entry.value) {
+        final imageFileName = path.basename(imagePath);
+        final newImagePath = path.join(folderPath, imageFileName);
+        await File(imagePath).copy(newImagePath);
+      }
+    }
+
+    // Show a dialog to indicate that the images have been saved
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Classification Saved"),
+          content: Text("Images have been saved into folders based on their quality."),
+          actions: <Widget>[
+            TextButton(
+              child: Text("OK"),
+              onPressed: () {
+                Navigator.of(context).pop();  // Close the dialog
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -266,6 +318,18 @@ class _PanelCenterBatchProcessingState extends State<PanelCenterBatchProcessing>
                         selectedQualityFilter = newValue;
                       });
                     },
+                  ),
+                ),
+              ),
+            // Save Classification Button (only visible after classifying batch)
+            if (showSaveButton)
+              Padding(
+                padding: const EdgeInsets.all(Constants.kPadding),
+                child: ElevatedButton(
+                  onPressed: saveClassification,
+                  child: Text('Save Classification', style: TextStyle(color: Colors.white)),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Constants.panelForeground,
                   ),
                 ),
               ),
