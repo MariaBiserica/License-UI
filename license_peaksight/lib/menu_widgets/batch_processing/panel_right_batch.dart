@@ -6,7 +6,7 @@ import 'dart:async';
 import 'dart:ui' as ui;
 
 class PanelRightBatchProcessing extends StatefulWidget {
-  final Function(List<File>)? onImagesSelected;  // Changed to handle a list of File
+  final Function(List<String> imagePaths)? onImagesSelected;  // Changed to handle a list of File
 
   PanelRightBatchProcessing({this.onImagesSelected});
 
@@ -15,7 +15,7 @@ class PanelRightBatchProcessing extends StatefulWidget {
 }
 
 class _PanelRightBatchProcessingState extends State<PanelRightBatchProcessing> {
-  List<File> images = [];
+  List<String> images = [];
 
   Future<void> pickImages() async {
     FilePickerResult? result = await FilePicker.platform.pickFiles(
@@ -24,23 +24,25 @@ class _PanelRightBatchProcessingState extends State<PanelRightBatchProcessing> {
     );
 
     if (result != null) {
-      List<File> newImages = result.paths.map((path) => File(path!)).toList();
+      List<String> paths = result.paths.whereType<String>().toList();
+      // List<String> paths = result.paths.map((path) => path!).toList();
       setState(() {
-          images.addAll(newImages);
-          print("Images added to state: ${images.map((file) => file.path).join(', ')}");
+          images.addAll(paths);
+          print("Images added to state: ${images.join(', ')}");
       });
-      if (images.isNotEmpty) {  // Check if the callback is not null
-        //widget.onImagesSelected?.call(images);  // Call the callback with the list of images
+      // Ensures the selected image paths are communicated back right after picking
+      if (images.isNotEmpty) { 
+        widget.onImagesSelected?.call(images);  // Call the callback with the list of images
       }
     }
   }
 
-  void viewImage(BuildContext context, File image) {
+  void viewImage(BuildContext context, String imagePath) {
     Navigator.of(context).push(PageRouteBuilder(
       opaque: false,
       barrierDismissible: true,
-      barrierColor: Colors.black45, // Slightly darken the background
-      pageBuilder: (_, __, ___) => ImageDetailView(imageFile: image),
+      barrierColor: Colors.black45,
+      pageBuilder: (_, __, ___) => ImageDetailView(imagePath: imagePath),
     ));
   }
 
@@ -71,28 +73,28 @@ class _PanelRightBatchProcessingState extends State<PanelRightBatchProcessing> {
                   : ListView.builder(
                   itemCount: images.length,
                   itemBuilder: (context, index) {
-                    File image = images[index];
+                    String imagePath = images[index];
                      return FutureBuilder<ui.Image>(
-                       future: _getImageSize(FileImage(image)),
+                       future: _getImageSize(FileImage(File(imagePath))),
                        builder: (BuildContext context, AsyncSnapshot<ui.Image> snapshot) {
                          final imageSize = snapshot.data != null ? "${snapshot.data!.width} x ${snapshot.data!.height}" : "Loading...";
                         return ListTile(
                           leading: GestureDetector(
-                            onTap: () => viewImage(context, image),
+                            onTap: () => viewImage(context, imagePath),
                             child: Hero(
-                              tag: image.path,
-                              child: Image.file(image, width: 50, height: 50, fit: BoxFit.cover),
+                              tag: imagePath,
+                              child: Image.file(File(imagePath), width: 50, height: 50, fit: BoxFit.cover),
                             ),
                           ),
                           title: Text(
-                            image.path.split('/').last,
+                            imagePath.split('/').last,
                             style: TextStyle(
                               fontSize: 14,
                               color: Colors.white,
                             ),
                           ),
                           subtitle: Text(
-                            '${image.lengthSync()} bytes - $imageSize',
+                            '${File(imagePath).lengthSync()} bytes - $imageSize',
                             style: TextStyle(
                               fontFamily: 'TellMeAJoke',
                               fontSize: 14,
@@ -133,9 +135,9 @@ class _PanelRightBatchProcessingState extends State<PanelRightBatchProcessing> {
 }
 
 class ImageDetailView extends StatelessWidget {
-  final File imageFile;
+  final String imagePath;
 
-  ImageDetailView({required this.imageFile});
+  ImageDetailView({required this.imagePath});
 
   @override
   Widget build(BuildContext context) {
@@ -145,9 +147,9 @@ class ImageDetailView extends StatelessWidget {
         onTap: () => Navigator.of(context).pop(),
         child: Center(
           child: Hero(
-            tag: imageFile.path,
+            tag: imagePath,
             child: InteractiveViewer(
-              child: Image.file(imageFile),
+              child: Image.file(File(imagePath)),
             ),
           ),
         ),

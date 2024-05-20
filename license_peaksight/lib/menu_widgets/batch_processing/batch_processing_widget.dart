@@ -8,11 +8,13 @@ import 'package:license_peaksight/menu_widgets/batch_processing/panel_right_batc
 import 'package:license_peaksight/responsive_layout.dart';
 
 class BatchProcessingWidget extends StatefulWidget {
-  final Function(String) onImageSelected;
+  final List<String> imagePaths;
+  final Function(List<String>) onImagesSelected;
   final Function(String) onSectionSelected;
 
   BatchProcessingWidget({
-    required this.onImageSelected,
+    required this.imagePaths,
+    required this.onImagesSelected,
     required this.onSectionSelected,
   });
 
@@ -22,7 +24,6 @@ class BatchProcessingWidget extends StatefulWidget {
 
 class _BatchProcessingWidgetState extends State<BatchProcessingWidget> {
   String selectedMetric = 'Noise'; // Default selected metric
-  List<File> selectedImages = []; // Placeholder for the list of images to be processed
 
   void handleMetricSelected(String metric) {
     print("Selected metric: $metric"); // Debug print to check the callback
@@ -31,36 +32,28 @@ class _BatchProcessingWidgetState extends State<BatchProcessingWidget> {
     });
   }
 
-  void handleImagesSelected(List<File> images) {
-    print("Selected images: $images"); // Debug print to check the callback
-    setState(() {
-      selectedImages = images; // Update the list of selected images
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
-    print("Building with ${selectedImages.length} images.");
     return ResponsiveLayout(
       tiny: Container(),
       phone: PanelLeftBatchProcessing(onMetricSelected: handleMetricSelected),
       tablet: Row(
         children: [
-          Expanded(child: PanelCenterBatchProcessing(imageFiles: selectedImages, selectedMetric: selectedMetric)),
+          Expanded(child: PanelCenterBatchProcessing(imagePaths: widget.imagePaths, selectedMetric: selectedMetric)),
         ],
       ),
       largeTablet: Row(
         children: [
-          Expanded(flex: 2, child: PanelCenterBatchProcessing(imageFiles: selectedImages, selectedMetric: selectedMetric)),
-          Expanded(flex: 3, child: PanelRightBatchProcessing(onImagesSelected: handleImagesSelected)),  
+          Expanded(flex: 2, child: PanelCenterBatchProcessing(imagePaths: widget.imagePaths, selectedMetric: selectedMetric)),
+          Expanded(flex: 3, child: PanelRightBatchProcessing(onImagesSelected: widget.onImagesSelected)),  
         ],
       ),
       computer: Row(
         children: [
           Expanded(flex: 2, child: DrawerPage(onSectionSelected: widget.onSectionSelected)),
           Expanded(flex: 2, child: PanelLeftBatchProcessing(onMetricSelected: handleMetricSelected)),
-          Expanded(flex: 2, child: PanelCenterBatchProcessing(imageFiles: selectedImages, selectedMetric: selectedMetric)),
-          Expanded(flex: 4, child: PanelRightBatchProcessing(onImagesSelected: handleImagesSelected)),
+          Expanded(flex: 2, child: PanelCenterBatchProcessing(imagePaths: widget.imagePaths, selectedMetric: selectedMetric)),
+          Expanded(flex: 4, child: PanelRightBatchProcessing(onImagesSelected: widget.onImagesSelected)),
         ],
       ),
     );

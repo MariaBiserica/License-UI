@@ -72,3 +72,27 @@ Future<QualityScores?> predictImageQuality(File imageFile, Set<String> selectedM
   }
   return null; // Return null if there's an error
 }
+
+Future<QualityScores?> predictImageQualityBatch(File imageFile, String selectedMetric) async {
+  try {
+    var uri = Uri.parse('http://127.0.0.1:5000/predict_batch'); // Adjust the URI as needed
+    var request = http.MultipartRequest('POST', uri)
+      ..fields['metric'] = selectedMetric // Change this to pass only the selected metric
+      ..files.add(await http.MultipartFile.fromPath('image', imageFile.path));
+    
+    print("Sending request to server...");
+    var response = await request.send().timeout(Duration(seconds: 120));
+    print("Received response from server");
+
+    if (response.statusCode == 200) {
+      var responseData = await response.stream.toBytes();
+      var responseString = String.fromCharCodes(responseData);
+      var jsonResponse = json.decode(responseString);
+      return QualityScores.fromJson(jsonResponse);  // Use factory constructor to create an instance of QualityScores 
+    }
+  } catch (e) {
+    print("Error fetching data: $e");
+  }
+  return null; // Return null if there's an error
+}
+

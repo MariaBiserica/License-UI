@@ -17,6 +17,7 @@ class WidgetTree extends StatefulWidget {
 
 class _WidgetTreeState extends State<WidgetTree> {
   String _imagePath = ''; // Holds the path of the selected image
+  List<String> _imagePaths = []; // Holds the paths of the selected images
   String _currentSection = 'Home'; // Default section
   Set<String> _selectedMetrics = {}; // For the IQA widget
 
@@ -24,6 +25,12 @@ class _WidgetTreeState extends State<WidgetTree> {
   void _onImageSelected(String imagePath) {
     setState(() {
       _imagePath = imagePath;
+    });
+  }
+
+  void _onImagesSelected(List<String> imagePaths) {
+    setState(() {
+      _imagePaths = imagePaths;
     });
   }
 
@@ -54,7 +61,8 @@ class _WidgetTreeState extends State<WidgetTree> {
         ); // My widget for Image Quality Assessment
       case 'Batch Processing':
         return BatchProcessingWidget(
-            onImageSelected: _onImageSelected, 
+            imagePaths: _imagePaths,
+            onImagesSelected: _onImagesSelected, 
             onSectionSelected: _onSectionSelected,
         ); // My widget for Batch Processing
       // Add other cases for different sections here
