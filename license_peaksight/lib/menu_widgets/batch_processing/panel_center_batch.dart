@@ -11,8 +11,13 @@ import '../../quality_assessment/get_quality_scores.dart';
 class PanelCenterBatchProcessing extends StatefulWidget {
   final List<String> imagePaths;
   final String selectedMetric;
+  final Function(List<double>) onScoresCalculated; // Add this parameter
 
-  PanelCenterBatchProcessing({required this.imagePaths, required this.selectedMetric});
+  PanelCenterBatchProcessing({
+    required this.imagePaths,
+    required this.selectedMetric,
+    required this.onScoresCalculated, // Add this parameter
+  });
 
   @override
   _PanelCenterBatchProcessingState createState() => _PanelCenterBatchProcessingState();
@@ -47,48 +52,56 @@ class _PanelCenterBatchProcessingState extends State<PanelCenterBatchProcessing>
   }
 
   void calculateQualityScores() async {
+    List<double> scores = []; // To store scores for the chart
+
     if (widget.imagePaths.isNotEmpty && widget.selectedMetric.isNotEmpty) {
       for (String imagePath in widget.imagePaths) {
-        final scores = await predictImageQuality(File(imagePath), {widget.selectedMetric});
+        final scoresResult = await predictImageQuality(File(imagePath), {widget.selectedMetric});
 
-        if (scores != null) {
+        if (scoresResult != null) {
           setState(() {
+            double? score;
             // Assigning values directly based on whether they were requested
             if (widget.selectedMetric == 'Noise') {
-              scoreMap[imagePath] = scores.noiseScore;
-              metricTiming[imagePath] = "${scores.noiseTime}";
+              score = scoresResult.noiseScore;
+              metricTiming[imagePath] = "${scoresResult.noiseTime}";
             }
             if (widget.selectedMetric == 'Contrast') {
-              scoreMap[imagePath] = scores.contrastScore;
-              metricTiming[imagePath] = "${scores.contrastTime}";
+              score = scoresResult.contrastScore;
+              metricTiming[imagePath] = "${scoresResult.contrastTime}";
             }
             if (widget.selectedMetric == 'Brightness') {
-              scoreMap[imagePath] = scores.brightnessScore;
-              metricTiming[imagePath] = "${scores.brightnessTime}";
+              score = scoresResult.brightnessScore;
+              metricTiming[imagePath] = "${scoresResult.brightnessTime}";
             }
             if (widget.selectedMetric == 'Sharpness') {
-              scoreMap[imagePath] = scores.sharpnessScore;
-              metricTiming[imagePath] = "${scores.sharpnessTime}";
+              score = scoresResult.sharpnessScore;
+              metricTiming[imagePath] = "${scoresResult.sharpnessTime}";
             }
             if (widget.selectedMetric == 'Chromatic Quality') {
-              scoreMap[imagePath] = scores.chromaticScore;
-              metricTiming[imagePath] = "${scores.chromaticTime}";
+              score = scoresResult.chromaticScore;
+              metricTiming[imagePath] = "${scoresResult.chromaticTime}";
             }
             if (widget.selectedMetric == 'BRISQUE') {
-              scoreMap[imagePath] = scores.brisqueScore;
-              metricTiming[imagePath] = "${scores.brisqueTime}";
+              score = scoresResult.brisqueScore;
+              metricTiming[imagePath] = "${scoresResult.brisqueTime}";
             }
             if (widget.selectedMetric == 'NIQE') {
-              scoreMap[imagePath] = scores.niqeScore;
-              metricTiming[imagePath] = "${scores.niqeTime}";
+              score = scoresResult.niqeScore;
+              metricTiming[imagePath] = "${scoresResult.niqeTime}";
             }
             if (widget.selectedMetric == 'ILNIQE') {
-              scoreMap[imagePath] = scores.ilniqeScore;
-              metricTiming[imagePath] = "${scores.ilniqeTime}";
+              score = scoresResult.ilniqeScore;
+              metricTiming[imagePath] = "${scoresResult.ilniqeTime}";
             }
             if (widget.selectedMetric == 'VGG16') {
-              scoreMap[imagePath] = scores.vgg16Score;
-              metricTiming[imagePath] = "${scores.vgg16Time}";
+              score = scoresResult.vgg16Score;
+              metricTiming[imagePath] = "${scoresResult.vgg16Time}";
+            }
+
+            if (score != null) {
+              scoreMap[imagePath] = score;
+              scores.add(score); // Add score to the list for the chart
             }
           });
         } else {
@@ -112,6 +125,8 @@ class _PanelCenterBatchProcessingState extends State<PanelCenterBatchProcessing>
           );
         }
       }
+
+      widget.onScoresCalculated(scores); // Call the callback with the calculated scores
     }
   }
 

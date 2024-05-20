@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:license_peaksight/drawer/drawer_page.dart';
 import 'package:license_peaksight/menu_widgets/batch_processing/panel_center_batch.dart';
@@ -24,6 +23,7 @@ class BatchProcessingWidget extends StatefulWidget {
 
 class _BatchProcessingWidgetState extends State<BatchProcessingWidget> {
   String selectedMetric = '';
+  List<double> scores = []; // Add this to store the scores
 
   void handleMetricSelected(String metric) {
     print("Selected metric: $metric"); // Debug print to check the callback
@@ -32,28 +32,72 @@ class _BatchProcessingWidgetState extends State<BatchProcessingWidget> {
     });
   }
 
+  void handleScoresCalculated(List<double> calculatedScores) {
+    setState(() {
+      scores = calculatedScores; // Update the scores when calculated
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return ResponsiveLayout(
       tiny: Container(),
-      phone: PanelLeftBatchProcessing(onMetricSelected: handleMetricSelected),
+      phone: PanelLeftBatchProcessing(
+        onMetricSelected: handleMetricSelected,
+        scores: scores, // Pass the scores to PanelLeftBatchProcessing
+      ),
       tablet: Row(
         children: [
-          Expanded(child: PanelCenterBatchProcessing(imagePaths: widget.imagePaths, selectedMetric: selectedMetric)),
+          Expanded(
+            child: PanelCenterBatchProcessing(
+              imagePaths: widget.imagePaths,
+              selectedMetric: selectedMetric,
+              onScoresCalculated: handleScoresCalculated, // Add this callback
+            ),
+          ),
         ],
       ),
       largeTablet: Row(
         children: [
-          Expanded(flex: 2, child: PanelCenterBatchProcessing(imagePaths: widget.imagePaths, selectedMetric: selectedMetric)),
-          Expanded(flex: 3, child: PanelRightBatchProcessing(onImagesSelected: widget.onImagesSelected)),  
+          Expanded(
+            flex: 2,
+            child: PanelCenterBatchProcessing(
+              imagePaths: widget.imagePaths,
+              selectedMetric: selectedMetric,
+              onScoresCalculated: handleScoresCalculated, // Add this callback
+            ),
+          ),
+          Expanded(
+            flex: 3,
+            child: PanelRightBatchProcessing(onImagesSelected: widget.onImagesSelected),
+          ),
         ],
       ),
       computer: Row(
         children: [
-          Expanded(flex: 2, child: DrawerPage(onSectionSelected: widget.onSectionSelected)),
-          Expanded(flex: 2, child: PanelLeftBatchProcessing(onMetricSelected: handleMetricSelected)),
-          Expanded(flex: 3, child: PanelCenterBatchProcessing(imagePaths: widget.imagePaths, selectedMetric: selectedMetric)),
-          Expanded(flex: 2, child: PanelRightBatchProcessing(onImagesSelected: widget.onImagesSelected)),
+          Expanded(
+            flex: 2,
+            child: DrawerPage(onSectionSelected: widget.onSectionSelected),
+          ),
+          Expanded(
+            flex: 2,
+            child: PanelLeftBatchProcessing(
+              onMetricSelected: handleMetricSelected,
+              scores: scores, // Pass the scores to PanelLeftBatchProcessing
+            ),
+          ),
+          Expanded(
+            flex: 3,
+            child: PanelCenterBatchProcessing(
+              imagePaths: widget.imagePaths,
+              selectedMetric: selectedMetric,
+              onScoresCalculated: handleScoresCalculated, // Add this callback
+            ),
+          ),
+          Expanded(
+            flex: 2,
+            child: PanelRightBatchProcessing(onImagesSelected: widget.onImagesSelected),
+          ),
         ],
       ),
     );
