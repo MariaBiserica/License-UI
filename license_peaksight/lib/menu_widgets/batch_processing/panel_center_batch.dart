@@ -212,47 +212,61 @@ class _PanelCenterBatchProcessingState extends State<PanelCenterBatchProcessing>
             if (showDropdown)
               Padding(
                 padding: const EdgeInsets.all(Constants.kPadding),
-                child: DropdownButton<String>(
-                  value: selectedQualityFilter,
-                  hint: Text("Select Quality", style: TextStyle(color: Colors.white)),
-                  dropdownColor: Constants.purpleLight,
-                  iconEnabledColor: Colors.white,
-                  underline: Container(height: 2, color: Colors.white),
-                  items: [
-                    DropdownMenuItem(
-                      child: Text("All", style: TextStyle(color: Colors.white)),
-                      value: null,
-                    ),
-                    DropdownMenuItem(
-                      child: Text("Excellent", style: TextStyle(color: Colors.white)),
-                      value: "Excellent",
-                    ),
-                    DropdownMenuItem(
-                      child: Text("Good", style: TextStyle(color: Colors.white)),
-                      value: "Good",
-                    ),
-                    DropdownMenuItem(
-                      child: Text("Fair", style: TextStyle(color: Colors.white)),
-                      value: "Fair",
-                    ),
-                    DropdownMenuItem(
-                      child: Text("Poor", style: TextStyle(color: Colors.white)),
-                      value: "Poor",
-                    ),
-                    DropdownMenuItem(
-                      child: Text("Bad", style: TextStyle(color: Colors.white)),
-                      value: "Bad",
-                    ),
-                    DropdownMenuItem(
-                      child: Text("Outlier", style: TextStyle(color: Colors.white)),
-                      value: "Outlier score, image might be corrupted",
-                    ),
-                  ],
-                  onChanged: (String? newValue) {
-                    setState(() {
-                      selectedQualityFilter = newValue;
-                    });
-                  },
+                child: Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: Constants.purpleLight,
+                    borderRadius: BorderRadius.circular(10),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black26,
+                        blurRadius: 6,
+                        offset: Offset(0, 2),
+                      ),
+                    ],
+                  ),
+                  child: DropdownButton<String>(
+                    value: selectedQualityFilter,
+                    hint: Text("Select Quality", style: TextStyle(color: Colors.white)),
+                    dropdownColor: Constants.purpleLight,
+                    iconEnabledColor: Colors.white,
+                    underline: Container(height: 2, color: Colors.white),
+                    items: [
+                      DropdownMenuItem(
+                        child: Text("All", style: TextStyle(color: Colors.white)),
+                        value: null,
+                      ),
+                      DropdownMenuItem(
+                        child: Text("Excellent", style: TextStyle(color: Colors.white)),
+                        value: "Excellent",
+                      ),
+                      DropdownMenuItem(
+                        child: Text("Good", style: TextStyle(color: Colors.white)),
+                        value: "Good",
+                      ),
+                      DropdownMenuItem(
+                        child: Text("Fair", style: TextStyle(color: Colors.white)),
+                        value: "Fair",
+                      ),
+                      DropdownMenuItem(
+                        child: Text("Poor", style: TextStyle(color: Colors.white)),
+                        value: "Poor",
+                      ),
+                      DropdownMenuItem(
+                        child: Text("Bad", style: TextStyle(color: Colors.white)),
+                        value: "Bad",
+                      ),
+                      DropdownMenuItem(
+                        child: Text("Outlier", style: TextStyle(color: Colors.white)),
+                        value: "Outlier score, image might be corrupted",
+                      ),
+                    ],
+                    onChanged: (String? newValue) {
+                      setState(() {
+                        selectedQualityFilter = newValue;
+                      });
+                    },
+                  ),
                 ),
               ),
             // Dynamic list of metric scores with image thumbnails
