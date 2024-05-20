@@ -27,86 +27,120 @@ class _PanelLeftBatchProcessingState extends State<PanelLeftBatchProcessing> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(Constants.kPadding),
-      child: Card(
-        color: Constants.purpleLight,
-        elevation: 3,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Padding(
+    return Scaffold(
+      body: SingleChildScrollView(
+        child: LayoutBuilder(
+          builder: (BuildContext context, BoxConstraints constraints) {
+            return Container(
               padding: const EdgeInsets.all(Constants.kPadding),
-              child: Text(
-                "Control Center",
-                style: TextStyle(
-                  fontFamily: 'MOXABestine',
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white
+              child: Card(
+                color: Constants.purpleLight,
+                elevation: 3,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20)),
+                child: Padding(
+                  padding: const EdgeInsets.all(Constants.kPadding),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(Constants.kPadding),
+                        child: Text(
+                          "Control Center",
+                          style: TextStyle(
+                            fontFamily: 'MOXABestine',
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                            vertical: Constants.kPadding),
+                        child: Text(
+                          "Select which metric to assess:",
+                          style: TextStyle(
+                            fontFamily: 'Voguella',
+                            fontSize: 14,
+                            color: Color.fromARGB(156, 158, 158, 158),
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding:
+                            const EdgeInsets.symmetric(horizontal: Constants.kPadding),
+                        child: ConstrainedBox(
+                          constraints: BoxConstraints(
+                            maxWidth: constraints.maxWidth - 2 * Constants.kPadding,
+                          ),
+                          child: DropdownButton<String>(
+                            isExpanded: true,
+                            value: selectedMetric,
+                            icon: Icon(Icons.arrow_downward, color: Colors.white),
+                            dropdownColor: Constants.purpleLight,
+                            underline: Container(height: 2, color: Colors.white),
+                            onChanged: (String? newValue) {
+                              setState(() {
+                                selectedMetric = newValue!;
+                                isOverallQualitySelected =
+                                    newValue == 'Overall Quality Score';
+                                selectedOverallQualityMetric = null; // Reset secondary selection if metric changes
+                              });
+                            },
+                            items: getDropdownMenuItems(),
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 10),
+                      if (isOverallQualitySelected) ...[
+                        Text(
+                          "Select detailed quality metric:",
+                          style: TextStyle(
+                            fontFamily: 'Voguella',
+                            fontSize: 14,
+                            color: Colors.white,
+                          ),
+                        ),
+                        SizedBox(height: 5),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: Constants.kPadding),
+                          child: ConstrainedBox(
+                            constraints: BoxConstraints(
+                              maxWidth: constraints.maxWidth - 2 * Constants.kPadding,
+                            ),
+                            child: DropdownButton<String>(
+                              isExpanded: true,
+                              value: selectedOverallQualityMetric,
+                              icon: Icon(Icons.arrow_downward, color: Colors.white),
+                              dropdownColor: Constants.purpleLight,
+                              underline: Container(height: 2, color: Colors.white),
+                              onChanged: (String? newValue) {
+                                setState(() {
+                                  selectedOverallQualityMetric = newValue!;
+                                });
+                              },
+                              items: getQualityDropdownItems(),
+                            ),
+                          ),
+                        ),
+                        SizedBox(height: 10),
+                      ],
+                      ElevatedButton(
+                        onPressed: startAnalysis,
+                        child: Text('Start Analysis',
+                            style: TextStyle(color: Colors.white)),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Constants.panelForeground,
+                        ),
+                      ),
+                      SizedBox(height: 10),
+                    ],
+                  ),
                 ),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: Constants.kPadding),
-              child: Text(
-                "Select which metric to assess:",
-                style: TextStyle(
-                  fontFamily: 'Voguella',
-                  fontSize: 14,
-                  color: Color.fromARGB(156, 158, 158, 158),
-                ),
-              ),
-            ),
-            DropdownButton<String>(
-              value: selectedMetric,
-              icon: Icon(Icons.arrow_downward, color: Colors.white),
-              dropdownColor: Constants.purpleLight,
-              underline: Container(height: 2, color: Colors.white),
-              onChanged: (String? newValue) {
-                setState(() {
-                  selectedMetric = newValue!;
-                  isOverallQualitySelected = newValue == 'Overall Quality Score';
-                  selectedOverallQualityMetric = null; // Reset secondary selection if metric changes
-                });
-              },
-              items: getDropdownMenuItems(),
-            ),
-            SizedBox(height: 10),
-            if (isOverallQualitySelected) ...[
-              Text(
-                "Select detailed quality metric:",
-                style: TextStyle(
-                  fontFamily: 'Voguella',
-                  fontSize: 14,
-                  color: Colors.white,
-                ),
-              ),
-              SizedBox(height: 5),
-              DropdownButton<String>(
-                value: selectedOverallQualityMetric,
-                icon: Icon(Icons.arrow_downward, color: Colors.white),
-                dropdownColor: Constants.purpleLight,
-                underline: Container(height: 2, color: Colors.white),
-                onChanged: (String? newValue) {
-                  setState(() {
-                    selectedOverallQualityMetric = newValue!;
-                  });
-                },
-                items: getQualityDropdownItems(),
-              ),
-              SizedBox(height: 10),
-            ],
-            ElevatedButton(
-              onPressed: startAnalysis,
-              child: Text('Start Analysis', style: TextStyle(color: Colors.white)),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Constants.panelForeground,
-              ),
-            ),
-            SizedBox(height: 10),
-          ],
+            );
+          },
         ),
       ),
     );

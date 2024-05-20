@@ -23,7 +23,7 @@ class BatchProcessingWidget extends StatefulWidget {
 }
 
 class _BatchProcessingWidgetState extends State<BatchProcessingWidget> {
-  String selectedMetric = 'Noise'; // Default selected metric
+  String selectedMetric = '';
 
   void handleMetricSelected(String metric) {
     print("Selected metric: $metric"); // Debug print to check the callback
