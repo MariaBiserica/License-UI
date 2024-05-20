@@ -162,7 +162,10 @@ class _PanelCenterBatchProcessingState extends State<PanelCenterBatchProcessing>
       }
     });
     setState(() {
-      showDropdown = true; // Show the dropdown after classifying the batch
+      showDropdown = !showDropdown; // Toggle the dropdown visibility
+      if (!showDropdown) {
+        selectedQualityFilter = null; // Reset the filter when hiding the dropdown
+      }
     });
   }
 
@@ -197,7 +200,7 @@ class _PanelCenterBatchProcessingState extends State<PanelCenterBatchProcessing>
                   ),
                   ElevatedButton(
                     onPressed: classifyBatch,
-                    child: Text('Classify Batch', style: TextStyle(color: Colors.white)),
+                    child: Text(showDropdown ? 'Hide Classification' : 'Classify Batch', style: TextStyle(color: Colors.white)),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Constants.panelForeground,
                     ),
