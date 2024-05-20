@@ -169,8 +169,10 @@ class _PanelCenterBatchProcessingState extends State<PanelCenterBatchProcessing>
       showDropdown = !showDropdown; // Toggle the dropdown visibility
       if (!showDropdown) {
         selectedQualityFilter = null; // Reset the filter when hiding the dropdown
+        showSaveButton = false; // Hide the save button when hiding the dropdown
+      } else {
+        showSaveButton = true; // Show the save button after classifying the batch
       }
-      showSaveButton = true; // Show the save button after classifying the batch
     });
   }
 
@@ -459,6 +461,13 @@ class _PanelCenterBatchProcessingState extends State<PanelCenterBatchProcessing>
           width: 50,
           height: 50,
           fit: BoxFit.cover,
+        ),
+      ),
+      title: Text(
+        path.basename(imagePath),
+        style: TextStyle(
+          fontSize: 15,
+          color: Colors.white,
         ),
       ),
       subtitle: Text(
