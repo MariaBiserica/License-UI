@@ -1,9 +1,10 @@
 import 'dart:io';
+import 'package:path/path.dart' as path;
 import 'package:http/http.dart' as http;
 
 Future<String?> modifyImageSplineRequest(String imagePath, List<Map<String, int>> controlPoints) async {
   try {
-    var uri = Uri.parse('http://127.0.0.1:5000/modify-image'); // Adjust the URI as needed
+    var uri = Uri.parse('http://127.0.0.1:5000/modify-image-spline'); // Adjust the URI as needed
     var request = http.MultipartRequest('POST', uri)
       ..files.add(await http.MultipartFile.fromPath('image', imagePath))
       ..fields['control_points'] = controlPoints.map((point) => '${point['x']},${point['y']}').join(';');
@@ -14,7 +15,8 @@ Future<String?> modifyImageSplineRequest(String imagePath, List<Map<String, int>
 
     if (response.statusCode == 200) {
       var responseData = await response.stream.toBytes();
-      var filePath = '${Directory.systemTemp.path}/modified_image.jpg';
+      var originalFileName = path.basenameWithoutExtension(imagePath);
+      var filePath = '${Directory.systemTemp.path}/${originalFileName}_modified_${DateTime.now().millisecondsSinceEpoch}.jpg';
       var file = File(filePath);
       await file.writeAsBytes(responseData);
       return filePath;

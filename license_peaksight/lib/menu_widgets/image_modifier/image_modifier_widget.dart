@@ -39,9 +39,8 @@ class _ImageModifierWidgetState extends State<ImageModifierWidget> {
   void modifyImageSpline() async {
     final controlPoints = [
       {'x': 0, 'y': 0},
-      {'x': 64, 'y': 70},
-      {'x': 128, 'y': 128},
-      {'x': 192, 'y': 190},
+      {'x': 111, 'y': 33},
+      {'x': 185, 'y': 118},
       {'x': 255, 'y': 255}
     ];
 
