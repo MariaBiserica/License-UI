@@ -21,30 +21,46 @@ class PanelCenterImageModifier extends StatelessWidget {
             ),
             child: Container(
               width: double.infinity, // Occupy all available width
-              height: MediaQuery.of(context).size.height - 2 * Constants.kPadding, // Occupy available height
+              height: MediaQuery.of(context).size.height - 13 * Constants.kPadding,
               padding: const EdgeInsets.all(Constants.kPadding),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
+              child: Stack(
                 children: [
-                  Text(
-                    "Modified Image",
-                    style: TextStyle(
-                      fontFamily: 'MOXABestine',
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
+                  Center(
+                    child: imagePath != null
+                        ? Image.file(File(imagePath!))
+                        : Text(
+                            "No modified image.",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 16,
+                            ),
+                          ),
+                  ),
+                  Positioned(
+                    top: 10,
+                    left: 10,
+                    right: 10,
+                    child: Card(
+                      color: Constants.purpleLight.withOpacity(0.8),
+                      elevation: 3,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(Constants.kPadding),
+                        child: Text(
+                          "Modified Image",
+                          style: TextStyle(
+                            fontFamily: 'MOXABestine',
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
                     ),
                   ),
-                  SizedBox(height: 10),
-                  imagePath != null
-                      ? Image.file(File(imagePath!))
-                      : Text(
-                          "No modified image.",
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 16,
-                          ),
-                        ),
                 ],
               ),
             ),

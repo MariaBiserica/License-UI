@@ -70,8 +70,8 @@ class _ImageModifierWidgetState extends State<ImageModifierWidget> {
         children: [
           Expanded(flex: 2, child: DrawerPage(onSectionSelected: widget.onSectionSelected)),
           Expanded(flex: 2, child: PanelLeftImageModifier(onMetricSelected: handleMetricSelected)),
-          Expanded(flex: 2, child: PanelCenterImageModifier(imagePath: modifiedImagePath)),
-          Expanded(flex: 4, child: PanelRightImageModifier(onImageSelected: widget.onImageSelected)),
+          Expanded(flex: 3, child: PanelCenterImageModifier(imagePath: modifiedImagePath)),
+          Expanded(flex: 3, child: PanelRightImageModifier(onImageSelected: widget.onImageSelected)),
         ],
       ),
     );
