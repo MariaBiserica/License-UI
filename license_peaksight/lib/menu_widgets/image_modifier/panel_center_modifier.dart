@@ -7,6 +7,15 @@ class PanelCenterImageModifier extends StatelessWidget {
 
   PanelCenterImageModifier({required this.imagePath});
 
+  void viewImage(BuildContext context, String imagePath) {
+    Navigator.of(context).push(PageRouteBuilder(
+      opaque: false,
+      pageBuilder: (BuildContext context, _, __) {
+        return ImageDetailView(imagePath: imagePath);
+      },
+    ));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -27,7 +36,16 @@ class PanelCenterImageModifier extends StatelessWidget {
                 children: [
                   Center(
                     child: imagePath != null
-                        ? Image.file(File(imagePath!))
+                        ? GestureDetector(
+                            onTap: () => viewImage(context, imagePath!),
+                            child: Hero(
+                              tag: imagePath!,
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(20),
+                                child: Image.file(File(imagePath!)),
+                              ),
+                            ),
+                          )
                         : Text(
                             "No modified image.",
                             style: TextStyle(
@@ -41,8 +59,8 @@ class PanelCenterImageModifier extends StatelessWidget {
                     left: 10,
                     right: 10,
                     child: Card(
-                      color: Constants.purpleLight.withOpacity(0.8),
-                      elevation: 3,
+                      color: Color.fromARGB(255, 71, 2, 77).withOpacity(0.8),
+                      elevation: 5,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(20),
                       ),
@@ -63,6 +81,30 @@ class PanelCenterImageModifier extends StatelessWidget {
                   ),
                 ],
               ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class ImageDetailView extends StatelessWidget {
+  final String imagePath;
+
+  ImageDetailView({required this.imagePath});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.black45,
+      body: GestureDetector(
+        onTap: () => Navigator.of(context).pop(),
+        child: Center(
+          child: Hero(
+            tag: imagePath,
+            child: InteractiveViewer(
+              child: Image.file(File(imagePath)),
             ),
           ),
         ),
