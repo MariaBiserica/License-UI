@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:license_peaksight/app_bar/app_bar_widget.dart';
 import 'package:license_peaksight/drawer/drawer_page.dart';
 import 'package:license_peaksight/menu_widgets/batch_processing/batch_processing_widget.dart';
+import 'package:license_peaksight/menu_widgets/image_modifier/image_modifier_widget.dart';
 import 'package:license_peaksight/responsive_layout.dart';
 import 'package:license_peaksight/menu_widgets/home/home_widget.dart';
 import 'package:license_peaksight/menu_widgets/image_quality_assessment/image_quality_widget.dart';
@@ -59,6 +60,12 @@ class _WidgetTreeState extends State<WidgetTree> {
             onImageSelected: _onImageSelected,
             onSectionSelected: _onSectionSelected,
         ); // My widget for Image Quality Assessment
+      case 'Image Modifier':
+        return ImageModifierWidget(
+            imagePath: _imagePath, 
+            onImageSelected: _onImageSelected,
+            onSectionSelected: _onSectionSelected,
+        ); // My widget for Image Modifier
       case 'Batch Processing':
         return BatchProcessingWidget(
             imagePaths: _imagePaths,
