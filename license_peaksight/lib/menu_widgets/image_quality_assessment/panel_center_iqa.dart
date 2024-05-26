@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:license_peaksight/constants.dart';
-import '../../quality_assessment/get_quality_scores.dart';
+import '../../server_requests/get_quality_scores.dart';
 
 class PanelCenterPage extends StatefulWidget {
   final String imagePath;

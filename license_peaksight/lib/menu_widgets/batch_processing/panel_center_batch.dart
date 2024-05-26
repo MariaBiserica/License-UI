@@ -6,7 +6,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as path;
 import 'package:file_picker/file_picker.dart';
 import 'package:license_peaksight/constants.dart';
-import '../../quality_assessment/get_quality_scores.dart';
+import '../../server_requests/get_quality_scores.dart';
 
 class PanelCenterBatchProcessing extends StatefulWidget {
   final List<String> imagePaths;

@@ -4,6 +4,7 @@ import 'package:license_peaksight/menu_widgets/image_modifier/panel_center_modif
 import 'package:license_peaksight/menu_widgets/image_modifier/panel_left_modifier.dart';
 import 'package:license_peaksight/menu_widgets/image_modifier/panel_right_modifier.dart';
 import 'package:license_peaksight/responsive_layout.dart';
+import 'package:license_peaksight/server_requests/image_modifier_service.dart';
 
 class ImageModifierWidget extends StatefulWidget {
   final String imagePath;
@@ -31,8 +32,23 @@ class _ImageModifierWidgetState extends State<ImageModifierWidget> {
     });
 
     if (metric == 'Spline Interpolation') {
-      //modifyImage();
+      modifyImageSpline();
     }
+  }
+
+  void modifyImageSpline() async {
+    final controlPoints = [
+      {'x': 0, 'y': 0},
+      {'x': 64, 'y': 70},
+      {'x': 128, 'y': 128},
+      {'x': 192, 'y': 190},
+      {'x': 255, 'y': 255}
+    ];
+
+    final filePath = await modifyImageSplineRequest(widget.imagePath, controlPoints);
+    setState(() {
+      modifiedImagePath = filePath;
+    });
   }
 
   @override
