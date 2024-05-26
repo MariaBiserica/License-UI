@@ -97,7 +97,7 @@ class _BatchProcessingWidgetState extends State<BatchProcessingWidget> {
             ),
           ),
           Expanded(
-            flex: 2,
+            flex: 3,
             child: PanelRightBatchProcessing(onImagesSelected: widget.onImagesSelected),
           ),
         ],
