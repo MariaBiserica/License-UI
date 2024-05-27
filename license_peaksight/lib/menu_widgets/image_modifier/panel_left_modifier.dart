@@ -22,7 +22,7 @@ class PointProvider with ChangeNotifier {
 }
 
 class PanelLeftImageModifier extends StatefulWidget {
-  final Function(String?) onMetricSelected;
+  final Function(String?, [double?]) onMetricSelected;
   final Function(List<Offset>) onPointsChanged;
 
   PanelLeftImageModifier({required this.onMetricSelected, required this.onPointsChanged});
@@ -41,6 +41,7 @@ class _PanelLeftImageModifierState extends State<PanelLeftImageModifier> {
     'Image Rotation'
   ];
   String? selectedMetric;
+  double rotationAngle = 45.0;
 
   void toggleMetric(String metric) {
     setState(() {
@@ -49,7 +50,7 @@ class _PanelLeftImageModifierState extends State<PanelLeftImageModifier> {
   }
 
   void startAnalysis() {
-    widget.onMetricSelected(selectedMetric);
+    widget.onMetricSelected(selectedMetric, selectedMetric == 'Image Rotation' ? rotationAngle : null);
   }
 
   @override
@@ -104,6 +105,27 @@ class _PanelLeftImageModifierState extends State<PanelLeftImageModifier> {
                               onChanged: (value) => toggleMetric(value!),
                               activeColor: Constants.endGradient,
                             )),
+                        if (selectedMetric == 'Image Rotation')
+                          Column(
+                            children: [
+                              Text(
+                                'Rotation Angle: ${rotationAngle.toInt()}°',
+                                style: TextStyle(color: Colors.white),
+                              ),
+                              Slider(
+                                value: rotationAngle,
+                                min: 0,
+                                max: 360,
+                                divisions: 360,
+                                label: rotationAngle.round().toString(),
+                                onChanged: (double value) {
+                                  setState(() {
+                                    rotationAngle = value;
+                                  });
+                                },
+                              ),
+                            ],
+                          ),
                         ElevatedButton(
                           onPressed: startAnalysis,
                           child: Text('Start Analysis', style: TextStyle(color: Colors.white)),

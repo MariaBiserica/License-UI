@@ -25,11 +25,14 @@ class _ImageModifierWidgetState extends State<ImageModifierWidget> {
   String? selectedMetric;
   Future<String?>? modifiedImagePathFuture;
   List<Offset> controlPoints = [];
+  double rotationAngle = 45.0;
 
-  void handleMetricSelected(String? metric) {
+  void handleMetricSelected(String? metric, [double? angle]) {
     print("Selected metric: $metric"); // Debug print to check the callback
     setState(() {
       selectedMetric = metric; // Update the selected metric
+      rotationAngle = angle ?? rotationAngle; // Update the rotation angle if provided
+
       if (metric == 'Spline Interpolation') {
         modifiedImagePathFuture = modifyImageSpline();
       } else if (metric == 'Gaussian Blur') {
@@ -41,7 +44,7 @@ class _ImageModifierWidgetState extends State<ImageModifierWidget> {
       } else if (metric == 'Histogram Equalization') {
         modifiedImagePathFuture = applyHistogramEqualization(widget.imagePath);
       } else if (metric == 'Image Rotation') {
-        modifiedImagePathFuture = applyImageRotation(widget.imagePath, 45); // Example angle
+        modifiedImagePathFuture = applyImageRotation(widget.imagePath, rotationAngle);
       }
     });
   }
