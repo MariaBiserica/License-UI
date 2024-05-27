@@ -33,17 +33,20 @@ class PanelLeftImageModifier extends StatefulWidget {
 
 class _PanelLeftImageModifierState extends State<PanelLeftImageModifier> {
   final List<String> metrics = [
-    'Spline Interpolation', 
-    'Gaussian Blur', 
-    'Edge Detection', 
-    'Color Space Conversion', 
-    'Histogram Equalization', 
-    'Image Rotation'
+    'Spline Interpolation',
+    'Gaussian Blur',
+    'Edge Detection',
+    'Color Space Conversion',
+    'Histogram Equalization',
+    'Image Rotation',
+    'Morphological Transformation',
   ];
   String? selectedMetric;
   double rotationAngle = 45.0;
   double blurAmount = 15.0;
   String selectedColorSpace = 'HSV';
+  String morphOperation = 'dilation';
+  int kernelSize = 3;
 
   void toggleMetric(String metric) {
     setState(() {
@@ -59,6 +62,9 @@ class _PanelLeftImageModifierState extends State<PanelLeftImageModifier> {
       options['blurAmount'] = blurAmount;
     } else if (selectedMetric == 'Color Space Conversion') {
       options['colorSpace'] = selectedColorSpace;
+    } else if (selectedMetric == 'Morphological Transformation') {
+      options['operation'] = morphOperation;
+      options['kernelSize'] = kernelSize;
     }
     widget.onMetricSelected(selectedMetric, options);
   }
@@ -160,8 +166,7 @@ class _PanelLeftImageModifierState extends State<PanelLeftImageModifier> {
                         if (selectedMetric == 'Color Space Conversion')
                           DropdownButton<String>(
                             value: selectedColorSpace,
-                            items: <String>['HSV', 'LAB', 'YCrCb']
-                                .map((String value) {
+                            items: <String>['HSV', 'LAB', 'YCrCb'].map((String value) {
                               return DropdownMenuItem<String>(
                                 value: value,
                                 child: Text(value, style: TextStyle(color: Colors.white)),
@@ -172,6 +177,41 @@ class _PanelLeftImageModifierState extends State<PanelLeftImageModifier> {
                                 selectedColorSpace = newValue!;
                               });
                             },
+                          ),
+                        if (selectedMetric == 'Morphological Transformation')
+                          Column(
+                            children: [
+                              DropdownButton<String>(
+                                value: morphOperation,
+                                items: <String>['dilation', 'erosion', 'opening', 'closing'].map((String value) {
+                                  return DropdownMenuItem<String>(
+                                    value: value,
+                                    child: Text(value, style: TextStyle(color: Colors.white)),
+                                  );
+                                }).toList(),
+                                onChanged: (String? newValue) {
+                                  setState(() {
+                                    morphOperation = newValue!;
+                                  });
+                                },
+                              ),
+                              Text(
+                                'Kernel Size: $kernelSize',
+                                style: TextStyle(color: Colors.white),
+                              ),
+                              Slider(
+                                value: kernelSize.toDouble(),
+                                min: 1,
+                                max: 20,
+                                divisions: 19,
+                                label: kernelSize.toString(),
+                                onChanged: (double value) {
+                                  setState(() {
+                                    kernelSize = value.toInt();
+                                  });
+                                },
+                              ),
+                            ],
                           ),
                         SizedBox(height: Constants.kPadding),
                         ElevatedButton(

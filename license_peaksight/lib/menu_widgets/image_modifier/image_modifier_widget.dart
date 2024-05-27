@@ -28,6 +28,8 @@ class _ImageModifierWidgetState extends State<ImageModifierWidget> {
   double rotationAngle = 45.0;
   double blurAmount = 15.0;
   String selectedColorSpace = 'HSV';
+  String morphOperation = 'dilation';
+  int kernelSize = 3;
 
   void handleMetricSelected(String? metric, [Map<String, dynamic>? options]) {
     print("Selected metric: $metric"); // Debug print to check the callback
@@ -37,6 +39,8 @@ class _ImageModifierWidgetState extends State<ImageModifierWidget> {
         rotationAngle = options['angle'] ?? rotationAngle; // Update the rotation angle if provided
         blurAmount = options['blurAmount'] ?? blurAmount; // Update the blur amount if provided
         selectedColorSpace = options['colorSpace'] ?? selectedColorSpace; // Update the color space if provided
+        morphOperation = options['operation'] ?? morphOperation;
+        kernelSize = options['kernelSize'] ?? kernelSize;
       }
 
       if (metric == 'Spline Interpolation') {
@@ -51,6 +55,8 @@ class _ImageModifierWidgetState extends State<ImageModifierWidget> {
         modifiedImagePathFuture = applyHistogramEqualization(widget.imagePath);
       } else if (metric == 'Image Rotation') {
         modifiedImagePathFuture = applyImageRotation(widget.imagePath, rotationAngle);
+      } else if (metric == 'Morphological Transformation') {
+        modifiedImagePathFuture = applyMorphologicalTransformation(widget.imagePath, morphOperation, kernelSize);
       }
     });
   }

@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 import 'package:path/path.dart' as path;
 import 'package:http/http.dart' as http;
@@ -150,6 +151,34 @@ Future<String?> applyImageRotation(String imagePath, double angle) async {
       var responseData = await response.stream.toBytes();
       var originalFileName = path.basenameWithoutExtension(imagePath);
       var filePath = '${Directory.systemTemp.path}/${originalFileName}_rotated_${DateTime.now().millisecondsSinceEpoch}.jpg';
+      var file = File(filePath);
+      await file.writeAsBytes(responseData);
+      return filePath;
+    } else {
+      print("Error: ${response.statusCode}");
+    }
+  } catch (e) {
+    print("Error fetching data: $e");
+  }
+  return null; // Return null if there's an error
+}
+
+Future<String?> applyMorphologicalTransformation(String imagePath, String operation, int kernelSize) async {
+  try {
+    var uri = Uri.parse('http://127.0.0.1:5000/apply_morphological_transformation');
+    var request = http.MultipartRequest('POST', uri)
+      ..files.add(await http.MultipartFile.fromPath('image', imagePath))
+      ..fields['operation'] = operation
+      ..fields['kernel_size'] = kernelSize.toString();
+
+    print("Sending request to server...");
+    var response = await request.send().timeout(Duration(seconds: 120));
+    print("Received response from server");
+
+    if (response.statusCode == 200) {
+      var responseData = await response.stream.toBytes();
+      var originalFileName = path.basenameWithoutExtension(imagePath);
+      var filePath = '${Directory.systemTemp.path}/${originalFileName}_morph_${DateTime.now().millisecondsSinceEpoch}.jpg';
       var file = File(filePath);
       await file.writeAsBytes(responseData);
       return filePath;
