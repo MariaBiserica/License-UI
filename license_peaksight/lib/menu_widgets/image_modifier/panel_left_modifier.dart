@@ -40,6 +40,7 @@ class _PanelLeftImageModifierState extends State<PanelLeftImageModifier> {
     'Histogram Equalization',
     'Image Rotation',
     'Morphological Transformation',
+    'Inverse Color',
   ];
   String? selectedMetric;
   double rotationAngle = 45.0;

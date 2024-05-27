@@ -190,3 +190,29 @@ Future<String?> applyMorphologicalTransformation(String imagePath, String operat
   }
   return null; // Return null if there's an error
 }
+
+Future<String?> applyInverseColor(String imagePath) async {
+  try {
+    var uri = Uri.parse('http://127.0.0.1:5000/apply_inverse_color');
+    var request = http.MultipartRequest('POST', uri)
+      ..files.add(await http.MultipartFile.fromPath('image', imagePath));
+
+    print("Sending request to server...");
+    var response = await request.send().timeout(Duration(seconds: 120));
+    print("Received response from server");
+
+    if (response.statusCode == 200) {
+      var responseData = await response.stream.toBytes();
+      var originalFileName = path.basenameWithoutExtension(imagePath);
+      var filePath = '${Directory.systemTemp.path}/${originalFileName}_inverted_${DateTime.now().millisecondsSinceEpoch}.jpg';
+      var file = File(filePath);
+      await file.writeAsBytes(responseData);
+      return filePath;
+    } else {
+      print("Error: ${response.statusCode}");
+    }
+  } catch (e) {
+    print("Error fetching data: $e");
+  }
+  return null; // Return null if there's an error
+}

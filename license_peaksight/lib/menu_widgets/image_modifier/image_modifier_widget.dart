@@ -57,6 +57,8 @@ class _ImageModifierWidgetState extends State<ImageModifierWidget> {
         modifiedImagePathFuture = applyImageRotation(widget.imagePath, rotationAngle);
       } else if (metric == 'Morphological Transformation') {
         modifiedImagePathFuture = applyMorphologicalTransformation(widget.imagePath, morphOperation, kernelSize);
+      } else if (metric == 'Inverse Color') {
+        modifiedImagePathFuture = applyInverseColor(widget.imagePath);
       }
     });
   }
