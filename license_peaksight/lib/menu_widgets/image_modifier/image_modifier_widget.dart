@@ -24,6 +24,7 @@ class ImageModifierWidget extends StatefulWidget {
 class _ImageModifierWidgetState extends State<ImageModifierWidget> {
   String? selectedMetric;
   Future<String?>? modifiedImagePathFuture;
+  List<Offset> controlPoints = [];
 
   void handleMetricSelected(String? metric) {
     print("Selected metric: $metric"); // Debug print to check the callback
@@ -35,15 +36,29 @@ class _ImageModifierWidgetState extends State<ImageModifierWidget> {
     });
   }
 
-  Future<String?> modifyImageSpline() async {
-    final controlPoints = [
-      {'x': 0, 'y': 0},
-      {'x': 111, 'y': 33},
-      {'x': 185, 'y': 118},
-      {'x': 255, 'y': 255}
-    ];
+  void handlePointsChanged(List<Offset> points) {
+    setState(() {
+      controlPoints = points;
+    });
+  }
 
-    final filePath = await modifyImageSplineRequest(widget.imagePath, controlPoints);
+  List<Map<String, int>> translateAndOrderPoints(List<Offset> points) {
+    final translatedPoints = points.map((point) {
+      final x = point.dx;
+      final y = 255 - point.dy;
+      return {'x': x.round(), 'y': y.round()};
+    }).toList();
+
+    translatedPoints.sort((a, b) => a['x']!.compareTo(b['x']!));
+    return translatedPoints;
+  }
+
+  Future<String?> modifyImageSpline() async {
+    final controlPointsMap = translateAndOrderPoints(controlPoints);
+
+    print("Translated and ordered control points: $controlPointsMap");
+
+    final filePath = await modifyImageSplineRequest(widget.imagePath, controlPointsMap);
     return filePath;
   }
 
@@ -60,13 +75,13 @@ class _ImageModifierWidgetState extends State<ImageModifierWidget> {
       largeTablet: Row(
         children: [
           Expanded(flex: 2, child: PanelCenterImageModifier(imagePathFuture: modifiedImagePathFuture)),
-          Expanded(flex: 3, child: PanelRightImageModifier(onImageSelected: widget.onImageSelected)),  
+          Expanded(flex: 3, child: PanelRightImageModifier(onImageSelected: widget.onImageSelected)),
         ],
       ),
       computer: Row(
         children: [
           Expanded(flex: 2, child: DrawerPage(onSectionSelected: widget.onSectionSelected)),
-          Expanded(flex: 2, child: PanelLeftImageModifier(onMetricSelected: handleMetricSelected)),
+          Expanded(flex: 2, child: PanelLeftImageModifier(onMetricSelected: handleMetricSelected, onPointsChanged: handlePointsChanged)),
           Expanded(flex: 3, child: PanelCenterImageModifier(imagePathFuture: modifiedImagePathFuture)),
           Expanded(flex: 3, child: PanelRightImageModifier(onImageSelected: widget.onImageSelected)),
         ],
