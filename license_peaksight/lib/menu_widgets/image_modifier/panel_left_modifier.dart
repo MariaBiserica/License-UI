@@ -32,7 +32,14 @@ class PanelLeftImageModifier extends StatefulWidget {
 }
 
 class _PanelLeftImageModifierState extends State<PanelLeftImageModifier> {
-  final List<String> metrics = ['Spline Interpolation', 'Other'];
+  final List<String> metrics = [
+    'Spline Interpolation', 
+    'Gaussian Blur', 
+    'Edge Detection', 
+    'Color Space Conversion', 
+    'Histogram Equalization', 
+    'Image Rotation'
+  ];
   String? selectedMetric;
 
   void toggleMetric(String metric) {

@@ -32,6 +32,16 @@ class _ImageModifierWidgetState extends State<ImageModifierWidget> {
       selectedMetric = metric; // Update the selected metric
       if (metric == 'Spline Interpolation') {
         modifiedImagePathFuture = modifyImageSpline();
+      } else if (metric == 'Gaussian Blur') {
+        modifiedImagePathFuture = applyGaussianBlur(widget.imagePath);
+      } else if (metric == 'Edge Detection') {
+        modifiedImagePathFuture = applyEdgeDetection(widget.imagePath);
+      } else if (metric == 'Color Space Conversion') {
+        modifiedImagePathFuture = applyColorSpaceConversion(widget.imagePath);
+      } else if (metric == 'Histogram Equalization') {
+        modifiedImagePathFuture = applyHistogramEqualization(widget.imagePath);
+      } else if (metric == 'Image Rotation') {
+        modifiedImagePathFuture = applyImageRotation(widget.imagePath, 45); // Example angle
       }
     });
   }
