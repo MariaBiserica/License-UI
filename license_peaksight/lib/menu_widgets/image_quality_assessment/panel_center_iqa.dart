@@ -101,7 +101,7 @@ class _PanelCenterPageState extends State<PanelCenterPage> {
 
   String getQualityLevelMessage(double? score) {
     if (score == null) return "No score calculated";
-    if (score > 5 || score < 1) return "Outlier score, image might be corrupted";
+    if (score > 5 || score < 1) return "Outlier";
     if (score > 4 && score <= 5) return "Excellent";
     if (score > 3 && score <= 4) return "Good";
     if (score > 2 && score <= 3) return "Fair";

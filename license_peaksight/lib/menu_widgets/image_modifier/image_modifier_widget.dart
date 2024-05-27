@@ -26,21 +26,27 @@ class _ImageModifierWidgetState extends State<ImageModifierWidget> {
   Future<String?>? modifiedImagePathFuture;
   List<Offset> controlPoints = [];
   double rotationAngle = 45.0;
+  double blurAmount = 15.0;
+  String selectedColorSpace = 'HSV';
 
-  void handleMetricSelected(String? metric, [double? angle]) {
+  void handleMetricSelected(String? metric, [Map<String, dynamic>? options]) {
     print("Selected metric: $metric"); // Debug print to check the callback
     setState(() {
       selectedMetric = metric; // Update the selected metric
-      rotationAngle = angle ?? rotationAngle; // Update the rotation angle if provided
+      if (options != null) {
+        rotationAngle = options['angle'] ?? rotationAngle; // Update the rotation angle if provided
+        blurAmount = options['blurAmount'] ?? blurAmount; // Update the blur amount if provided
+        selectedColorSpace = options['colorSpace'] ?? selectedColorSpace; // Update the color space if provided
+      }
 
       if (metric == 'Spline Interpolation') {
         modifiedImagePathFuture = modifyImageSpline();
       } else if (metric == 'Gaussian Blur') {
-        modifiedImagePathFuture = applyGaussianBlur(widget.imagePath);
+        modifiedImagePathFuture = applyGaussianBlur(widget.imagePath, blurAmount);
       } else if (metric == 'Edge Detection') {
         modifiedImagePathFuture = applyEdgeDetection(widget.imagePath);
       } else if (metric == 'Color Space Conversion') {
-        modifiedImagePathFuture = applyColorSpaceConversion(widget.imagePath);
+        modifiedImagePathFuture = applyColorSpaceConversion(widget.imagePath, selectedColorSpace);
       } else if (metric == 'Histogram Equalization') {
         modifiedImagePathFuture = applyHistogramEqualization(widget.imagePath);
       } else if (metric == 'Image Rotation') {

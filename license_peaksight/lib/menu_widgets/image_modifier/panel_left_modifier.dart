@@ -22,7 +22,7 @@ class PointProvider with ChangeNotifier {
 }
 
 class PanelLeftImageModifier extends StatefulWidget {
-  final Function(String?, [double?]) onMetricSelected;
+  final Function(String?, [Map<String, dynamic>?]) onMetricSelected;
   final Function(List<Offset>) onPointsChanged;
 
   PanelLeftImageModifier({required this.onMetricSelected, required this.onPointsChanged});
@@ -42,6 +42,8 @@ class _PanelLeftImageModifierState extends State<PanelLeftImageModifier> {
   ];
   String? selectedMetric;
   double rotationAngle = 45.0;
+  double blurAmount = 15.0;
+  String selectedColorSpace = 'HSV';
 
   void toggleMetric(String metric) {
     setState(() {
@@ -50,7 +52,15 @@ class _PanelLeftImageModifierState extends State<PanelLeftImageModifier> {
   }
 
   void startAnalysis() {
-    widget.onMetricSelected(selectedMetric, selectedMetric == 'Image Rotation' ? rotationAngle : null);
+    final Map<String, dynamic> options = {};
+    if (selectedMetric == 'Image Rotation') {
+      options['angle'] = rotationAngle;
+    } else if (selectedMetric == 'Gaussian Blur') {
+      options['blurAmount'] = blurAmount;
+    } else if (selectedMetric == 'Color Space Conversion') {
+      options['colorSpace'] = selectedColorSpace;
+    }
+    widget.onMetricSelected(selectedMetric, options);
   }
 
   @override
@@ -126,6 +136,44 @@ class _PanelLeftImageModifierState extends State<PanelLeftImageModifier> {
                               ),
                             ],
                           ),
+                        if (selectedMetric == 'Gaussian Blur')
+                          Column(
+                            children: [
+                              Text(
+                                'Blur Amount: ${blurAmount.toInt()}',
+                                style: TextStyle(color: Colors.white),
+                              ),
+                              Slider(
+                                value: blurAmount,
+                                min: 1,
+                                max: 100,
+                                divisions: 100,
+                                label: blurAmount.round().toString(),
+                                onChanged: (double value) {
+                                  setState(() {
+                                    blurAmount = value;
+                                  });
+                                },
+                              ),
+                            ],
+                          ),
+                        if (selectedMetric == 'Color Space Conversion')
+                          DropdownButton<String>(
+                            value: selectedColorSpace,
+                            items: <String>['HSV', 'LAB', 'YCrCb']
+                                .map((String value) {
+                              return DropdownMenuItem<String>(
+                                value: value,
+                                child: Text(value, style: TextStyle(color: Colors.white)),
+                              );
+                            }).toList(),
+                            onChanged: (String? newValue) {
+                              setState(() {
+                                selectedColorSpace = newValue!;
+                              });
+                            },
+                          ),
+                        SizedBox(height: Constants.kPadding),
                         ElevatedButton(
                           onPressed: startAnalysis,
                           child: Text('Start Analysis', style: TextStyle(color: Colors.white)),

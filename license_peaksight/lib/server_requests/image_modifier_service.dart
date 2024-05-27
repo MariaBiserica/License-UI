@@ -29,11 +29,12 @@ Future<String?> modifyImageSplineRequest(String imagePath, List<Map<String, int>
   return null; // Return null if there's an error
 }
 
-Future<String?> applyGaussianBlur(String imagePath) async {
+Future<String?> applyGaussianBlur(String imagePath, double blurAmount) async {
   try {
     var uri = Uri.parse('http://127.0.0.1:5000/apply_gaussian_blur');
     var request = http.MultipartRequest('POST', uri)
-      ..files.add(await http.MultipartFile.fromPath('image', imagePath));
+      ..files.add(await http.MultipartFile.fromPath('image', imagePath))
+      ..fields['blur_amount'] = blurAmount.toString();
 
     print("Sending request to server...");
     var response = await request.send().timeout(Duration(seconds: 120));
@@ -81,11 +82,12 @@ Future<String?> applyEdgeDetection(String imagePath) async {
   return null; // Return null if there's an error
 }
 
-Future<String?> applyColorSpaceConversion(String imagePath) async {
+Future<String?> applyColorSpaceConversion(String imagePath, String selectedColorSpace) async {
   try {
     var uri = Uri.parse('http://127.0.0.1:5000/apply_color_space_conversion');
     var request = http.MultipartRequest('POST', uri)
-      ..files.add(await http.MultipartFile.fromPath('image', imagePath));
+      ..files.add(await http.MultipartFile.fromPath('image', imagePath))
+      ..fields['color_space'] = selectedColorSpace;
 
     print("Sending request to server...");
     var response = await request.send().timeout(Duration(seconds: 120));
