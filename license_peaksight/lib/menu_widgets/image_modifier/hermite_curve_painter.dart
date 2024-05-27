@@ -7,13 +7,16 @@ class HermiteCurvePainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
+    final double margin = 20.0; // Margin for labels
+    final Offset origin = Offset(margin, size.height - margin); // Origin point with margins
+
     final paint = Paint()
       ..color = Colors.black
       ..strokeWidth = 2;
 
     // Draw the axes
-    canvas.drawLine(Offset(0, size.height), Offset(size.width, size.height), paint);
-    canvas.drawLine(Offset(0, 0), Offset(0, size.height), paint);
+    canvas.drawLine(origin, Offset(size.width - margin, origin.dy), paint); // X axis
+    canvas.drawLine(origin, Offset(origin.dx, margin), paint); // Y axis
 
     // Draw the grid and gradations
     final gridPaint = Paint()
@@ -24,28 +27,31 @@ class HermiteCurvePainter extends CustomPainter {
       textDirection: TextDirection.ltr,
     );
 
-    for (double i = 0; i <= size.width; i += size.width / 10) {
-      canvas.drawLine(Offset(i, 0), Offset(i, size.height), gridPaint);
+    final double graphWidth = size.width - 2 * margin;
+    final double graphHeight = size.height - 2 * margin;
+
+    for (double i = 0; i <= graphWidth; i += graphWidth * 2 / 10) {
+      canvas.drawLine(Offset(origin.dx + i, origin.dy), Offset(origin.dx + i, margin), gridPaint); // Vertical grid lines
       // Draw x-axis gradations
       final textSpan = TextSpan(
-        text: (i / size.width * 255).round().toString(),
+        text: (i / graphWidth * 255).round().toString(),
         style: TextStyle(color: Colors.black, fontSize: 12),
       );
       textPainter.text = textSpan;
       textPainter.layout();
-      textPainter.paint(canvas, Offset(i - textPainter.width / 2, size.height + 2));
+      textPainter.paint(canvas, Offset(origin.dx + i - textPainter.width / 2, origin.dy + 2));
     }
 
-    for (double i = 0; i <= size.height; i += size.height / 10) {
-      canvas.drawLine(Offset(0, i), Offset(size.width, i), gridPaint);
+    for (double i = 0; i <= graphHeight; i += graphHeight / 10) {
+      canvas.drawLine(Offset(origin.dx, origin.dy - i), Offset(size.width - margin, origin.dy - i), gridPaint); // Horizontal grid lines
       // Draw y-axis gradations
       final textSpan = TextSpan(
-        text: (255 - i / size.height * 255).round().toString(),
+        text: (i / graphHeight * 255).round().toString(),
         style: TextStyle(color: Colors.black, fontSize: 12),
       );
       textPainter.text = textSpan;
       textPainter.layout();
-      textPainter.paint(canvas, Offset(-textPainter.width - 2, i - textPainter.height / 2));
+      textPainter.paint(canvas, Offset(origin.dx - textPainter.width - 2, origin.dy - i - textPainter.height / 2));
     }
 
     // Draw the axes labels
@@ -55,7 +61,7 @@ class HermiteCurvePainter extends CustomPainter {
     );
     textPainter.text = textSpanX;
     textPainter.layout();
-    textPainter.paint(canvas, Offset(size.width - 20, size.height - 20));
+    textPainter.paint(canvas, Offset(size.width - margin + 4, origin.dy + 12));
 
     final textSpanY = TextSpan(
       text: 'Oy',
@@ -63,10 +69,18 @@ class HermiteCurvePainter extends CustomPainter {
     );
     textPainter.text = textSpanY;
     textPainter.layout();
-    textPainter.paint(canvas, Offset(10, 10));
+    textPainter.paint(canvas, Offset(15, margin - 25));
+
+    // Transform points to fit the coordinate system
+    final transformedPoints = points
+        .map((p) => Offset(
+              origin.dx + p.dx / 255 * graphWidth,
+              origin.dy - (255 - p.dy) / 255 * graphHeight, // Adjust Y transformation
+            ))
+        .toList();
 
     // Sort points by their x-coordinate
-    final sortedPoints = List<Offset>.from(points)..sort((a, b) => a.dx.compareTo(b.dx));
+    final sortedPoints = List<Offset>.from(transformedPoints)..sort((a, b) => a.dx.compareTo(b.dx));
 
     // Draw the Hermite curve
     if (sortedPoints.length >= 2) {
@@ -93,7 +107,7 @@ class HermiteCurvePainter extends CustomPainter {
           final y = h1 * p0.dy + h2 * p1.dy + h3 * m0.dy + h4 * m1.dy;
 
           // Ensure points are within canvas bounds
-          if (x >= 0 && x <= size.width && y >= 0 && y <= size.height) {
+          if (x >= margin && x <= size.width - margin && y >= margin && y <= size.height - margin) {
             canvas.drawCircle(Offset(x, y), 1, curvePaint);
           }
         }
@@ -105,16 +119,20 @@ class HermiteCurvePainter extends CustomPainter {
       ..color = Colors.blue
       ..strokeWidth = 6;
 
-    for (final point in sortedPoints) {
-      canvas.drawCircle(point, 4, pointPaint);
+    for (final point in points) {
+      final transformedPoint = Offset(
+        origin.dx + point.dx / 255 * graphWidth,
+        origin.dy - (255 - point.dy) / 255 * graphHeight,
+      );
+      canvas.drawCircle(transformedPoint, 4, pointPaint);
 
       final textSpan = TextSpan(
         text: '(${point.dx.round()}, ${255 - point.dy.round()})',
-        style: TextStyle(color: Colors.black, fontSize: 12),
+        style: TextStyle(color: Colors.black, fontSize: 8),
       );
       textPainter.text = textSpan;
       textPainter.layout();
-      textPainter.paint(canvas, Offset(point.dx + 5, point.dy - 12));
+      textPainter.paint(canvas, Offset(transformedPoint.dx + 5, transformedPoint.dy - 12));
     }
   }
 
