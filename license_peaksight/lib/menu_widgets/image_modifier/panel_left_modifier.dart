@@ -115,7 +115,28 @@ class _PanelLeftImageModifierState extends State<PanelLeftImageModifier> {
                       WidgetsBinding.instance.addPostFrameCallback((_) {
                         widget.onPointsChanged(pointProvider.points);
                       });
-                      return HermiteCurveInterpolation();
+                      return Padding(
+                        padding: const EdgeInsets.only(top: Constants.kPadding),
+                        child: Card(
+                          elevation: 3,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(Constants.kPadding),
+                            child: Column(
+                              children: [
+                                HermiteCurveInterpolation(),
+                                SizedBox(height: 10),
+                                ElevatedButton(
+                                  onPressed: () => pointProvider.clearPoints(),
+                                  child: Text('Clear Points'),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      );
                     },
                   ),
               ],
@@ -150,11 +171,6 @@ class HermiteCurveInterpolation extends StatelessWidget {
                   child: Container(),
                 ),
               ),
-            ),
-            SizedBox(height: 10),
-            ElevatedButton(
-              onPressed: () => pointProvider.clearPoints(),
-              child: Text('Clear Points'),
             ),
           ],
         );

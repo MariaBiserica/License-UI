@@ -92,7 +92,10 @@ class HermiteCurvePainter extends CustomPainter {
           final x = h1 * p0.dx + h2 * p1.dx + h3 * m0.dx + h4 * m1.dx;
           final y = h1 * p0.dy + h2 * p1.dy + h3 * m0.dy + h4 * m1.dy;
 
-          canvas.drawCircle(Offset(x, y), 1, curvePaint);
+          // Ensure points are within canvas bounds
+          if (x >= 0 && x <= size.width && y >= 0 && y <= size.height) {
+            canvas.drawCircle(Offset(x, y), 1, curvePaint);
+          }
         }
       }
     }
