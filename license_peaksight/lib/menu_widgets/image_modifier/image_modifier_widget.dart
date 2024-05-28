@@ -67,6 +67,8 @@ class _ImageModifierWidgetState extends State<ImageModifierWidget> {
         modifiedImagePathFuture = applyInverseColor(widget.imagePath);
       } else if (metric == 'Color Enhancement') {
         modifiedImagePathFuture = applyColorEnhancement(widget.imagePath, hueScalar, saturationScalar, valueScalar);
+      } else if (metric == 'Sharpening') {
+        modifiedImagePathFuture = applySharpening(widget.imagePath, kernelSize);
       }
     });
   }

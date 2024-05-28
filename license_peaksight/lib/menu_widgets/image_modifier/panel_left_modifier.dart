@@ -43,7 +43,8 @@ class _PanelLeftImageModifierState extends State<PanelLeftImageModifier> {
     'Image Rotation',
     'Morphological Transformation',
     'Inverse Color',
-    'Color Enhancement'
+    'Color Enhancement',
+    'Sharpening'
   ];
   String? selectedMetric;
   double rotationAngle = 45.0;
@@ -94,6 +95,8 @@ class _PanelLeftImageModifierState extends State<PanelLeftImageModifier> {
       options['hueScalar'] = hueScalar;
       options['saturationScalar'] = saturationScalar;
       options['valueScalar'] = valueScalar;
+    } else if (selectedMetric == 'Sharpening') {
+      options['kernelSize'] = kernelSize;
     }
     widget.onMetricSelected(selectedMetric, options);
   }
@@ -320,6 +323,27 @@ class _PanelLeftImageModifierState extends State<PanelLeftImageModifier> {
                                 onChanged: (double value) {
                                   setState(() {
                                     valueScalar = value;
+                                  });
+                                },
+                              ),
+                            ],
+                          ),
+                        if (selectedMetric == 'Sharpening')
+                          Column(
+                            children: [
+                              Text(
+                                'Kernel Size: $kernelSize',
+                                style: TextStyle(color: Colors.white),
+                              ),
+                              Slider(
+                                value: kernelSize.toDouble(),
+                                min: 1,
+                                max: 21,
+                                divisions: 10,
+                                label: kernelSize.toString(),
+                                onChanged: (double value) {
+                                  setState(() {
+                                    kernelSize = value.toInt();
                                   });
                                 },
                               ),
