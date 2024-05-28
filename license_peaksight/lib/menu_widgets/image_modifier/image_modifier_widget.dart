@@ -102,27 +102,63 @@ class _ImageModifierWidgetState extends State<ImageModifierWidget> {
   @override
   Widget build(BuildContext context) {
     return ResponsiveLayout(
-      tiny: Container(),
-      phone: PanelCenterImageModifier(imagePathFuture: modifiedImagePathFuture),
-      tablet: Row(
+      tiny: _buildScrollableColumnLayout(), // Single column for tiny layout
+      phone: _buildScrollableColumnLayout(), // Single column for phone layout
+      tablet: _buildTabletLayout(), // Custom layout for tablet
+      largeTablet: _buildLargeTabletLayout(), // Side by side layout for large tablet
+      computer: _buildComputerLayout(), // Side by side layout for computer
+    );
+  }
+
+  // Build a scrollable column layout for tiny and phone
+  Widget _buildScrollableColumnLayout() {
+    return SingleChildScrollView(
+      child: Column(
         children: [
-          Expanded(child: PanelCenterImageModifier(imagePathFuture: modifiedImagePathFuture)),
+          SizedBox(height: 400, child: PanelLeftImageModifier(onMetricSelected: handleMetricSelected, onPointsChanged: handlePointsChanged)),
+          SizedBox(height: 500, child: PanelCenterImageModifier(imagePathFuture: modifiedImagePathFuture)),
+          SizedBox(height: 500, child: PanelRightImageModifier(onImageSelected: widget.onImageSelected)),
+          SizedBox(height: 100),
         ],
       ),
-      largeTablet: Row(
-        children: [
-          Expanded(flex: 2, child: PanelCenterImageModifier(imagePathFuture: modifiedImagePathFuture)),
-          Expanded(flex: 3, child: PanelRightImageModifier(onImageSelected: widget.onImageSelected)),
-        ],
-      ),
-      computer: Row(
-        children: [
-          Expanded(flex: 2, child: DrawerPage(onSectionSelected: widget.onSectionSelected)),
-          Expanded(flex: 2, child: PanelLeftImageModifier(onMetricSelected: handleMetricSelected, onPointsChanged: handlePointsChanged)),
-          Expanded(flex: 3, child: PanelCenterImageModifier(imagePathFuture: modifiedImagePathFuture)),
-          Expanded(flex: 3, child: PanelRightImageModifier(onImageSelected: widget.onImageSelected)),
-        ],
-      ),
+    );
+  }
+
+  // Build a custom layout for tablet
+  Widget _buildTabletLayout() {
+    return Column(
+      children: [
+        Row(
+          children: [
+            Expanded(child: SizedBox(height: 210, child: PanelLeftImageModifier(onMetricSelected: handleMetricSelected, onPointsChanged: handlePointsChanged))),
+            Expanded(flex: 2, child: SizedBox(height: 210, child: PanelCenterImageModifier(imagePathFuture: modifiedImagePathFuture))),
+          ],
+        ),
+        SizedBox(height: 330, child: PanelRightImageModifier(onImageSelected: widget.onImageSelected)),
+      ],
+    );
+  }
+
+  // Build a custom layout for large tablet
+  Widget _buildLargeTabletLayout() {
+    return Row(
+      children: [
+        Expanded(flex: 2, child: PanelLeftImageModifier(onMetricSelected: handleMetricSelected, onPointsChanged: handlePointsChanged)),
+        Expanded(flex: 3, child: PanelCenterImageModifier(imagePathFuture: modifiedImagePathFuture)),
+        Expanded(flex: 3, child: PanelRightImageModifier(onImageSelected: widget.onImageSelected)),
+      ],
+    );
+  }
+
+  // Build a custom layout for computer
+  Widget _buildComputerLayout() {
+    return Row(
+      children: [
+        Expanded(flex: 2, child: DrawerPage(onSectionSelected: widget.onSectionSelected)),
+        Expanded(flex: 2, child: PanelLeftImageModifier(onMetricSelected: handleMetricSelected, onPointsChanged: handlePointsChanged)),
+        Expanded(flex: 3, child: PanelCenterImageModifier(imagePathFuture: modifiedImagePathFuture)),
+        Expanded(flex: 3, child: PanelRightImageModifier(onImageSelected: widget.onImageSelected)),
+      ],
     );
   }
 }
