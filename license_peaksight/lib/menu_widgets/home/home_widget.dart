@@ -10,7 +10,7 @@ class HomeWidget extends StatefulWidget {
   final String imagePath;
   final Function(String) onImageSelected;
   final Function(String) onSectionSelected; // callback for section changes
-  final List<NotificationCustom> notifications; // Notifications list
+  final ValueNotifier<List<NotificationCustom>> notifications; // Notifications list
   final Function(NotificationCustom) onRestore; // Callback to restore task
   final GlobalKey<RightPanelHomeState> rightPanelKey; // Key to access RightPanelHome state
 

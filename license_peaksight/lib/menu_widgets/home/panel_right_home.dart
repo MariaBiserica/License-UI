@@ -7,7 +7,7 @@ import 'package:license_peaksight/authentication/authentication_service.dart';
 import 'package:license_peaksight/menu_widgets/home/task.dart';
 
 class RightPanelHome extends StatefulWidget {
-  final List<NotificationCustom> notifications; // Notifications list
+  final ValueNotifier<List<NotificationCustom>> notifications; // Notifications list
   final Function(NotificationCustom) onRestore; // Callback to restore task
   final GlobalKey<RightPanelHomeState> key;
 
@@ -44,14 +44,13 @@ class RightPanelHomeState extends State<RightPanelHome> {
   }
 
   void _addNotification(Task task, String message) {
-    setState(() {
-      widget.notifications.add(NotificationCustom(
+    widget.notifications.value = List.from(widget.notifications.value)
+      ..add(NotificationCustom(
         id: DateTime.now().toIso8601String(),
         message: message,
         task: task,
         timestamp: DateTime.now(),
       ));
-    });
   }
 
   void _addOrEditTask({Task? task}) {
@@ -194,8 +193,7 @@ class RightPanelHomeState extends State<RightPanelHome> {
     _addNotification(task, "Task '${task.title}' deleted");
   }
   
-  void restoreTask(NotificationCustom notification) async {
-    Task task = notification.task;
+  void restoreTask(Task task) async {
     String? userId = _authService.getCurrentUserId();
     if (userId != null) {
       var docRef = await FirebaseFirestore.instance.collection('tasks').add({
@@ -205,7 +203,6 @@ class RightPanelHomeState extends State<RightPanelHome> {
       task.id = docRef.id;  // Update the local task id with the new document ID
       setState(() {
         tasks.add(task);
-        widget.notifications.remove(notification); // Remove the notification after restoring
       });
     }
   }

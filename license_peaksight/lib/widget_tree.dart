@@ -23,7 +23,7 @@ class _WidgetTreeState extends State<WidgetTree> {
   List<String> _imagePaths = []; // Holds the paths of the selected images
   String _currentSection = 'Home'; // Default section
   Set<String> _selectedMetrics = {}; // For the IQA widget
-  List<NotificationCustom> _notifications = []; // Manage notifications state
+  final ValueNotifier<List<NotificationCustom>> _notifications = ValueNotifier([]); // Manage notifications state
 
   final GlobalKey<RightPanelHomeState> _rightPanelKey = GlobalKey<RightPanelHomeState>();
 
@@ -53,12 +53,10 @@ class _WidgetTreeState extends State<WidgetTree> {
 
   // Handle the restoration of tasks
   void _handleRestore(NotificationCustom notification) {
-    setState(() {
-      _notifications.remove(notification); // Remove notification after restoration
-    });
+    _notifications.value = List.from(_notifications.value)..remove(notification); // Remove notification after restoration
     
     // Find the RightPanelHome and restore the task
-    _rightPanelKey.currentState?.restoreTask(notification);
+    _rightPanelKey.currentState?.restoreTask(notification.task);
   }
 
   // Returns the appropriate widget based on the current section.
@@ -112,11 +110,16 @@ class _WidgetTreeState extends State<WidgetTree> {
         child: (ResponsiveLayout.isTinyLimit(context) ||
                 ResponsiveLayout.isTinyHeightLimit(context)
                 ? Container() 
-                : AppBarWidget(
-                  avatarUrl: widget.userAvatarUrl,
-                  notifications: _notifications,
-                  onRestore: _handleRestore,  
-                )),
+                : ValueListenableBuilder<List<NotificationCustom>>(
+                    valueListenable: _notifications,
+                    builder: (context, notifications, child) {
+                      return AppBarWidget(
+                        avatarUrl: widget.userAvatarUrl,
+                        notifications: notifications,
+                        onRestore: _handleRestore,  
+                      );
+                    },
+                  )),
       ),
       body: _getSectionWidget(),
       drawer: DrawerPage(onSectionSelected: _onSectionSelected),
