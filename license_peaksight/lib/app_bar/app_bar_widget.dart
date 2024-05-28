@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:license_peaksight/app_bar/custom_avatar.dart';
+import 'package:license_peaksight/app_bar/notification_service.dart';
 import 'package:license_peaksight/constants.dart';
 import 'package:license_peaksight/responsive_layout.dart';
 
@@ -8,8 +9,10 @@ int _currentSelectedButton = 0;
 
 class AppBarWidget extends StatefulWidget {
   final String? avatarUrl;
+  final List<NotificationCustom> notifications; // Pass notifications to the AppBarWidget
+  final Function(NotificationCustom) onRestore; // Callback to restore task
 
-  AppBarWidget({this.avatarUrl});
+  AppBarWidget({this.avatarUrl, required this.notifications, required this.onRestore});
 
   @override
   _AppBarWidgetState createState() => _AppBarWidgetState();
@@ -25,7 +28,7 @@ class _AppBarWidgetState extends State<AppBarWidget> {
       builder: (context, snapshot) {
         User? user = snapshot.data;
         // Use the user's photo URL if available, otherwise use the avatar URL provided in the widget
-        String avatarUrl = widget.avatarUrl ?? "images/profile.png"; // user?.photoURL ?? widget.avatarUrl ?? "images/profile.png";
+        String avatarUrl = widget.avatarUrl ?? "images/profile.png";
         if (user?.photoURL != "" && user?.photoURL != null) {
           avatarUrl = user!.photoURL!;
         }
@@ -86,20 +89,26 @@ class _AppBarWidgetState extends State<AppBarWidget> {
               Stack(
                 children: [
                   IconButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      _showNotificationsDialog(context);
+                    },
                     icon: Icon(Icons.notifications_none_outlined),
                     color: Colors.white,
                     iconSize: 30,
                   ),
-                  Positioned(
-                    right: 6,
-                    top: 6,
-                    child: CircleAvatar(
-                      backgroundColor: Colors.pink,
-                      radius: 8,
-                      child: Text("3", style: TextStyle(fontSize: 10, color: Colors.white)),
+                  if (widget.notifications.isNotEmpty)
+                    Positioned(
+                      right: 6,
+                      top: 6,
+                      child: CircleAvatar(
+                        backgroundColor: Colors.pink,
+                        radius: 8,
+                        child: Text(
+                          "${widget.notifications.length}",
+                          style: TextStyle(fontSize: 10, color: Colors.white),
+                        ),
+                      ),
                     ),
-                  ),
                 ],
               ),
               if (!ResponsiveLayout.isPhone(context))
@@ -117,13 +126,52 @@ class _AppBarWidgetState extends State<AppBarWidget> {
                     radius: 30,
                     child: CustomAvatar(
                       imageUrl: avatarUrl,
-                      fallbackAsset: "images/profile.png" // Specify a default local asset image
+                      fallbackAsset: "images/profile.png", // Specify a default local asset image
                     ),
                   ),
                 ),
               SizedBox(width: Constants.kPadding),
             ],
           ),
+        );
+      },
+    );
+  }
+
+  void _showNotificationsDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text("Notifications"),
+          content: Container(
+            width: double.minPositive, // Ensures the dialog is only as wide as the content needs it to be
+            child: ListView.builder(
+              shrinkWrap: true,
+              itemCount: widget.notifications.length,
+              itemBuilder: (context, index) {
+                var notification = widget.notifications[index];
+                return ListTile(
+                  title: Text(notification.message),
+                  trailing: IconButton(
+                    icon: Icon(Icons.restore),
+                    onPressed: () {
+                      widget.onRestore(notification);
+                      Navigator.of(context).pop(); // Close the dialog
+                    },
+                  ),
+                );
+              },
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Close the dialog
+              },
+              child: Text('Close'),
+            ),
+          ],
         );
       },
     );

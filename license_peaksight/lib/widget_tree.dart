@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:license_peaksight/app_bar/app_bar_widget.dart';
+import 'package:license_peaksight/app_bar/notification_service.dart';
 import 'package:license_peaksight/drawer/drawer_page.dart';
 import 'package:license_peaksight/menu_widgets/batch_processing/batch_processing_widget.dart';
+import 'package:license_peaksight/menu_widgets/home/panel_right_home.dart';
 import 'package:license_peaksight/menu_widgets/image_modifier/image_modifier_widget.dart';
 import 'package:license_peaksight/responsive_layout.dart';
 import 'package:license_peaksight/menu_widgets/home/home_widget.dart';
@@ -21,6 +23,9 @@ class _WidgetTreeState extends State<WidgetTree> {
   List<String> _imagePaths = []; // Holds the paths of the selected images
   String _currentSection = 'Home'; // Default section
   Set<String> _selectedMetrics = {}; // For the IQA widget
+  List<NotificationCustom> _notifications = []; // Manage notifications state
+
+  final GlobalKey<RightPanelHomeState> _rightPanelKey = GlobalKey<RightPanelHomeState>();
 
   // Function to be called when an image is selected in PanelRightPage
   void _onImageSelected(String imagePath) {
@@ -46,13 +51,27 @@ class _WidgetTreeState extends State<WidgetTree> {
     setState(() => _selectedMetrics = metrics);
   }
 
+  // Handle the restoration of tasks
+  void _handleRestore(NotificationCustom notification) {
+    setState(() {
+      _notifications.remove(notification); // Remove notification after restoration
+    });
+    
+    // Find the RightPanelHome and restore the task
+    _rightPanelKey.currentState?.restoreTask(notification);
+  }
+
   // Returns the appropriate widget based on the current section.
   Widget _getSectionWidget() {
     switch (_currentSection) {
       case 'Home':
         return HomeWidget(
-            imagePath: _imagePath, onImageSelected: _onImageSelected,
+            imagePath: _imagePath, 
+            onImageSelected: _onImageSelected,
             onSectionSelected: _onSectionSelected,
+            notifications: _notifications,
+            onRestore: _handleRestore, // Pass the callback to HomeWidget
+            rightPanelKey: _rightPanelKey,
         ); // My widget for Home
       case 'Image Quality Assessment':
         return ImageQualityWidget(
@@ -78,6 +97,9 @@ class _WidgetTreeState extends State<WidgetTree> {
             imagePath: _imagePath, 
             onImageSelected: _onImageSelected,
             onSectionSelected: _onSectionSelected,
+            notifications: _notifications,
+            onRestore: _handleRestore,
+            rightPanelKey: _rightPanelKey,
         ); // Default to HomeWidget
     }
   }
@@ -90,7 +112,11 @@ class _WidgetTreeState extends State<WidgetTree> {
         child: (ResponsiveLayout.isTinyLimit(context) ||
                 ResponsiveLayout.isTinyHeightLimit(context)
                 ? Container() 
-                : AppBarWidget(avatarUrl: widget.userAvatarUrl,)),
+                : AppBarWidget(
+                  avatarUrl: widget.userAvatarUrl,
+                  notifications: _notifications,
+                  onRestore: _handleRestore,  
+                )),
       ),
       body: _getSectionWidget(),
       drawer: DrawerPage(onSectionSelected: _onSectionSelected),

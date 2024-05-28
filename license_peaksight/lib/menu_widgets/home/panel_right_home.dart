@@ -1,16 +1,23 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:license_peaksight/app_bar/notification_service.dart';
 import 'package:license_peaksight/constants.dart';
 import 'package:license_peaksight/authentication/authentication_service.dart';
 import 'package:license_peaksight/menu_widgets/home/task.dart';
 
 class RightPanelHome extends StatefulWidget {
+  final List<NotificationCustom> notifications; // Notifications list
+  final Function(NotificationCustom) onRestore; // Callback to restore task
+  final GlobalKey<RightPanelHomeState> key;
+
+  RightPanelHome({required this.notifications, required this.onRestore, required this.key});
+  
   @override
-  _RightPanelHomeState createState() => _RightPanelHomeState();
+  RightPanelHomeState createState() => RightPanelHomeState();
 }
 
-class _RightPanelHomeState extends State<RightPanelHome> {
+class RightPanelHomeState extends State<RightPanelHome> {
   final AuthService _authService = AuthService();
   List<Task> tasks = [];
 
@@ -34,6 +41,17 @@ class _RightPanelHomeState extends State<RightPanelHome> {
         tasks = tasksData;
       });
     }
+  }
+
+  void _addNotification(Task task, String message) {
+    setState(() {
+      widget.notifications.add(NotificationCustom(
+        id: DateTime.now().toIso8601String(),
+        message: message,
+        task: task,
+        timestamp: DateTime.now(),
+      ));
+    });
   }
 
   void _addOrEditTask({Task? task}) {
@@ -170,8 +188,26 @@ class _RightPanelHomeState extends State<RightPanelHome> {
   }
 
   void _deleteTask(String taskId) async {
+    var task = tasks.firstWhere((task) => task.id == taskId);
     await FirebaseFirestore.instance.collection('tasks').doc(taskId).delete();
     _fetchTasks();
+    _addNotification(task, "Task '${task.title}' deleted");
+  }
+  
+  void restoreTask(NotificationCustom notification) async {
+    Task task = notification.task;
+    String? userId = _authService.getCurrentUserId();
+    if (userId != null) {
+      var docRef = await FirebaseFirestore.instance.collection('tasks').add({
+        ...task.toMap(),
+        'userId': userId,
+      });
+      task.id = docRef.id;  // Update the local task id with the new document ID
+      setState(() {
+        tasks.add(task);
+        widget.notifications.remove(notification); // Remove the notification after restoring
+      });
+    }
   }
 
   @override
