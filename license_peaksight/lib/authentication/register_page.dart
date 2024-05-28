@@ -44,12 +44,18 @@ class _RegisterPageState extends State<RegisterPage> {
   List<String> predefinedAvatars = [
     'images/profile_avatars/avatar1.png',
     'images/profile_avatars/avatar2.png',
+    'images/profile_avatars/avatar3.png',
+    'images/profile_avatars/avatar4.png',
+    'images/profile_avatars/avatar5.png',
   ];
 
   // URLs for predefined avatars if already uploaded to Firebase Storage
   List<String> predefinedAvatarUrls = [
-    'https://firebasestorage.googleapis.com/v0/b/peak-sight.appspot.com/o/predefined_avatars%2Favatar1.png?alt=media&token=032c8aa9-dd58-4eb2-942b-ba6a2b9471d4',
-    'https://firebasestorage.googleapis.com/v0/b/peak-sight.appspot.com/o/predefined_avatars%2Favatar2.png?alt=media&token=f2314594-e2e2-4036-be30-64dff9ce0c27',
+    'https://firebasestorage.googleapis.com/v0/b/peak-sight.appspot.com/o/predefined_avatars%2Favatar1.png?alt=media&token=b4864658-00b9-4b67-a1cc-70a7fc2fe96f',
+    'https://firebasestorage.googleapis.com/v0/b/peak-sight.appspot.com/o/predefined_avatars%2Favatar2.png?alt=media&token=c0a1ba86-4b47-4b0a-86de-8897e733fded',
+    'https://firebasestorage.googleapis.com/v0/b/peak-sight.appspot.com/o/predefined_avatars%2Favatar3.png?alt=media&token=7277c976-7e5f-4206-8b69-3cd191c7239d',
+    'https://firebasestorage.googleapis.com/v0/b/peak-sight.appspot.com/o/predefined_avatars%2Favatar4.png?alt=media&token=99ccd0ec-e1cc-4ae6-a9f3-814e85139a8a',
+    'https://firebasestorage.googleapis.com/v0/b/peak-sight.appspot.com/o/predefined_avatars%2Favatar5.png?alt=media&token=354766bc-60f8-4dee-8028-085841d8dc25',
   ];
 
   CarouselController _carouselController = CarouselController();
