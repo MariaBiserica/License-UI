@@ -30,6 +30,9 @@ class _ImageModifierWidgetState extends State<ImageModifierWidget> {
   String selectedColorSpace = 'HSV';
   String morphOperation = 'dilation';
   int kernelSize = 3;
+  double hueScalar = 1.0;
+  double saturationScalar = 1.0;
+  double valueScalar = 1.0;
 
   void handleMetricSelected(String? metric, [Map<String, dynamic>? options]) {
     print("Selected metric: $metric"); // Debug print to check the callback
@@ -41,6 +44,9 @@ class _ImageModifierWidgetState extends State<ImageModifierWidget> {
         selectedColorSpace = options['colorSpace'] ?? selectedColorSpace; // Update the color space if provided
         morphOperation = options['operation'] ?? morphOperation;
         kernelSize = options['kernelSize'] ?? kernelSize;
+        hueScalar = options['hueScalar'] ?? hueScalar;
+        saturationScalar = options['saturationScalar'] ?? saturationScalar;
+        valueScalar = options['valueScalar'] ?? valueScalar;
       }
 
       if (metric == 'Spline Interpolation') {
@@ -59,6 +65,8 @@ class _ImageModifierWidgetState extends State<ImageModifierWidget> {
         modifiedImagePathFuture = applyMorphologicalTransformation(widget.imagePath, morphOperation, kernelSize);
       } else if (metric == 'Inverse Color') {
         modifiedImagePathFuture = applyInverseColor(widget.imagePath);
+      } else if (metric == 'Color Enhancement') {
+        modifiedImagePathFuture = applyColorEnhancement(widget.imagePath, hueScalar, saturationScalar, valueScalar);
       }
     });
   }

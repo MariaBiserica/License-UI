@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:license_peaksight/menu_widgets/image_modifier/hermite_curve_painter.dart';
 import 'package:provider/provider.dart';
@@ -41,6 +43,7 @@ class _PanelLeftImageModifierState extends State<PanelLeftImageModifier> {
     'Image Rotation',
     'Morphological Transformation',
     'Inverse Color',
+    'Color Enhancement'
   ];
   String? selectedMetric;
   double rotationAngle = 45.0;
@@ -48,10 +51,31 @@ class _PanelLeftImageModifierState extends State<PanelLeftImageModifier> {
   String selectedColorSpace = 'HSV';
   String morphOperation = 'dilation';
   int kernelSize = 3;
+  double hueScalar = 1.0;
+  double saturationScalar = 1.0;
+  double valueScalar = 1.0;
+
+  final List<Map<String, double>> colorEnhancementPresets = [
+    {'hueScalar': 0.7, 'saturationScalar': 1.5, 'valueScalar': 0.5}, // Low saturation, low value
+    {'hueScalar': 0.7, 'saturationScalar': 1.5, 'valueScalar': 1.5}, // Low saturation, high value
+    {'hueScalar': 1.3, 'saturationScalar': 1.5, 'valueScalar': 0.5}, // High saturation, low value
+    {'hueScalar': 1.3, 'saturationScalar': 1.5, 'valueScalar': 1.5}, // High saturation, high value
+    {'hueScalar': 1.1, 'saturationScalar': 1.2, 'valueScalar': 1.1}, // Slight enhancement
+    {'hueScalar': 1.2, 'saturationScalar': 1.5, 'valueScalar': 1.2}, // Medium enhancement
+    {'hueScalar': 1.5, 'saturationScalar': 2.0, 'valueScalar': 1.5}, // Strong enhancement
+  ];
 
   void toggleMetric(String metric) {
     setState(() {
       selectedMetric = (selectedMetric == metric) ? null : metric;
+    });
+  }
+
+  void applyPreset(Map<String, double> preset) {
+    setState(() {
+      hueScalar = preset['hueScalar']!;
+      saturationScalar = preset['saturationScalar']!;
+      valueScalar = preset['valueScalar']!;
     });
   }
 
@@ -66,6 +90,10 @@ class _PanelLeftImageModifierState extends State<PanelLeftImageModifier> {
     } else if (selectedMetric == 'Morphological Transformation') {
       options['operation'] = morphOperation;
       options['kernelSize'] = kernelSize;
+    } else if (selectedMetric == 'Color Enhancement') {
+      options['hueScalar'] = hueScalar;
+      options['saturationScalar'] = saturationScalar;
+      options['valueScalar'] = valueScalar;
     }
     widget.onMetricSelected(selectedMetric, options);
   }
@@ -209,6 +237,89 @@ class _PanelLeftImageModifierState extends State<PanelLeftImageModifier> {
                                 onChanged: (double value) {
                                   setState(() {
                                     kernelSize = value.toInt();
+                                  });
+                                },
+                              ),
+                            ],
+                          ),
+                        if (selectedMetric == 'Color Enhancement')
+                          Column(
+                            children: [
+                              Text(
+                                'Presets',
+                                style: TextStyle(fontWeight: FontWeight.bold, color: Color.fromARGB(172, 255, 255, 255), fontSize: 16),
+                              ),
+                              SizedBox(height: 10),
+                              Wrap(
+                                spacing: 8.0,
+                                runSpacing: 4.0,
+                                children: colorEnhancementPresets.map((preset) {
+                                  final bool isSelected = hueScalar == preset['hueScalar'] &&
+                                      saturationScalar == preset['saturationScalar'] &&
+                                      valueScalar == preset['valueScalar'];
+                                  return ElevatedButton(
+                                    onPressed: () => applyPreset(preset),
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: isSelected ? Color.fromARGB(215, 253, 141, 169) : Constants.panelForeground,
+                                    ),
+                                    child: Text(
+                                      'Hue: ${preset['hueScalar']}, Sat: ${preset['saturationScalar']}, Val: ${preset['valueScalar']}',
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                  );
+                                }).toList(),
+                              ),
+                              SizedBox(height: 10),
+                              Text(
+                                'Custom',
+                                style: TextStyle(fontWeight: FontWeight.bold, color: Color.fromARGB(172, 255, 255, 255), fontSize: 16),
+                              ),
+                              SizedBox(height: 5),
+                              Text(
+                                'Hue Scalar: ${hueScalar.toStringAsFixed(2)}',
+                                style: TextStyle(color: Colors.white),
+                              ),
+                              Slider(
+                                value: hueScalar,
+                                min: 0.0,
+                                max: 2.0,
+                                divisions: 20,
+                                label: hueScalar.toStringAsFixed(2),
+                                onChanged: (double value) {
+                                  setState(() {
+                                    hueScalar = value;
+                                  });
+                                },
+                              ),
+                              Text(
+                                'Saturation Scalar: ${saturationScalar.toStringAsFixed(2)}',
+                                style: TextStyle(color: Colors.white),
+                              ),
+                              Slider(
+                                value: saturationScalar,
+                                min: 0.0,
+                                max: 2.0,
+                                divisions: 20,
+                                label: saturationScalar.toStringAsFixed(2),
+                                onChanged: (double value) {
+                                  setState(() {
+                                    saturationScalar = value;
+                                  });
+                                },
+                              ),
+                              Text(
+                                'Value Scalar: ${valueScalar.toStringAsFixed(2)}',
+                                style: TextStyle(color: Colors.white),
+                              ),
+                              Slider(
+                                value: valueScalar,
+                                min: 0.0,
+                                max: 2.0,
+                                divisions: 20,
+                                label: valueScalar.toStringAsFixed(2),
+                                onChanged: (double value) {
+                                  setState(() {
+                                    valueScalar = value;
                                   });
                                 },
                               ),
