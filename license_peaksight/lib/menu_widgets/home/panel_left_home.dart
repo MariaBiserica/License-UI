@@ -14,68 +14,70 @@ class _LeftPanelHomeState extends State<LeftPanelHome> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.all(Constants.kPaddingHome / 2),
-      margin: EdgeInsets.all(Constants.kPaddingHome), // Adds margin around the container
-      decoration: BoxDecoration(
-        color: Constants.panelBackground,
-        borderRadius: BorderRadius.circular(Constants.borderRadius), // Rounded corners
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.2),
-            spreadRadius: 1,
-            blurRadius: 20,
-            offset: Offset(0, 10), // Changes position of shadow
-          ),
-        ],
-      ),
-      child: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            SizedBox(height: Constants.kPaddingHome),
-            Text(
-              'Quick Access',
-              style: TextStyle(
-                fontFamily: 'HeaderFont', 
-                fontSize: 34, 
-                color: Color.fromARGB(215, 255, 255, 255),
-                shadows: <Shadow>[
-                  Shadow(
-                    color: Colors.black.withOpacity(0.5),
-                    offset: Offset(1, 1),
-                    blurRadius: 2,
-                  ),
-                ],
+    return Scaffold(
+      body: SingleChildScrollView(
+        child: Container(
+          padding: EdgeInsets.all(Constants.kPaddingHome / 2),
+          margin: EdgeInsets.all(Constants.kPaddingHome), // Adds margin around the container
+          decoration: BoxDecoration(
+            color: Constants.panelBackground,
+            borderRadius: BorderRadius.circular(Constants.borderRadius), // Rounded corners
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.2),
+                spreadRadius: 1,
+                blurRadius: 20,
+                offset: Offset(0, 10), // Changes position of shadow
               ),
-            ),
-            StreamBuilder(
-              stream: _taskStream(),
-              builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-                if (snapshot.hasData) {
-                  int completedTasks = 0;
-                  int inProgressTasks = 0;
-                  int queuedTasks = 0;
+            ],
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              SizedBox(height: Constants.kPaddingHome),
+              Text(
+                'Quick Access',
+                style: TextStyle(
+                  fontFamily: 'HeaderFont', 
+                  fontSize: 34, 
+                  color: Color.fromARGB(215, 255, 255, 255),
+                  shadows: <Shadow>[
+                    Shadow(
+                      color: Colors.black.withOpacity(0.5),
+                      offset: Offset(1, 1),
+                      blurRadius: 2,
+                    ),
+                  ],
+                ),
+              ),
+              StreamBuilder(
+                stream: _taskStream(),
+                builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                  if (snapshot.hasData) {
+                    int completedTasks = 0;
+                    int inProgressTasks = 0;
+                    int queuedTasks = 0;
 
-                  snapshot.data!.docs.forEach((doc) {
-                    Task task = Task.fromMap(doc.data() as Map<String, dynamic>, doc.id);
-                    if (task.status == 'completed') {
-                      completedTasks++;
-                    } else if (task.status == 'in progress') {
-                      inProgressTasks++;
-                    } else if (task.status == 'queued') {
-                      queuedTasks++;
-                    }
-                  });
+                    snapshot.data!.docs.forEach((doc) {
+                      Task task = Task.fromMap(doc.data() as Map<String, dynamic>, doc.id);
+                      if (task.status == 'completed') {
+                        completedTasks++;
+                      } else if (task.status == 'in progress') {
+                        inProgressTasks++;
+                      } else if (task.status == 'queued') {
+                        queuedTasks++;
+                      }
+                    });
 
-                  return _buildStatsOverview(completedTasks, inProgressTasks, queuedTasks);
-                } else if (snapshot.hasError) {
-                  return Text("Error: ${snapshot.error}");
-                }
-                return CircularProgressIndicator();
-              },
-            ),
-          ],
+                    return _buildStatsOverview(completedTasks, inProgressTasks, queuedTasks);
+                  } else if (snapshot.hasError) {
+                    return Text("Error: ${snapshot.error}");
+                  }
+                  return CircularProgressIndicator();
+                },
+              ),
+            ],
+          ),
         ),
       ),
     );
