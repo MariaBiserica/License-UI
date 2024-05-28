@@ -11,8 +11,14 @@ class AppBarWidget extends StatefulWidget {
   final String? avatarUrl;
   final List<NotificationCustom> notifications; // Pass notifications to the AppBarWidget
   final Function(NotificationCustom) onRestore; // Callback to restore task
+  final VoidCallback onClearNotifications; // Callback to clear notifications
 
-  AppBarWidget({this.avatarUrl, required this.notifications, required this.onRestore});
+  AppBarWidget({
+    this.avatarUrl,
+    required this.notifications,
+    required this.onRestore,
+    required this.onClearNotifications,
+  });
 
   @override
   _AppBarWidgetState createState() => _AppBarWidgetState();
@@ -170,6 +176,13 @@ class _AppBarWidgetState extends State<AppBarWidget> {
                 Navigator.of(context).pop(); // Close the dialog
               },
               child: Text('Close'),
+            ),
+            TextButton(
+              onPressed: () {
+                widget.onClearNotifications();
+                Navigator.of(context).pop(); // Close the dialog
+              },
+              child: Text('Clear Notifications'),
             ),
           ],
         );

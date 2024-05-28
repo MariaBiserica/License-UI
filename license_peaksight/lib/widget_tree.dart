@@ -59,6 +59,13 @@ class _WidgetTreeState extends State<WidgetTree> {
     _rightPanelKey.currentState?.restoreTask(notification.task);
   }
 
+  // Handle the clearing of notifications
+  void _handleClearNotifications() {
+    setState(() {
+      _notifications.value = [];
+    });
+  }
+
   // Returns the appropriate widget based on the current section.
   Widget _getSectionWidget() {
     switch (_currentSection) {
@@ -116,7 +123,8 @@ class _WidgetTreeState extends State<WidgetTree> {
                       return AppBarWidget(
                         avatarUrl: widget.userAvatarUrl,
                         notifications: notifications,
-                        onRestore: _handleRestore,  
+                        onRestore: _handleRestore,
+                        onClearNotifications: _handleClearNotifications,  
                       );
                     },
                   )),
