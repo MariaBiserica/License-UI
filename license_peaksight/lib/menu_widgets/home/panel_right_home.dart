@@ -231,11 +231,17 @@ class RightPanelHomeState extends State<RightPanelHome> {
           Text(
             'Tasks & Goals',
             style: TextStyle(
-              fontFamily: 'MOXABestine', 
-              fontSize: 20, 
-              fontWeight: FontWeight.bold, 
-              color: Colors.white
-            ),
+                fontFamily: 'HeaderFont', 
+                fontSize: 35, 
+                color: Color.fromARGB(215, 255, 255, 255),
+                shadows: <Shadow>[
+                  Shadow(
+                    color: Colors.black.withOpacity(0.5),
+                    offset: Offset(1, 1),
+                    blurRadius: 2,
+                  ),
+                ],
+              ),
           ),
           SizedBox(height: Constants.kPaddingHome),
           Expanded( // This will contain the scrollable part

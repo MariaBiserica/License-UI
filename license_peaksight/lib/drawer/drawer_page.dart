@@ -52,13 +52,13 @@ class _DrawerPageState extends State<DrawerPage> {
                         color: Colors.white,
                         shadows: [
                           Shadow(
-                            offset: Offset(1.0, 1.0),
-                            blurRadius: 3.0,
+                            offset: Offset(5.0, 1.0),
+                            blurRadius: 2.0,
                             color: Color.fromARGB(150, 0, 0, 0),
                           ),
                         ],
-                        fontFamily: 'MOXABestine',
-                        fontSize: 40,
+                        fontFamily: 'MenuFont',
+                        fontSize: 55,
                       ),
                     ),
                     trailing: ResponsiveLayout.isComputer(context)

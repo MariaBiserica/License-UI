@@ -88,6 +88,12 @@ flutter:
     - family: Rastaglion
       fonts:
         - asset: assets/fonts/Rastaglion.ttf
+    - family: HeaderFont
+      fonts:
+        - asset: assets/fonts/Waylimo.ttf
+    - family: MenuFont
+      fonts:
+        - asset: assets/fonts/Rastaglion.ttf
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
