@@ -31,29 +31,75 @@ class _HomeWidgetState extends State<HomeWidget> {
   @override
   Widget build(BuildContext context) {
     return ResponsiveLayout(
-      tiny: Container(),
-      phone: CenterPanelHome(), 
-      tablet: Row(
+      tiny: _buildScrollableColumnLayout(), // Single column for tiny layout
+      phone: _buildScrollableColumnLayout(), // Single column for phone layout
+      tablet: _buildTabletLayout(), // Custom layout for tablet
+      largeTablet: _buildLargeTabletLayout(), // Side by side layout for large tablet
+      computer: _buildComputerLayout(), // Side by side layout for computer
+    );
+  }
+
+  Widget _buildScrollableColumnLayout() {
+    return SingleChildScrollView(
+      child: Column(
         children: [
-          Expanded(child: LeftPanelHome()),
-          Expanded(flex: 2, child: CenterPanelHome()),
+          SizedBox(height: 400, child: LeftPanelHome()),
+          SizedBox(height: 500, child: CenterPanelHome()),
+          SizedBox(height: 500, child: RightPanelHome(
+            notifications: widget.notifications,
+            onRestore: widget.onRestore,
+            key: widget.rightPanelKey,
+          )),
+          SizedBox(height: 100),
         ],
       ),
-      largeTablet: Row(
-        children: [
-          Expanded(flex: 2, child: LeftPanelHome()),
-          Expanded(flex: 2, child: CenterPanelHome()),
-          Expanded(flex: 3, child: RightPanelHome(notifications: widget.notifications, onRestore: widget.onRestore, key: widget.rightPanelKey)),  
-        ],
-      ),
-      computer: Row(
-        children: [
-          Expanded(flex: 2, child: DrawerPage(onSectionSelected: widget.onSectionSelected)),
-          Expanded(flex: 2, child: LeftPanelHome()),
-          Expanded(flex: 2, child: CenterPanelHome()),
-          Expanded(flex: 4, child: RightPanelHome(notifications: widget.notifications, onRestore: widget.onRestore, key: widget.rightPanelKey)),  
-        ],
-      ),
+    );
+  }
+
+  Widget _buildTabletLayout() {
+    return Column(
+      children: [
+        Row(
+          children: [
+            Expanded(child: SizedBox(height: 210, child: LeftPanelHome())),
+            Expanded(flex: 2, child: SizedBox(height: 210, child: CenterPanelHome())),
+          ],
+        ),
+        SizedBox(height: 330, child: RightPanelHome(
+          notifications: widget.notifications,
+          onRestore: widget.onRestore,
+          key: widget.rightPanelKey,
+        )),
+      ],
+    );
+  }
+
+  Widget _buildLargeTabletLayout() {
+    return Row(
+      children: [
+        Expanded(flex: 2, child: LeftPanelHome()),
+        Expanded(flex: 2, child: CenterPanelHome()),
+        Expanded(flex: 4, child: RightPanelHome(
+          notifications: widget.notifications,
+          onRestore: widget.onRestore,
+          key: widget.rightPanelKey,
+        )),
+      ],
+    );
+  }
+
+  Widget _buildComputerLayout() {
+    return Row(
+      children: [
+        Expanded(flex: 2, child: DrawerPage(onSectionSelected: widget.onSectionSelected)),
+        Expanded(flex: 2, child: LeftPanelHome()),
+        Expanded(flex: 2, child: CenterPanelHome()),
+        Expanded(flex: 4, child: RightPanelHome(
+          notifications: widget.notifications,
+          onRestore: widget.onRestore,
+          key: widget.rightPanelKey,
+        )),
+      ],
     );
   }
 }

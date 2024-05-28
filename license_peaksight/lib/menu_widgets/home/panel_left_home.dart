@@ -29,47 +29,49 @@ class _LeftPanelHomeState extends State<LeftPanelHome> {
           ),
         ],
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          SizedBox(height: Constants.kPaddingHome),
-          Text(
-            'Quick Access',
-            style: TextStyle(
-              fontFamily: 'MOXABestine', 
-              fontSize: 20, 
-              fontWeight: FontWeight.bold, 
-              color: Colors.white
+      child: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            SizedBox(height: Constants.kPaddingHome),
+            Text(
+              'Quick Access',
+              style: TextStyle(
+                fontFamily: 'MOXABestine', 
+                fontSize: 20, 
+                fontWeight: FontWeight.bold, 
+                color: Colors.white
+              ),
             ),
-          ),
-          SizedBox(height: Constants.kPaddingHome),
-          StreamBuilder(
-            stream: _taskStream(),
-            builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-              if (snapshot.hasData) {
-                int completedTasks = 0;
-                int inProgressTasks = 0;
-                int queuedTasks = 0;
+            SizedBox(height: Constants.kPaddingHome),
+            StreamBuilder(
+              stream: _taskStream(),
+              builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                if (snapshot.hasData) {
+                  int completedTasks = 0;
+                  int inProgressTasks = 0;
+                  int queuedTasks = 0;
 
-                snapshot.data!.docs.forEach((doc) {
-                  Task task = Task.fromMap(doc.data() as Map<String, dynamic>, doc.id);
-                  if (task.status == 'completed') {
-                    completedTasks++;
-                  } else if (task.status == 'in progress') {
-                    inProgressTasks++;
-                  } else if (task.status == 'queued') {
-                    queuedTasks++;
-                  }
-                });
+                  snapshot.data!.docs.forEach((doc) {
+                    Task task = Task.fromMap(doc.data() as Map<String, dynamic>, doc.id);
+                    if (task.status == 'completed') {
+                      completedTasks++;
+                    } else if (task.status == 'in progress') {
+                      inProgressTasks++;
+                    } else if (task.status == 'queued') {
+                      queuedTasks++;
+                    }
+                  });
 
-                return _buildStatsOverview(completedTasks, inProgressTasks, queuedTasks);
-              } else if (snapshot.hasError) {
-                return Text("Error: ${snapshot.error}");
-              }
-              return CircularProgressIndicator();
-            },
-          ),
-        ],
+                  return _buildStatsOverview(completedTasks, inProgressTasks, queuedTasks);
+                } else if (snapshot.hasError) {
+                  return Text("Error: ${snapshot.error}");
+                }
+                return CircularProgressIndicator();
+              },
+            ),
+          ],
+        ),
       ),
     );
   }
