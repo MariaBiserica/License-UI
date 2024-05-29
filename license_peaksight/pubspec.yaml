@@ -94,6 +94,9 @@ flutter:
     - family: MenuFont
       fonts:
         - asset: assets/fonts/Rastaglion.ttf
+    - family: WelcomeFont
+      fonts:
+        - asset: assets/fonts/Partly Notes Single Line.ttf
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
