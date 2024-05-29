@@ -44,7 +44,9 @@ class _PanelLeftImageModifierState extends State<PanelLeftImageModifier> {
     'Morphological Transformation',
     'Inverse Color',
     'Color Enhancement',
-    'Sharpening'
+    'Sharpening',
+    'Median Blur',
+    'Noise Reduction',
   ];
   String? selectedMetric;
   double rotationAngle = 45.0;
@@ -96,6 +98,8 @@ class _PanelLeftImageModifierState extends State<PanelLeftImageModifier> {
       options['saturationScalar'] = saturationScalar;
       options['valueScalar'] = valueScalar;
     } else if (selectedMetric == 'Sharpening') {
+      options['kernelSize'] = kernelSize;
+    } else if (selectedMetric == 'Median Blur') {
       options['kernelSize'] = kernelSize;
     }
     widget.onMetricSelected(selectedMetric, options);
@@ -334,7 +338,7 @@ class _PanelLeftImageModifierState extends State<PanelLeftImageModifier> {
                               ),
                             ],
                           ),
-                        if (selectedMetric == 'Sharpening')
+                        if (selectedMetric == 'Sharpening' || selectedMetric == 'Median Blur')
                           Column(
                             children: [
                               Text(

@@ -69,6 +69,10 @@ class _ImageModifierWidgetState extends State<ImageModifierWidget> {
         modifiedImagePathFuture = applyColorEnhancement(widget.imagePath, hueScalar, saturationScalar, valueScalar);
       } else if (metric == 'Sharpening') {
         modifiedImagePathFuture = applySharpening(widget.imagePath, kernelSize);
+      } else if (metric == 'Median Blur') {
+        modifiedImagePathFuture = applyMedianBlur(widget.imagePath, kernelSize);
+      } else if (metric == 'Noise Reduction') {
+        modifiedImagePathFuture = applyNoiseReduction(widget.imagePath);
       }
     });
   }

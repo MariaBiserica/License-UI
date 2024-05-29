@@ -272,3 +272,60 @@ Future<String?> applySharpening(String imagePath, int kernelSize) async {
   }
   return null; // Return null if there's an error
 }
+
+Future<String?> applyMedianBlur(String imagePath, int kernelSize) async {
+  try {
+    var uri = Uri.parse('http://127.0.0.1:5000/apply_median_blur');
+    var request = http.MultipartRequest('POST', uri)
+      ..files.add(await http.MultipartFile.fromPath('image', imagePath))
+      ..fields['kernel_size'] = kernelSize.toString();
+
+    print("Sending request to server...");
+    var response = await request.send().timeout(Duration(seconds: 120));
+    print("Received response from server");
+
+    if (response.statusCode == 200) {
+      var responseData = await response.stream.toBytes();
+      var originalFileName = path.basenameWithoutExtension(imagePath);
+      var filePath = '${Directory.systemTemp.path}/${originalFileName}_filtered_${DateTime.now().millisecondsSinceEpoch}.jpg';
+      var file = File(filePath);
+      await file.writeAsBytes(responseData);
+      return filePath;
+    } else {
+      print("Error: ${response.statusCode}");
+    }
+  } catch (e) {
+    print("Error fetching data: $e");
+  }
+  return null; // Return null if there's an error
+}
+
+Future<String?> applyNoiseReduction(String imagePath, {int h = 10, int hForColorComponents = 10, int templateWindowSize = 7, int searchWindowSize = 21}) async {
+  try {
+    var uri = Uri.parse('http://127.0.0.1:5000/apply_noise_reduction');
+    var request = http.MultipartRequest('POST', uri)
+      ..files.add(await http.MultipartFile.fromPath('image', imagePath))
+      ..fields['h'] = h.toString()
+      ..fields['hForColorComponents'] = hForColorComponents.toString()
+      ..fields['templateWindowSize'] = templateWindowSize.toString()
+      ..fields['searchWindowSize'] = searchWindowSize.toString();
+
+    print("Sending request to server...");
+    var response = await request.send().timeout(Duration(seconds: 120));
+    print("Received response from server");
+
+    if (response.statusCode == 200) {
+      var responseData = await response.stream.toBytes();
+      var originalFileName = path.basenameWithoutExtension(imagePath);
+      var filePath = '${Directory.systemTemp.path}/${originalFileName}_denoised_${DateTime.now().millisecondsSinceEpoch}.jpg';
+      var file = File(filePath);
+      await file.writeAsBytes(responseData);
+      return filePath;
+    } else {
+      print("Error: ${response.statusCode}");
+    }
+  } catch (e) {
+    print("Error fetching data: $e");
+  }
+  return null; // Return null if there's an error
+}
