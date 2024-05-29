@@ -93,43 +93,15 @@ class _AppBarWidgetState extends State<AppBarWidget> {
                           .snapshots(),
                       builder: (context, snapshot) {
                         if (snapshot.connectionState == ConnectionState.waiting) {
-                          return Text(
-                            "Welcome back!",
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          );
+                          return _buildWelcomeMessage("Welcome back!");
                         } else if (snapshot.hasError) {
-                          return Text(
-                            "Error loading username",
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          );
+                          return _buildWelcomeMessage("Error loading username");
                         } else if (!snapshot.hasData || !snapshot.data!.exists) {
-                          return Text(
-                            "Welcome back!",
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          );
+                          return _buildWelcomeMessage("Welcome back!");
                         } else {
                           var userDoc = snapshot.data!;
                           _username = userDoc['username'];
-                          return Text(
-                            "Welcome back, $_username!",
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          );
+                          return _buildWelcomeMessage("Welcome back, $_username!");
                         }
                       },
                     ),
@@ -228,6 +200,23 @@ class _AppBarWidgetState extends State<AppBarWidget> {
     );
   }
 
+  Widget _buildWelcomeMessage(String message) {
+    return CustomPaint(
+      painter: SpeechBubblePainter(),
+      child: Container(
+        padding: EdgeInsets.fromLTRB(25, 8, 15, 8),
+        child: Text(
+          message,
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 15,
+            fontFamily: 'IndieFlower',
+          ),
+        ),
+      ),
+    );
+  }
+
   void _showNotificationsDialog(BuildContext context) {
     showDialog(
       context: context,
@@ -272,5 +261,38 @@ class _AppBarWidgetState extends State<AppBarWidget> {
         );
       },
     );
+  }
+}
+
+class SpeechBubblePainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..color = Color.fromARGB(255, 246, 2, 96).withOpacity(0.2)
+      ..style = PaintingStyle.fill;
+
+    final path = Path()
+      ..moveTo(20, 10)
+      ..lineTo(20, 10)
+      ..arcToPoint(Offset(size.width - 190, 0), radius: Radius.circular(10))
+      // Draw top side and top-right rounded corner
+      ..lineTo(size.width - 10, 0)
+      ..arcToPoint(Offset(size.width, 10), radius: Radius.circular(10))
+      // Draw right side and bottom-right rounded corner
+      ..lineTo(size.width, size.height - 10)
+      ..arcToPoint(Offset(size.width - 10, size.height), radius: Radius.circular(10))
+      // Draw bottom side
+      ..lineTo(30, size.height)
+      ..arcToPoint(Offset(20, size.height - 10), radius: Radius.circular(10))
+      // Draw left side and close the path
+      ..lineTo(10, 20)
+      ..close();
+
+    canvas.drawPath(path, paint);
+  }
+
+  @override
+  bool shouldRepaint(CustomPainter oldDelegate) {
+    return false;
   }
 }
