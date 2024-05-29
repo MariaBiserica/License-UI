@@ -13,6 +13,16 @@ import 'package:firebase_auth/firebase_auth.dart';
 enum AvatarSelectionOption { enterUrl, pickImage, choosePredefined }
 
 class EditPage extends StatefulWidget {
+  final String email;
+  final String username;
+  final String? avatarUrl;
+
+  EditPage({
+    required this.email,
+    required this.username,
+    this.avatarUrl,
+  });
+
   @override
   _EditPageState createState() => _EditPageState();
 }
@@ -22,10 +32,10 @@ class _EditPageState extends State<EditPage> {
   final _formKey = GlobalKey<FormState>();
   final ImagePicker _picker = ImagePicker();
   
-  String email = '';
-  String password = '';
+  late String email;
+  late String password;
   bool _isPasswordVisible = false; // State to toggle password visibility
-  String username = '';
+  late String username;
   String? avatarUrl; // URL for the uploaded or selected avatar
   XFile? _image; // Selected image file
   AvatarSelectionOption? _avatarSelectionOption;
@@ -60,6 +70,14 @@ class _EditPageState extends State<EditPage> {
 
   CarouselController _carouselController = CarouselController();
   int _currentAvatarIndex = -1; // No avatar selected by default
+
+  @override
+  void initState() {
+    super.initState();
+    email = widget.email;
+    username = widget.username;
+    avatarUrl = widget.avatarUrl;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -107,6 +125,7 @@ class _EditPageState extends State<EditPage> {
                         ),
                         SizedBox(height: 20), // Add some spacing between the title and form fields
                         TextFormField(
+                          initialValue: email,
                           decoration: InputDecoration(
                             labelText: 'Email',
                             hintText: 'Enter your email address',
@@ -152,6 +171,7 @@ class _EditPageState extends State<EditPage> {
                         ),
                         SizedBox(height: 20),
                         TextFormField(
+                          initialValue: username,
                           decoration: InputDecoration(
                             labelText: 'Username',
                             hintText: 'Enter a username',
@@ -198,11 +218,12 @@ class _EditPageState extends State<EditPage> {
                         SizedBox(height: 20),
                         if (_avatarSelectionOption == AvatarSelectionOption.enterUrl)
                           TextFormField(
+                            initialValue: avatarUrl,
                             decoration: InputDecoration(
                               labelText: 'Image URL',
                               hintText: 'Enter an image URL',
                               border: OutlineInputBorder(), // Adds a border to the input field
-                              prefixIcon: Icon(Icons.image), // Adds an username icon before the text field
+                              prefixIcon: Icon(Icons.image), // Adds an image icon before the text field
                             ),
                             onChanged: (val) => avatarUrl = val,
                           ),
@@ -283,8 +304,8 @@ class _EditPageState extends State<EditPage> {
                           onPressed: _updateUser,
                           child: Text('Update Profile'),
                           style: ButtonStyle(
-                            minimumSize: MaterialStateProperty.all(Size(200, 36)), // Minimum size
-                            padding: MaterialStateProperty.all(EdgeInsets.symmetric(horizontal: 16)), // Padding inside the button
+                            minimumSize: MaterialStateProperty.all(Size(200, 36)),
+                            padding: MaterialStateProperty.all(EdgeInsets.symmetric(horizontal: 16)),
                           ),
                         ),
                         SizedBox(height: 20),

@@ -1,7 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:license_peaksight/app_bar/custom_avatar.dart';
 import 'package:license_peaksight/app_bar/notification_service.dart';
+import 'package:license_peaksight/authentication/edit_page.dart';
 import 'package:license_peaksight/constants.dart';
 import 'package:license_peaksight/responsive_layout.dart';
 
@@ -76,13 +78,26 @@ class _AppBarWidgetState extends State<AppBarWidget> {
               SizedBox(width: Constants.kPadding),
               Spacer(),
               PopupMenuButton<String>(
-                onSelected: (value) {
+                onSelected: (value) async {
                   switch (value) {
                     case 'Logout':
                       Navigator.pushNamed(context, '/login');
                       break;
                     case 'Edit':
-                      Navigator.pushNamed(context, '/edit');
+                      User? user = FirebaseAuth.instance.currentUser;
+                      if (user != null) {
+                        DocumentSnapshot userDoc = await FirebaseFirestore.instance.collection('users').doc(user.uid).get();
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => EditPage(
+                              email: user.email!,
+                              username: userDoc['username'],
+                              avatarUrl: user.photoURL,
+                            ),
+                          ),
+                        );
+                      }
                       break;
                   }
                 },
