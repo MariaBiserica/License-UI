@@ -123,32 +123,23 @@ class _EditPageState extends State<EditPage> {
                             ),
                           ],
                         ),
-                        SizedBox(height: 20), // Add some spacing between the title and form fields
+                        SizedBox(height: 20),
                         TextFormField(
-                          initialValue: email,
+                          initialValue: username,
                           decoration: InputDecoration(
-                            labelText: 'Email',
-                            hintText: 'Enter your email address',
+                            labelText: 'Username',
+                            hintText: 'Enter a username',
                             border: OutlineInputBorder(), // Adds a border to the input field
-                            prefixIcon: Icon(Icons.email), // Adds an email icon before the text field
+                            prefixIcon: Icon(Icons.supervised_user_circle), // Adds an username icon before the text field
                           ),
-                          validator: (val) {
-                            if (val == null || val.isEmpty) {
-                              return 'Please enter an email';
-                            } else if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(val)) {
-                              return 'Enter a valid email address';
-                            }
-                            return null;
-                          },
-                          onChanged: (val) => setState(() => email = val),
-                          keyboardType: TextInputType.emailAddress, // Optimizes the keyboard for email input
-                          autocorrect: false, // Disables autocorrect
+                          validator: (val) => val!.isEmpty ? 'Enter a username' : null,
+                          onChanged: (val) => setState(() => username = val),
                         ),
                         SizedBox(height: 20),
                         TextFormField(
                           decoration: InputDecoration(
                             labelText: 'Password',
-                            hintText: 'Enter a password',
+                            hintText: 'Enter your current password or a new one to change it',
                             border: OutlineInputBorder(), // Adds a border to the input field
                             prefixIcon: Icon(Icons.password), // Adds a password icon before the text field
                             suffixIcon: IconButton(
@@ -168,18 +159,6 @@ class _EditPageState extends State<EditPage> {
                           obscureText: !_isPasswordVisible, // Use the state to toggle visibility
                           validator: (val) => val!.length < 6 ? 'Enter a password 6+ chars long' : null,
                           onChanged: (val) => setState(() => password = val),
-                        ),
-                        SizedBox(height: 20),
-                        TextFormField(
-                          initialValue: username,
-                          decoration: InputDecoration(
-                            labelText: 'Username',
-                            hintText: 'Enter a username',
-                            border: OutlineInputBorder(), // Adds a border to the input field
-                            prefixIcon: Icon(Icons.supervised_user_circle), // Adds an username icon before the text field
-                          ),
-                          validator: (val) => val!.isEmpty ? 'Enter a username' : null,
-                          onChanged: (val) => setState(() => username = val),
                         ),
                         SizedBox(height: 20),
                         DropdownButtonFormField<String>(
