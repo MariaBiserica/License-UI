@@ -28,6 +28,23 @@ class AppBarWidget extends StatefulWidget {
 
 class _AppBarWidgetState extends State<AppBarWidget> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  String _username = '';
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchUsername();
+  }
+
+  Future<void> _fetchUsername() async {
+    User? user = _auth.currentUser;
+    if (user != null) {
+      DocumentSnapshot userDoc = await FirebaseFirestore.instance.collection('users').doc(user.uid).get();
+      setState(() {
+        _username = userDoc['username'];
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -47,24 +64,76 @@ class _AppBarWidgetState extends State<AppBarWidget> {
             children: [
               SizedBox(width: Constants.kPadding),
               if (ResponsiveLayout.isComputer(context))
-                Container(
-                  margin: EdgeInsets.all(Constants.kPadding),
-                  height: double.infinity,
-                  decoration: BoxDecoration(
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black45,
-                        offset: Offset(0, 0),
-                        spreadRadius: 1,
-                        blurRadius: 10,
+                Row(
+                  children: [
+                    Container(
+                      margin: EdgeInsets.all(Constants.kPadding),
+                      height: double.infinity,
+                      decoration: BoxDecoration(
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black45,
+                            offset: Offset(0, 0),
+                            spreadRadius: 1,
+                            blurRadius: 10,
+                          ),
+                        ],
+                        shape: BoxShape.circle,
                       ),
-                    ],
-                    shape: BoxShape.circle,
-                  ),
-                  child: CircleAvatar(
-                    radius: 30,
-                    child: Image.asset("images/logo.png"),
-                  ),
+                      child: CircleAvatar(
+                        radius: 30,
+                        child: Image.asset("images/logo.png"),
+                      ),
+                    ),
+                    SizedBox(width: 10),
+                    StreamBuilder<DocumentSnapshot>(
+                      stream: FirebaseFirestore.instance
+                          .collection('users')
+                          .doc(user?.uid)
+                          .snapshots(),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState == ConnectionState.waiting) {
+                          return Text(
+                            "Welcome back!",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          );
+                        } else if (snapshot.hasError) {
+                          return Text(
+                            "Error loading username",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          );
+                        } else if (!snapshot.hasData || !snapshot.data!.exists) {
+                          return Text(
+                            "Welcome back!",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          );
+                        } else {
+                          var userDoc = snapshot.data!;
+                          _username = userDoc['username'];
+                          return Text(
+                            "Welcome back, $_username!",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          );
+                        }
+                      },
+                    ),
+                  ],
                 )
               else
                 IconButton(
