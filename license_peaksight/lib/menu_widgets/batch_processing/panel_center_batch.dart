@@ -7,16 +7,17 @@ import 'package:path/path.dart' as path;
 import 'package:file_picker/file_picker.dart';
 import 'package:license_peaksight/constants.dart';
 import '../../server_requests/get_quality_scores.dart';
+import 'dart:ui' as ui;
 
 class PanelCenterBatchProcessing extends StatefulWidget {
   final List<String> imagePaths;
   final String selectedMetric;
-  final Function(List<double>) onScoresCalculated; // Add this parameter
+  final Function(List<double>) onScoresCalculated;
 
   PanelCenterBatchProcessing({
     required this.imagePaths,
     required this.selectedMetric,
-    required this.onScoresCalculated, // Add this parameter
+    required this.onScoresCalculated,
   });
 
   @override
@@ -44,15 +45,14 @@ class _PanelCenterBatchProcessingState extends State<PanelCenterBatchProcessing>
   void didUpdateWidget(covariant PanelCenterBatchProcessing oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (widget.selectedMetric != oldWidget.selectedMetric || widget.imagePaths != oldWidget.imagePaths) {
-      // Reset progress and initiate a new calculation
       progress = 0.0;
       metricTiming.clear();
-      calculateQualityScores();  // Recalculate scores if selected metric or images change
+      calculateQualityScores();
     }
   }
 
   void calculateQualityScores() async {
-    List<double> scores = []; // To store scores for the chart
+    List<double> scores = [];
 
     if (widget.imagePaths.isNotEmpty && widget.selectedMetric.isNotEmpty) {
       for (String imagePath in widget.imagePaths) {
@@ -61,7 +61,6 @@ class _PanelCenterBatchProcessingState extends State<PanelCenterBatchProcessing>
         if (scoresResult != null) {
           setState(() {
             double? score;
-            // Assigning values directly based on whether they were requested
             if (widget.selectedMetric == 'Noise') {
               score = scoresResult.noiseScore;
               metricTiming[imagePath] = "${scoresResult.noiseTime}";
@@ -101,11 +100,10 @@ class _PanelCenterBatchProcessingState extends State<PanelCenterBatchProcessing>
 
             if (score != null) {
               scoreMap[imagePath] = score;
-              scores.add(score); // Add score to the list for the chart
+              scores.add(score);
             }
           });
         } else {
-          // Show a dialog if the scores are null
           showDialog(
             context: context,
             builder: (BuildContext context) {
@@ -116,7 +114,7 @@ class _PanelCenterBatchProcessingState extends State<PanelCenterBatchProcessing>
                   TextButton(
                     child: Text("OK"),
                     onPressed: () {
-                      Navigator.of(context).pop();  // Close the dialog
+                      Navigator.of(context).pop();
                     },
                   ),
                 ],
@@ -126,7 +124,7 @@ class _PanelCenterBatchProcessingState extends State<PanelCenterBatchProcessing>
         }
       }
 
-      widget.onScoresCalculated(scores); // Call the callback with the calculated scores
+      widget.onScoresCalculated(scores);
     }
   }
 
@@ -181,12 +179,12 @@ class _PanelCenterBatchProcessingState extends State<PanelCenterBatchProcessing>
       }
     });
     setState(() {
-      showDropdown = !showDropdown; // Toggle the dropdown visibility
+      showDropdown = !showDropdown;
       if (!showDropdown) {
-        selectedQualityFilter = null; // Reset the filter when hiding the dropdown
-        showSaveButton = false; // Hide the save button when hiding the dropdown
+        selectedQualityFilter = null;
+        showSaveButton = false;
       } else {
-        showSaveButton = true; // Show the save button after classifying the batch
+        showSaveButton = true;
       }
     });
   }
@@ -195,7 +193,6 @@ class _PanelCenterBatchProcessingState extends State<PanelCenterBatchProcessing>
     String? selectedDirectory = await FilePicker.platform.getDirectoryPath();
 
     if (selectedDirectory == null) {
-      // User canceled the picker
       return;
     }
 
@@ -218,7 +215,6 @@ class _PanelCenterBatchProcessingState extends State<PanelCenterBatchProcessing>
       }
     }
 
-    // Show a dialog to indicate that the images have been saved
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -229,7 +225,7 @@ class _PanelCenterBatchProcessingState extends State<PanelCenterBatchProcessing>
             TextButton(
               child: Text("OK"),
               onPressed: () {
-                Navigator.of(context).pop();  // Close the dialog
+                Navigator.of(context).pop();
               },
             ),
           ],
@@ -248,9 +244,7 @@ class _PanelCenterBatchProcessingState extends State<PanelCenterBatchProcessing>
       body: SingleChildScrollView(
         child: Column(
           children: [
-            // Top overview card
             buildOverviewCard(),
-            // "Show top 10%" button and "Classify Batch" button
             Padding(
               padding: const EdgeInsets.all(Constants.kPadding),
               child: Row(
@@ -277,7 +271,6 @@ class _PanelCenterBatchProcessingState extends State<PanelCenterBatchProcessing>
                 ],
               ),
             ),
-            // Quality Filter Dropdown (only visible after classifying batch)
             if (showDropdown)
               Padding(
                 padding: const EdgeInsets.all(Constants.kPadding),
@@ -338,7 +331,6 @@ class _PanelCenterBatchProcessingState extends State<PanelCenterBatchProcessing>
                   ),
                 ),
               ),
-            // Save Classification Button (only visible after classifying batch)
             if (showSaveButton)
               Padding(
                 padding: const EdgeInsets.all(Constants.kPadding),
@@ -350,7 +342,6 @@ class _PanelCenterBatchProcessingState extends State<PanelCenterBatchProcessing>
                   ),
                 ),
               ),
-            // Dynamic list of metric scores with image thumbnails
             buildMetricsList(displayImagePaths),
           ],
         ),
@@ -406,15 +397,15 @@ class _PanelCenterBatchProcessingState extends State<PanelCenterBatchProcessing>
                   ],
                 ),
               ),
-              SizedBox(height: 8), // Space between title and subtitle
+              SizedBox(height: 8),
               Text(
                 "Image quality MOS scale scores",
                 style: TextStyle(color: Color.fromARGB(156, 158, 158, 158)),
               ),
-              SizedBox(height: 8), // Additional space before the table
+              SizedBox(height: 8),
               Container(
                 decoration: BoxDecoration(
-                  color: Colors.black54, // Dark background for the table
+                  color: Colors.black54,
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: Padding(
@@ -475,13 +466,19 @@ class _PanelCenterBatchProcessingState extends State<PanelCenterBatchProcessing>
   Widget buildMetricTile(String imagePath, double? score) {
     bool isCalculating = metricTiming[imagePath] == null;
     return ListTile(
-      leading: ClipRRect(
-        borderRadius: BorderRadius.circular(8.0),
-        child: Image.file(
-          File(imagePath),
-          width: 50,
-          height: 50,
-          fit: BoxFit.cover,
+      leading: GestureDetector(
+        onTap: () => viewImage(context, imagePath, "center_panel"),
+        child: Hero(
+          tag: "center_panel_$imagePath",
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(8.0),
+            child: Image.file(
+              File(imagePath),
+              width: 50,
+              height: 50,
+              fit: BoxFit.cover,
+            ),
+          ),
         ),
       ),
       title: Text(
@@ -503,8 +500,8 @@ class _PanelCenterBatchProcessingState extends State<PanelCenterBatchProcessing>
       ),
       trailing: isCalculating
           ? SizedBox(
-              width: 60, // Set a specific width for the SizedBox
-              height: 20, // Set a specific height for the animation
+              width: 60,
+              height: 20,
               child: SpinKitThreeBounce(
                 color: Colors.white,
                 size: 20.0,
@@ -514,6 +511,40 @@ class _PanelCenterBatchProcessingState extends State<PanelCenterBatchProcessing>
               metricTiming[imagePath] ?? "Calculating...",
               style: TextStyle(color: Colors.grey[400]),
             ),
+    );
+  }
+
+  void viewImage(BuildContext context, String imagePath, String panel) {
+    Navigator.of(context).push(PageRouteBuilder(
+      opaque: false,
+      barrierDismissible: true,
+      barrierColor: Colors.black45,
+      pageBuilder: (_, __, ___) => ImageDetailView(imagePath: imagePath, panel: panel),
+    ));
+  }
+}
+
+class ImageDetailView extends StatelessWidget {
+  final String imagePath;
+  final String panel;
+
+  ImageDetailView({required this.imagePath, required this.panel});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.transparent,
+      body: GestureDetector(
+        onTap: () => Navigator.of(context).pop(),
+        child: Center(
+          child: Hero(
+            tag: "center_panel_$imagePath",
+            child: InteractiveViewer(
+              child: Image.file(File(imagePath)),
+            ),
+          ),
+        ),
+      ),
     );
   }
 }
