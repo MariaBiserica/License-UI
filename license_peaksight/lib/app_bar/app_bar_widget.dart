@@ -9,8 +9,6 @@ import 'package:license_peaksight/responsive_layout.dart';
 import 'package:license_peaksight/theme_provider.dart';
 import 'package:provider/provider.dart';
 
-int _currentSelectedButton = 0;
-
 class AppBarWidget extends StatefulWidget {
   final String? avatarUrl;
   final List<NotificationCustom> notifications; // Pass notifications to the AppBarWidget
@@ -64,7 +62,7 @@ class _AppBarWidgetState extends State<AppBarWidget> {
         }
 
         return Container(
-          color: themeColors['appBarBackground'],
+          color: themeColors['panelBackground'],
           child: Row(
             children: [
               SizedBox(width: Constants.kPadding),
@@ -88,6 +86,7 @@ class _AppBarWidgetState extends State<AppBarWidget> {
                       child: CircleAvatar(
                         radius: 30,
                         child: Image.asset("images/logo.png"),
+                        backgroundColor: themeColors['helpPanelBackground'],
                       ),
                     ),
                     SizedBox(width: 10),
@@ -118,7 +117,7 @@ class _AppBarWidgetState extends State<AppBarWidget> {
                     Scaffold.of(context).openDrawer();
                   },
                   iconSize: 30,
-                  color: Colors.white,
+                  color: themeColors['textColor'],
                   icon: Icon(Icons.menu),
                 ),
               SizedBox(width: Constants.kPadding),
@@ -168,7 +167,7 @@ class _AppBarWidgetState extends State<AppBarWidget> {
                       _showNotificationsDialog(context);
                     },
                     icon: Icon(Icons.notifications_none_outlined),
-                    color: Colors.white,
+                    color: themeColors['textColor'],
                     iconSize: 30,
                   ),
                   if (widget.notifications.isNotEmpty)

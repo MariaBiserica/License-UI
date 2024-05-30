@@ -102,7 +102,7 @@ class _DrawerPageState extends State<DrawerPage> {
                                 fontFamily: 'Rastaglion',
                                 shadows: [
                                   Shadow(
-                                    offset: Offset(1.0, 1.0),
+                                    offset: Offset(3.0, 1.0),
                                     blurRadius: 3.0,
                                     color: Color.fromARGB(150, 0, 0, 0),
                                   ),

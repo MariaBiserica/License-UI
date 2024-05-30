@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:license_peaksight/constants.dart';
 
 class ThemeProvider extends ChangeNotifier {
-  String _selectedTheme = 'Purple';
+  String _selectedTheme = 'Default';
 
   String get selectedTheme => _selectedTheme;
 
