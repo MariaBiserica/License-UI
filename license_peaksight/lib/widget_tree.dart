@@ -3,6 +3,7 @@ import 'package:license_peaksight/app_bar/app_bar_widget.dart';
 import 'package:license_peaksight/app_bar/notification_service.dart';
 import 'package:license_peaksight/drawer/drawer_page.dart';
 import 'package:license_peaksight/menu_widgets/batch_processing/batch_processing_widget.dart';
+import 'package:license_peaksight/menu_widgets/help_documentation/help_documentation_widget.dart';
 import 'package:license_peaksight/menu_widgets/home/panel_right_home.dart';
 import 'package:license_peaksight/menu_widgets/image_modifier/image_modifier_widget.dart';
 import 'package:license_peaksight/responsive_layout.dart';
@@ -96,7 +97,10 @@ class _WidgetTreeState extends State<WidgetTree> {
             onImagesSelected: _onImagesSelected, 
             onSectionSelected: _onSectionSelected,
         ); // My widget for Batch Processing
-      // Add other cases for different sections here
+      case 'Help & Documentation':
+        return HelpAndDocumentationWidget(
+          onSectionSelected: _onSectionSelected
+        ); // My widget for Help & Documentation
       default:
         return HomeWidget(
             imagePath: _imagePath, 
