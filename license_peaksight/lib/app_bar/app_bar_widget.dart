@@ -226,9 +226,8 @@ class _AppBarWidgetState extends State<AppBarWidget> {
         message,
         style: TextStyle(
           color: themeColors['textColor'],
-          fontSize: 24,
-          fontWeight: FontWeight.bold,
-          fontFamily: 'WelcomeFont',
+          fontSize: 25,
+          fontFamily: 'TellMeAJoke',
         ),
       ),
     );
