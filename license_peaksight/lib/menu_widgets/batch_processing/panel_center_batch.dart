@@ -13,11 +13,13 @@ class PanelCenterBatchProcessing extends StatefulWidget {
   final List<String> imagePaths;
   final String selectedMetric;
   final Function(List<double>) onScoresCalculated;
+  final Map<String, Color> themeColors;
 
   PanelCenterBatchProcessing({
     required this.imagePaths,
     required this.selectedMetric,
     required this.onScoresCalculated,
+    required this.themeColors,
   });
 
   @override
@@ -173,7 +175,7 @@ class _PanelCenterBatchProcessingState extends State<PanelCenterBatchProcessing>
         case 'Bad':
           badImages.add(imagePath);
           break;
-        case 'Outlier score, image might be corrupted':
+        case 'Outlier':
           outlierImages.add(imagePath);
           break;
       }
@@ -256,16 +258,16 @@ class _PanelCenterBatchProcessingState extends State<PanelCenterBatchProcessing>
                         showTop10 = !showTop10;
                       });
                     },
-                    child: Text(showTop10 ? 'Show All' : 'Show Best Picks', style: TextStyle(color: Colors.white)),
+                    child: Text(showTop10 ? 'Show All' : 'Show Best Picks', style: TextStyle(color: widget.themeColors['textColor'])),
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Constants.panelForeground,
+                      backgroundColor: widget.themeColors['panelForeground'],
                     ),
                   ),
                   ElevatedButton(
                     onPressed: classifyBatch,
-                    child: Text(showDropdown ? 'Hide Classification' : 'Classify Batch', style: TextStyle(color: Colors.white)),
+                    child: Text(showDropdown ? 'Hide Classification' : 'Classify Batch', style: TextStyle(color: widget.themeColors['textColor'])),
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Constants.panelForeground,
+                      backgroundColor: widget.themeColors['panelForeground'],
                     ),
                   ),
                 ],
@@ -277,7 +279,7 @@ class _PanelCenterBatchProcessingState extends State<PanelCenterBatchProcessing>
                 child: Container(
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
-                    color: Constants.purpleLight,
+                    color: widget.themeColors['panelBackground'],
                     borderRadius: BorderRadius.circular(10),
                     boxShadow: [
                       BoxShadow(
@@ -289,38 +291,38 @@ class _PanelCenterBatchProcessingState extends State<PanelCenterBatchProcessing>
                   ),
                   child: DropdownButton<String>(
                     value: selectedQualityFilter,
-                    hint: Text("Select Quality", style: TextStyle(color: Colors.white)),
-                    dropdownColor: Constants.purpleLight,
-                    iconEnabledColor: Colors.white,
-                    underline: Container(height: 2, color: Colors.white),
+                    hint: Text("Select Quality", style: TextStyle(color: widget.themeColors['textColor'])),
+                    dropdownColor: widget.themeColors['panelBackground'],
+                    iconEnabledColor: widget.themeColors['textColor'],
+                    underline: Container(height: 2, color: widget.themeColors['textColor']),
                     items: [
                       DropdownMenuItem(
-                        child: Text("All", style: TextStyle(color: Colors.white)),
+                        child: Text("All", style: TextStyle(color: widget.themeColors['textColor'])),
                         value: null,
                       ),
                       DropdownMenuItem(
-                        child: Text("Excellent", style: TextStyle(color: Colors.white)),
+                        child: Text("Excellent", style: TextStyle(color: widget.themeColors['textColor'])),
                         value: "Excellent",
                       ),
                       DropdownMenuItem(
-                        child: Text("Good", style: TextStyle(color: Colors.white)),
+                        child: Text("Good", style: TextStyle(color: widget.themeColors['textColor'])),
                         value: "Good",
                       ),
                       DropdownMenuItem(
-                        child: Text("Fair", style: TextStyle(color: Colors.white)),
+                        child: Text("Fair", style: TextStyle(color: widget.themeColors['textColor'])),
                         value: "Fair",
                       ),
                       DropdownMenuItem(
-                        child: Text("Poor", style: TextStyle(color: Colors.white)),
+                        child: Text("Poor", style: TextStyle(color: widget.themeColors['textColor'])),
                         value: "Poor",
                       ),
                       DropdownMenuItem(
-                        child: Text("Bad", style: TextStyle(color: Colors.white)),
+                        child: Text("Bad", style: TextStyle(color: widget.themeColors['textColor'])),
                         value: "Bad",
                       ),
                       DropdownMenuItem(
-                        child: Text("Outlier", style: TextStyle(color: Colors.white)),
-                        value: "Outlier score, image might be corrupted",
+                        child: Text("Outlier", style: TextStyle(color: widget.themeColors['textColor'])),
+                        value: "Outlier",
                       ),
                     ],
                     onChanged: (String? newValue) {
@@ -336,9 +338,9 @@ class _PanelCenterBatchProcessingState extends State<PanelCenterBatchProcessing>
                 padding: const EdgeInsets.all(Constants.kPadding),
                 child: ElevatedButton(
                   onPressed: saveClassification,
-                  child: Text('Save Classification', style: TextStyle(color: Colors.white)),
+                  child: Text('Save Classification', style: TextStyle(color: widget.themeColors['textColor'])),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Constants.panelForeground,
+                    backgroundColor: widget.themeColors['panelForeground'],
                   ),
                 ),
               ),
@@ -361,7 +363,7 @@ class _PanelCenterBatchProcessingState extends State<PanelCenterBatchProcessing>
         return poorImages;
       case 'Bad':
         return badImages;
-      case 'Outlier score, image might be corrupted':
+      case 'Outlier':
         return outlierImages;
       default:
         return widget.imagePaths;
@@ -372,7 +374,7 @@ class _PanelCenterBatchProcessingState extends State<PanelCenterBatchProcessing>
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: Constants.kPadding / 2, vertical: Constants.kPadding / 2),
       child: Card(
-        color: Constants.purpleLight,
+        color: widget.themeColors['panelBackground'],
         elevation: 3,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(30),
@@ -387,7 +389,7 @@ class _PanelCenterBatchProcessingState extends State<PanelCenterBatchProcessing>
                 style: TextStyle(
                   fontFamily: 'HeaderFont', 
                   fontSize: 35, 
-                  color: Color.fromARGB(215, 255, 255, 255),
+                  color: widget.themeColors['textColor'],
                   shadows: <Shadow>[
                     Shadow(
                       color: Colors.black.withOpacity(0.5),
@@ -436,8 +438,8 @@ class _PanelCenterBatchProcessingState extends State<PanelCenterBatchProcessing>
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(score, style: TextStyle(color: Colors.white, fontWeight: isHeader ? FontWeight.bold : FontWeight.normal)),
-          Text(label, style: TextStyle(color: Colors.white, fontWeight: isHeader ? FontWeight.bold : FontWeight.normal)),
+          Text(score, style: TextStyle(color: widget.themeColors['textColor'], fontWeight: isHeader ? FontWeight.bold : FontWeight.normal)),
+          Text(label, style: TextStyle(color: widget.themeColors['textColor'], fontWeight: isHeader ? FontWeight.bold : FontWeight.normal)),
         ],
       ),
     );
@@ -447,7 +449,7 @@ class _PanelCenterBatchProcessingState extends State<PanelCenterBatchProcessing>
     return Padding(
       padding: const EdgeInsets.all(Constants.kPadding),
       child: Card(
-        color: Constants.purpleLight,
+        color: widget.themeColors['panelBackground'],
         elevation: 3,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         child: Padding(
@@ -485,7 +487,7 @@ class _PanelCenterBatchProcessingState extends State<PanelCenterBatchProcessing>
         path.basename(imagePath),
         style: TextStyle(
           fontSize: 15,
-          color: Colors.white,
+          color: widget.themeColors['textColor'],
         ),
       ),
       subtitle: Text(
@@ -495,7 +497,7 @@ class _PanelCenterBatchProcessingState extends State<PanelCenterBatchProcessing>
         style: TextStyle(
           fontFamily: 'TellMeAJoke',
           fontSize: 17,
-          color: Colors.grey[400],
+          color: widget.themeColors['subtitleColor'],
         ),
       ),
       trailing: isCalculating
@@ -503,13 +505,13 @@ class _PanelCenterBatchProcessingState extends State<PanelCenterBatchProcessing>
               width: 60,
               height: 20,
               child: SpinKitThreeBounce(
-                color: Colors.white,
+                color: widget.themeColors['textColor'],
                 size: 20.0,
               ),
             )
           : Text(
               metricTiming[imagePath] ?? "Calculating...",
-              style: TextStyle(color: Colors.grey[400]),
+              style: TextStyle(color: widget.themeColors['subtitleColor']),
             ),
     );
   }

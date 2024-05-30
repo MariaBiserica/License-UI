@@ -7,6 +7,10 @@ import 'package:license_peaksight/menu_widgets/home/task.dart';
 import 'package:license_peaksight/menu_widgets/home/pie_chart_goals.dart';
 
 class CenterPanelHome extends StatefulWidget {
+  final Map<String, Color> themeColors;
+
+  CenterPanelHome({required this.themeColors});
+
   @override
   _CenterPanelHomeState createState() => _CenterPanelHomeState();
 }
@@ -44,7 +48,7 @@ class _CenterPanelHomeState extends State<CenterPanelHome> {
       padding: EdgeInsets.all(Constants.kPaddingHome / 2),
       margin: EdgeInsets.all(Constants.kPaddingHome),
       decoration: BoxDecoration(
-        color: Constants.panelBackground,
+        color: widget.themeColors['panelBackground'],
         borderRadius: BorderRadius.circular(Constants.borderRadius),
         boxShadow: [
           BoxShadow(
@@ -65,7 +69,7 @@ class _CenterPanelHomeState extends State<CenterPanelHome> {
               style: TextStyle(
                 fontFamily: 'HeaderFont', 
                 fontSize: 35, 
-                color: Color.fromARGB(215, 255, 255, 255),
+                color: widget.themeColors['textColor'],
                 shadows: <Shadow>[
                   Shadow(
                     color: Colors.black.withOpacity(0.5),
@@ -87,7 +91,7 @@ class _CenterPanelHomeState extends State<CenterPanelHome> {
                           fontFamily: 'Voguella',
                           fontSize: 28, 
                           fontWeight: FontWeight.bold, 
-                          color: Colors.white,
+                          color: widget.themeColors['textColor'],
                           shadows: [
                             Shadow( // Text shadow for better readability
                               offset: Offset(1.0, 1.0),
@@ -104,7 +108,7 @@ class _CenterPanelHomeState extends State<CenterPanelHome> {
                           fontFamily: 'Voguella',
                           fontSize: 28, 
                           fontWeight: FontWeight.bold, 
-                          color: Colors.white,
+                          color: widget.themeColors['textColor'],
                           shadows: [
                             Shadow( // Text shadow for better readability
                               offset: Offset(1.0, 1.0),
@@ -138,7 +142,7 @@ class _CenterPanelHomeState extends State<CenterPanelHome> {
         }
         if (snapshot.hasData && snapshot.data!.isNotEmpty) {
           return Card(
-            color: Constants.panelForeground,
+            color: widget.themeColors['panelForeground'],
             elevation: 3,
             margin: EdgeInsets.all(Constants.kPaddingHome / 2),
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(Constants.borderRadius)),
@@ -150,7 +154,7 @@ class _CenterPanelHomeState extends State<CenterPanelHome> {
                     Text(
                       task.title,
                       style: TextStyle(
-                        color: Colors.white,
+                        color: widget.themeColors['textColor'],
                         fontSize: 16, // Larger font size for better visibility
                         fontWeight: FontWeight.bold, // Make text bold
                       ),
@@ -165,7 +169,7 @@ class _CenterPanelHomeState extends State<CenterPanelHome> {
                       child: Text(
                         task.status.toUpperCase(), // Display status in uppercase
                         style: TextStyle(
-                          color: Colors.white,
+                          color: widget.themeColors['textColor'],
                           fontSize: 12,
                           fontWeight: FontWeight.bold,
                         ),
@@ -175,7 +179,7 @@ class _CenterPanelHomeState extends State<CenterPanelHome> {
                 ),
                 subtitle: Text(
                   'Tap for details', // or use task.description for more details
-                  style: TextStyle(color: Colors.grey[300]),
+                  style: TextStyle(color: widget.themeColors['detailsColor']),
                 ),
                 onTap: () => showDialog(
                   context: context,
@@ -196,7 +200,7 @@ class _CenterPanelHomeState extends State<CenterPanelHome> {
             fontFamily: 'TellMeAJoke',
             fontSize: 20, 
             fontWeight: FontWeight.bold, 
-            color: const Color.fromARGB(255, 255, 255, 255)
+            color: widget.themeColors['textColor'],
           ),
         );
       },

@@ -6,6 +6,8 @@ import 'package:license_peaksight/app_bar/notification_service.dart';
 import 'package:license_peaksight/authentication/edit_page.dart';
 import 'package:license_peaksight/constants.dart';
 import 'package:license_peaksight/responsive_layout.dart';
+import 'package:license_peaksight/theme_provider.dart';
+import 'package:provider/provider.dart';
 
 int _currentSelectedButton = 0;
 
@@ -48,6 +50,9 @@ class _AppBarWidgetState extends State<AppBarWidget> {
 
   @override
   Widget build(BuildContext context) {
+    final themeProvider = Provider.of<ThemeProvider>(context); 
+    final themeColors = themeProvider.themeColors;
+    
     return StreamBuilder<User?>(
       stream: _auth.authStateChanges(),
       builder: (context, snapshot) {
@@ -59,7 +64,7 @@ class _AppBarWidgetState extends State<AppBarWidget> {
         }
 
         return Container(
-          color: Constants.purpleLight,
+          color: themeColors['appBarBackground'],
           child: Row(
             children: [
               SizedBox(width: Constants.kPadding),
@@ -148,6 +153,14 @@ class _AppBarWidgetState extends State<AppBarWidget> {
                 ],
                 icon: Icon(Icons.settings, color: Colors.white, size: 30),
               ),
+              SizedBox(width: Constants.kPadding),
+              IconButton(
+                icon: Icon(Icons.color_lens, color: Colors.white),
+                onPressed: () {
+                  _showThemeDialog(context);
+                },
+              ),
+              SizedBox(width: Constants.kPadding),
               Stack(
                 children: [
                   IconButton(
@@ -163,11 +176,11 @@ class _AppBarWidgetState extends State<AppBarWidget> {
                       right: 6,
                       top: 6,
                       child: CircleAvatar(
-                        backgroundColor: Colors.pink,
+                        backgroundColor: themeColors['notificationBadge'],
                         radius: 8,
                         child: Text(
                           "${widget.notifications.length}",
-                          style: TextStyle(fontSize: 10, color: Colors.white),
+                          style: TextStyle(fontSize: 10, color: themeColors['textColor']),
                         ),
                       ),
                     ),
@@ -184,7 +197,7 @@ class _AppBarWidgetState extends State<AppBarWidget> {
                     shape: BoxShape.circle,
                   ),
                   child: CircleAvatar(
-                    backgroundColor: Constants.endGradient,
+                    backgroundColor: themeColors['panelForeground'],
                     radius: 30,
                     child: CustomAvatar(
                       imageUrl: avatarUrl,
@@ -201,6 +214,9 @@ class _AppBarWidgetState extends State<AppBarWidget> {
   }
 
   Widget _buildWelcomeMessage(String message) {
+    final themeProvider = Provider.of<ThemeProvider>(context); 
+    final themeColors = themeProvider.themeColors;
+
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 15, vertical: 8),
       decoration: BoxDecoration(
@@ -210,7 +226,7 @@ class _AppBarWidgetState extends State<AppBarWidget> {
       child: Text(
         message,
         style: TextStyle(
-          color: Colors.white,
+          color: themeColors['textColor'],
           fontSize: 24,
           fontWeight: FontWeight.bold,
           fontFamily: 'WelcomeFont',
@@ -264,4 +280,28 @@ class _AppBarWidgetState extends State<AppBarWidget> {
       },
     );
   }
+
+  void _showThemeDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text("Choose Theme"),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: Constants.themes.keys.map((theme) {
+              return ListTile(
+                title: Text(theme),
+                onTap: () {
+                  Provider.of<ThemeProvider>(context, listen: false).changeTheme(theme);
+                  Navigator.of(context).pop();
+                },
+              );
+            }).toList(),
+          ),
+        );
+      },
+    );
+  }
+
 }

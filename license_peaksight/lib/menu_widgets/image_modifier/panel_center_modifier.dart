@@ -6,8 +6,12 @@ import 'package:license_peaksight/constants.dart';
 
 class PanelCenterImageModifier extends StatelessWidget {
   final Future<String?>? imagePathFuture;
+  final Map<String, Color> themeColors;
 
-  PanelCenterImageModifier({required this.imagePathFuture});
+  PanelCenterImageModifier({
+    required this.imagePathFuture,
+    required this.themeColors,
+  });
 
   void viewImage(BuildContext context, String imagePath) {
     Navigator.of(context).push(PageRouteBuilder(
@@ -53,7 +57,7 @@ class PanelCenterImageModifier extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.all(Constants.kPadding),
           child: Card(
-            color: Constants.purpleLight,
+            color: themeColors['panelBackground'],
             elevation: 3,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(20),
@@ -73,19 +77,19 @@ class PanelCenterImageModifier extends StatelessWidget {
                           if (snapshot.connectionState == ConnectionState.waiting) {
                             return Center(
                               child: SpinKitFadingFour(
-                                color: Colors.white,
+                                color: themeColors['textColor'],
                                 size: 50.0,
                               ),
                             );
                           } else if (snapshot.hasError) {
                             return Text(
                               "Error loading image.",
-                              style: TextStyle(color: Colors.white, fontSize: 16),
+                              style: TextStyle(color: themeColors['textColor'], fontSize: 16),
                             );
                           } else if (!snapshot.hasData || snapshot.data == null) {
                             return Text(
                               "No modified image.",
-                              style: TextStyle(color: Colors.white, fontSize: 16),
+                              style: TextStyle(color: themeColors['textColor'], fontSize: 16),
                             );
                           } else {
                             final imagePath = snapshot.data!;
@@ -109,7 +113,7 @@ class PanelCenterImageModifier extends StatelessWidget {
                     left: 10,
                     right: 10,
                     child: Card(
-                      color: Color.fromARGB(255, 71, 2, 77).withOpacity(0.8),
+                      color: themeColors['panelBackground']!.withOpacity(0.8),
                       elevation: 5,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(20),
@@ -121,7 +125,7 @@ class PanelCenterImageModifier extends StatelessWidget {
                           style: TextStyle(
                             fontFamily: 'HeaderFont', 
                             fontSize: 35, 
-                            color: Color.fromARGB(215, 255, 255, 255),
+                            color: themeColors['textColor'],
                             shadows: <Shadow>[
                               Shadow(
                                 color: Colors.black.withOpacity(0.5),
@@ -149,9 +153,9 @@ class PanelCenterImageModifier extends StatelessWidget {
                               saveImageLocally(context, imagePath);
                             }
                           },
-                          child: Text('Save', style: TextStyle(color: Colors.white)),
+                          child: Text('Save', style: TextStyle(color: themeColors['textColor'])),
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: Constants.panelForeground,
+                            backgroundColor: themeColors['panelForeground'],
                           ),
                         ),
                       ],

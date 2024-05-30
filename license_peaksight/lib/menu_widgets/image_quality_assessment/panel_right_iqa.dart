@@ -6,8 +6,12 @@ import 'package:license_peaksight/constants.dart';
 // Add a callback function parameter to PanelRightPage
 class PanelRightPage extends StatefulWidget {
   final Function(String imagePath)? onImageSelected;
+  final Map<String, Color> themeColors;
 
-  PanelRightPage({this.onImageSelected});
+  PanelRightPage({
+    this.onImageSelected,
+    required this.themeColors,
+  });
 
   @override
   _PanelRightPageState createState() => _PanelRightPageState();
@@ -122,7 +126,7 @@ class _PanelRightPageState extends State<PanelRightPage> with SingleTickerProvid
       body: Container(
         padding: const EdgeInsets.all(Constants.kPadding),
         child: Card(
-          color: Constants.purpleLight,
+          color: widget.themeColors['panelBackground'],
           elevation: 3,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
           child: Padding(
@@ -134,8 +138,8 @@ class _PanelRightPageState extends State<PanelRightPage> with SingleTickerProvid
                   onPressed: pickImages,
                   child: Text('Upload Images'),
                   style: ElevatedButton.styleFrom(
-                    foregroundColor: Colors.white, 
-                    backgroundColor: Constants.panelForeground,
+                    foregroundColor: widget.themeColors['textColor'], 
+                    backgroundColor: widget.themeColors['panelForeground'],
                   ),
                 ),
                 SizedBox(height: 20), // Adjust the space as needed
@@ -150,11 +154,11 @@ class _PanelRightPageState extends State<PanelRightPage> with SingleTickerProvid
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     IconButton(
-                      icon: Icon(Icons.arrow_left, color: Constants.panelForeground),
+                      icon: Icon(Icons.arrow_left, color: widget.themeColors['panelForeground']),
                       onPressed: images.isEmpty ? null : previousImage,
                     ),
                     IconButton(
-                      icon: Icon(Icons.arrow_right, color: Constants.panelForeground),
+                      icon: Icon(Icons.arrow_right, color: widget.themeColors['panelForeground']),
                       onPressed: images.isEmpty ? null : nextImage,
                     ),
                   ],

@@ -10,8 +10,14 @@ class RightPanelHome extends StatefulWidget {
   final ValueNotifier<List<NotificationCustom>> notifications; // Notifications list
   final Function(NotificationCustom) onRestore; // Callback to restore task
   final GlobalKey<RightPanelHomeState> key;
+  final Map<String, Color> themeColors;
 
-  RightPanelHome({required this.notifications, required this.onRestore, required this.key});
+  RightPanelHome({
+    required this.notifications, 
+    required this.onRestore, 
+    required this.key,
+    required this.themeColors,
+  });
   
   @override
   RightPanelHomeState createState() => RightPanelHomeState();
@@ -213,7 +219,7 @@ class RightPanelHomeState extends State<RightPanelHome> {
       padding: EdgeInsets.all(Constants.kPaddingHome / 2),
       margin: EdgeInsets.all(Constants.kPaddingHome),
       decoration: BoxDecoration(
-        color: Constants.panelBackground,
+        color: widget.themeColors['panelBackground'],
         borderRadius: BorderRadius.circular(Constants.borderRadius),
         boxShadow: [
           BoxShadow(
@@ -233,7 +239,7 @@ class RightPanelHomeState extends State<RightPanelHome> {
             style: TextStyle(
                 fontFamily: 'HeaderFont', 
                 fontSize: 35, 
-                color: Color.fromARGB(215, 255, 255, 255),
+                color: widget.themeColors['textColor'],
                 shadows: <Shadow>[
                   Shadow(
                     color: Colors.black.withOpacity(0.5),
@@ -259,9 +265,9 @@ class RightPanelHomeState extends State<RightPanelHome> {
           Align(
             alignment: Alignment.bottomRight,
             child: FloatingActionButton(
-              backgroundColor: Constants.panelForeground,
+              backgroundColor: widget.themeColors['panelForeground'],
               onPressed: () => _addOrEditTask(),
-              child: Icon(Icons.add, color: Colors.white),
+              child: Icon(Icons.add, color: widget.themeColors['textColor']),
             ),
           ),
         ],
@@ -274,7 +280,7 @@ class RightPanelHomeState extends State<RightPanelHome> {
     return Container(
       margin: EdgeInsets.symmetric(vertical: 8.0),  // Adds space between category tiles
       decoration: BoxDecoration(
-        color: Constants.panelForeground,  // Darker background color
+        color: widget.themeColors['panelForeground'], 
         borderRadius: BorderRadius.circular(Constants.borderRadius),  // Rounded corners
         boxShadow: [
           BoxShadow(
@@ -293,7 +299,7 @@ class RightPanelHomeState extends State<RightPanelHome> {
           title: Text(
             "$category Goals",
             style: TextStyle(
-              color: Colors.white,
+              color: widget.themeColors['textColor'],
               //fontWeight: FontWeight.bold,
               shadows: [
                 Shadow( // Text shadow for better readability
@@ -314,7 +320,7 @@ class RightPanelHomeState extends State<RightPanelHome> {
 
   Widget _buildTaskCard(Task task, BuildContext context) {
     return Card(
-      color: Constants.panelForeground,
+      color: widget.themeColors['panelForeground'],
       elevation: 3,
       margin: EdgeInsets.only(top: Constants.kPaddingHome / 2),
       shape: RoundedRectangleBorder(
@@ -327,7 +333,7 @@ class RightPanelHomeState extends State<RightPanelHome> {
             Text(
               task.title,
               style: TextStyle(
-                color: Colors.white,
+                color: widget.themeColors['textColor'],
                 fontSize: 16, // Larger font size for better visibility
                 fontWeight: FontWeight.bold, // Make text bold
                 shadows: [
@@ -349,7 +355,7 @@ class RightPanelHomeState extends State<RightPanelHome> {
               child: Text(
                 task.status.toUpperCase(), // Display status in uppercase
                 style: TextStyle(
-                  color: Colors.white,
+                  color: widget.themeColors['textColor'],
                   fontSize: 12,
                   fontWeight: FontWeight.bold,
                 ),
@@ -368,8 +374,8 @@ class RightPanelHomeState extends State<RightPanelHome> {
         trailing: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            IconButton(icon: Icon(Icons.edit, color: Colors.white), onPressed: () => _addOrEditTask(task: task)),
-            IconButton(icon: Icon(Icons.delete, color: Colors.white), onPressed: () => _deleteTaskPrompt(task.id)),
+            IconButton(icon: Icon(Icons.edit, color: widget.themeColors['textColor']), onPressed: () => _addOrEditTask(task: task)),
+            IconButton(icon: Icon(Icons.delete, color: widget.themeColors['textColor']), onPressed: () => _deleteTaskPrompt(task.id)),
           ],
         ),
       ),

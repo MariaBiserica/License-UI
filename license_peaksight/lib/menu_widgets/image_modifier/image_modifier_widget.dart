@@ -5,6 +5,8 @@ import 'package:license_peaksight/menu_widgets/image_modifier/panel_left_modifie
 import 'package:license_peaksight/menu_widgets/image_modifier/panel_right_modifier.dart';
 import 'package:license_peaksight/responsive_layout.dart';
 import 'package:license_peaksight/server_requests/image_modifier_service.dart';
+import 'package:provider/provider.dart';
+import 'package:license_peaksight/theme_provider.dart';
 
 class ImageModifierWidget extends StatefulWidget {
   final String imagePath;
@@ -105,63 +107,148 @@ class _ImageModifierWidgetState extends State<ImageModifierWidget> {
 
   @override
   Widget build(BuildContext context) {
+    final themeProvider = Provider.of<ThemeProvider>(context);
+    final themeColors = themeProvider.themeColors;
+
     return ResponsiveLayout(
-      tiny: _buildScrollableColumnLayout(), // Single column for tiny layout
-      phone: _buildScrollableColumnLayout(), // Single column for phone layout
-      tablet: _buildTabletLayout(), // Custom layout for tablet
-      largeTablet: _buildLargeTabletLayout(), // Side by side layout for large tablet
-      computer: _buildComputerLayout(), // Side by side layout for computer
+      tiny: _buildScrollableColumnLayout(themeColors),
+      phone: _buildScrollableColumnLayout(themeColors),
+      tablet: _buildTabletLayout(themeColors),
+      largeTablet: _buildLargeTabletLayout(themeColors),
+      computer: _buildComputerLayout(themeColors),
     );
   }
 
-  // Build a scrollable column layout for tiny and phone
-  Widget _buildScrollableColumnLayout() {
+  Widget _buildScrollableColumnLayout(Map<String, Color> themeColors) {
     return SingleChildScrollView(
       child: Column(
         children: [
-          SizedBox(height: 400, child: PanelLeftImageModifier(onMetricSelected: handleMetricSelected, onPointsChanged: handlePointsChanged)),
-          SizedBox(height: 500, child: PanelCenterImageModifier(imagePathFuture: modifiedImagePathFuture)),
-          SizedBox(height: 500, child: PanelRightImageModifier(onImageSelected: widget.onImageSelected)),
+          SizedBox(
+            height: 400,
+            child: PanelLeftImageModifier(
+              onMetricSelected: handleMetricSelected,
+              onPointsChanged: handlePointsChanged,
+              themeColors: themeColors,
+            ),
+          ),
+          SizedBox(
+            height: 500,
+            child: PanelCenterImageModifier(
+              imagePathFuture: modifiedImagePathFuture,
+              themeColors: themeColors,
+            ),
+          ),
+          SizedBox(
+            height: 500,
+            child: PanelRightImageModifier(
+              onImageSelected: widget.onImageSelected,
+              themeColors: themeColors,
+            ),
+          ),
           SizedBox(height: 100),
         ],
       ),
     );
   }
 
-  // Build a custom layout for tablet
-  Widget _buildTabletLayout() {
+  Widget _buildTabletLayout(Map<String, Color> themeColors) {
     return Column(
       children: [
         Row(
           children: [
-            Expanded(child: SizedBox(height: 210, child: PanelLeftImageModifier(onMetricSelected: handleMetricSelected, onPointsChanged: handlePointsChanged))),
-            Expanded(flex: 2, child: SizedBox(height: 210, child: PanelCenterImageModifier(imagePathFuture: modifiedImagePathFuture))),
+            Expanded(
+              child: SizedBox(
+                height: 210,
+                child: PanelLeftImageModifier(
+                  onMetricSelected: handleMetricSelected,
+                  onPointsChanged: handlePointsChanged,
+                  themeColors: themeColors,
+                ),
+              ),
+            ),
+            Expanded(
+              flex: 2,
+              child: SizedBox(
+                height: 210,
+                child: PanelCenterImageModifier(
+                  imagePathFuture: modifiedImagePathFuture,
+                  themeColors: themeColors,
+                ),
+              ),
+            ),
           ],
         ),
-        SizedBox(height: 330, child: PanelRightImageModifier(onImageSelected: widget.onImageSelected)),
+        SizedBox(
+          height: 330,
+          child: PanelRightImageModifier(
+            onImageSelected: widget.onImageSelected,
+            themeColors: themeColors,
+          ),
+        ),
       ],
     );
   }
 
-  // Build a custom layout for large tablet
-  Widget _buildLargeTabletLayout() {
+  Widget _buildLargeTabletLayout(Map<String, Color> themeColors) {
     return Row(
       children: [
-        Expanded(flex: 2, child: PanelLeftImageModifier(onMetricSelected: handleMetricSelected, onPointsChanged: handlePointsChanged)),
-        Expanded(flex: 3, child: PanelCenterImageModifier(imagePathFuture: modifiedImagePathFuture)),
-        Expanded(flex: 3, child: PanelRightImageModifier(onImageSelected: widget.onImageSelected)),
+        Expanded(
+          flex: 2,
+          child: PanelLeftImageModifier(
+            onMetricSelected: handleMetricSelected,
+            onPointsChanged: handlePointsChanged,
+            themeColors: themeColors,
+          ),
+        ),
+        Expanded(
+          flex: 3,
+          child: PanelCenterImageModifier(
+            imagePathFuture: modifiedImagePathFuture,
+            themeColors: themeColors,
+          ),
+        ),
+        Expanded(
+          flex: 3,
+          child: PanelRightImageModifier(
+            onImageSelected: widget.onImageSelected,
+            themeColors: themeColors,
+          ),
+        ),
       ],
     );
   }
 
-  // Build a custom layout for computer
-  Widget _buildComputerLayout() {
+  Widget _buildComputerLayout(Map<String, Color> themeColors) {
     return Row(
       children: [
-        Expanded(flex: 2, child: DrawerPage(onSectionSelected: widget.onSectionSelected)),
-        Expanded(flex: 2, child: PanelLeftImageModifier(onMetricSelected: handleMetricSelected, onPointsChanged: handlePointsChanged)),
-        Expanded(flex: 3, child: PanelCenterImageModifier(imagePathFuture: modifiedImagePathFuture)),
-        Expanded(flex: 3, child: PanelRightImageModifier(onImageSelected: widget.onImageSelected)),
+        Expanded(
+          flex: 2,
+          child: DrawerPage(
+            onSectionSelected: widget.onSectionSelected,
+          ),
+        ),
+        Expanded(
+          flex: 2,
+          child: PanelLeftImageModifier(
+            onMetricSelected: handleMetricSelected,
+            onPointsChanged: handlePointsChanged,
+            themeColors: themeColors,
+          ),
+        ),
+        Expanded(
+          flex: 3,
+          child: PanelCenterImageModifier(
+            imagePathFuture: modifiedImagePathFuture,
+            themeColors: themeColors,
+          ),
+        ),
+        Expanded(
+          flex: 3,
+          child: PanelRightImageModifier(
+            onImageSelected: widget.onImageSelected,
+            themeColors: themeColors,
+          ),
+        ),
       ],
     );
   }

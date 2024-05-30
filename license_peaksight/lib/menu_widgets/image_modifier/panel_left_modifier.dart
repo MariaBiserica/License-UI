@@ -26,8 +26,13 @@ class PointProvider with ChangeNotifier {
 class PanelLeftImageModifier extends StatefulWidget {
   final Function(String?, [Map<String, dynamic>?]) onMetricSelected;
   final Function(List<Offset>) onPointsChanged;
+  final Map<String, Color> themeColors;
 
-  PanelLeftImageModifier({required this.onMetricSelected, required this.onPointsChanged});
+  PanelLeftImageModifier({
+    required this.onMetricSelected, 
+    required this.onPointsChanged,
+    required this.themeColors,
+  });
 
   @override
   _PanelLeftImageModifierState createState() => _PanelLeftImageModifierState();
@@ -116,7 +121,7 @@ class _PanelLeftImageModifierState extends State<PanelLeftImageModifier> {
             child: Column(
               children: [
                 Card(
-                  color: Constants.purpleLight,
+                  color: widget.themeColors['panelBackground'],
                   elevation: 3,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(20),
@@ -131,7 +136,7 @@ class _PanelLeftImageModifierState extends State<PanelLeftImageModifier> {
                           style: TextStyle(
                             fontFamily: 'HeaderFont', 
                             fontSize: 35, 
-                            color: Color.fromARGB(215, 255, 255, 255),
+                            color: widget.themeColors['textColor'],
                             shadows: <Shadow>[
                               Shadow(
                                 color: Colors.black.withOpacity(0.5),
@@ -145,30 +150,30 @@ class _PanelLeftImageModifierState extends State<PanelLeftImageModifier> {
                           "Select what kind of adjustments you want to make to the image.",
                           style: TextStyle(
                             fontSize: 14,
-                            color: Color.fromARGB(156, 158, 158, 158),
+                            color: widget.themeColors['subtitleColor'],
                           ),
                         ),
-                        Divider(color: Colors.white30),
+                        Divider(color: widget.themeColors['dividerColor']),
                         ...metrics.map((metric) => RadioListTile<String>(
                               title: Text(
                                 metric,
                                 style: TextStyle(
                                   fontFamily: 'TellMeAJoke',
                                   fontSize: 21,
-                                  color: Colors.white,
+                                  color: widget.themeColors['textColor'],
                                 ),
                               ),
                               value: metric,
                               groupValue: selectedMetric,
                               onChanged: (value) => toggleMetric(value!),
-                              activeColor: Constants.endGradient,
+                              activeColor: widget.themeColors['endGradientColor'],
                             )),
                         if (selectedMetric == 'Image Rotation')
                           Column(
                             children: [
                               Text(
                                 'Rotation Angle: ${rotationAngle.toInt()}°',
-                                style: TextStyle(color: Colors.white),
+                                style: TextStyle(color: widget.themeColors['textColor']),
                               ),
                               Slider(
                                 value: rotationAngle,
@@ -189,7 +194,7 @@ class _PanelLeftImageModifierState extends State<PanelLeftImageModifier> {
                             children: [
                               Text(
                                 'Blur Amount: ${blurAmount.toInt()}',
-                                style: TextStyle(color: Colors.white),
+                                style: TextStyle(color: widget.themeColors['textColor']),
                               ),
                               Slider(
                                 value: blurAmount,
@@ -211,7 +216,7 @@ class _PanelLeftImageModifierState extends State<PanelLeftImageModifier> {
                             items: <String>['HSV', 'LAB', 'YCrCb'].map((String value) {
                               return DropdownMenuItem<String>(
                                 value: value,
-                                child: Text(value, style: TextStyle(color: Colors.white)),
+                                child: Text(value, style: TextStyle(color: widget.themeColors['textColor'])),
                               );
                             }).toList(),
                             onChanged: (String? newValue) {
@@ -228,7 +233,7 @@ class _PanelLeftImageModifierState extends State<PanelLeftImageModifier> {
                                 items: <String>['dilation', 'erosion', 'opening', 'closing'].map((String value) {
                                   return DropdownMenuItem<String>(
                                     value: value,
-                                    child: Text(value, style: TextStyle(color: Colors.white)),
+                                    child: Text(value, style: TextStyle(color: widget.themeColors['textColor'])),
                                   );
                                 }).toList(),
                                 onChanged: (String? newValue) {
@@ -239,7 +244,7 @@ class _PanelLeftImageModifierState extends State<PanelLeftImageModifier> {
                               ),
                               Text(
                                 'Kernel Size: $kernelSize',
-                                style: TextStyle(color: Colors.white),
+                                style: TextStyle(color: widget.themeColors['textColor']),
                               ),
                               Slider(
                                 value: kernelSize.toDouble(),
@@ -260,7 +265,7 @@ class _PanelLeftImageModifierState extends State<PanelLeftImageModifier> {
                             children: [
                               Text(
                                 'Presets',
-                                style: TextStyle(fontWeight: FontWeight.bold, color: Color.fromARGB(172, 255, 255, 255), fontSize: 16),
+                                style: TextStyle(fontWeight: FontWeight.bold, color: widget.themeColors['detailsColor'], fontSize: 16),
                               ),
                               SizedBox(height: 10),
                               Wrap(
@@ -273,11 +278,11 @@ class _PanelLeftImageModifierState extends State<PanelLeftImageModifier> {
                                   return ElevatedButton(
                                     onPressed: () => applyPreset(preset),
                                     style: ElevatedButton.styleFrom(
-                                      backgroundColor: isSelected ? Color.fromARGB(215, 253, 141, 169) : Constants.panelForeground,
+                                      backgroundColor: isSelected ? widget.themeColors['selectedColor'] : widget.themeColors['panelForeground'],
                                     ),
                                     child: Text(
                                       'Hue: ${preset['hueScalar']}, Sat: ${preset['saturationScalar']}, Val: ${preset['valueScalar']}',
-                                      style: TextStyle(color: Colors.white),
+                                      style: TextStyle(color: widget.themeColors['textColor']),
                                     ),
                                   );
                                 }).toList(),
@@ -285,12 +290,12 @@ class _PanelLeftImageModifierState extends State<PanelLeftImageModifier> {
                               SizedBox(height: 10),
                               Text(
                                 'Custom',
-                                style: TextStyle(fontWeight: FontWeight.bold, color: Color.fromARGB(172, 255, 255, 255), fontSize: 16),
+                                style: TextStyle(fontWeight: FontWeight.bold, color: widget.themeColors['detailsColor'], fontSize: 16),
                               ),
                               SizedBox(height: 5),
                               Text(
                                 'Hue Scalar: ${hueScalar.toStringAsFixed(2)}',
-                                style: TextStyle(color: Colors.white),
+                                style: TextStyle(color: widget.themeColors['textColor']),
                               ),
                               Slider(
                                 value: hueScalar,
@@ -306,7 +311,7 @@ class _PanelLeftImageModifierState extends State<PanelLeftImageModifier> {
                               ),
                               Text(
                                 'Saturation Scalar: ${saturationScalar.toStringAsFixed(2)}',
-                                style: TextStyle(color: Colors.white),
+                                style: TextStyle(color: widget.themeColors['textColor']),
                               ),
                               Slider(
                                 value: saturationScalar,
@@ -322,7 +327,7 @@ class _PanelLeftImageModifierState extends State<PanelLeftImageModifier> {
                               ),
                               Text(
                                 'Value Scalar: ${valueScalar.toStringAsFixed(2)}',
-                                style: TextStyle(color: Colors.white),
+                                style: TextStyle(color: widget.themeColors['textColor']),
                               ),
                               Slider(
                                 value: valueScalar,
@@ -343,7 +348,7 @@ class _PanelLeftImageModifierState extends State<PanelLeftImageModifier> {
                             children: [
                               Text(
                                 'Kernel Size: $kernelSize',
-                                style: TextStyle(color: Colors.white),
+                                style: TextStyle(color: widget.themeColors['textColor']),
                               ),
                               Slider(
                                 value: kernelSize.toDouble(),
@@ -362,9 +367,9 @@ class _PanelLeftImageModifierState extends State<PanelLeftImageModifier> {
                         SizedBox(height: Constants.kPadding),
                         ElevatedButton(
                           onPressed: startAnalysis,
-                          child: Text('Start Analysis', style: TextStyle(color: Colors.white)),
+                          child: Text('Start Analysis', style: TextStyle(color: widget.themeColors['textColor'])),
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: Constants.panelForeground,
+                            backgroundColor: widget.themeColors['panelForeground'],
                           ),
                         ),
                       ],

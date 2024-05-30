@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:license_peaksight/constants.dart';
 import 'package:license_peaksight/drawer/curve_clipper.dart';
 import 'package:license_peaksight/responsive_layout.dart';
+import 'package:provider/provider.dart';
+import 'package:license_peaksight/theme_provider.dart';
 
 class DrawerPage extends StatefulWidget {
   final Function(String) onSectionSelected;
 
-  DrawerPage({required this.onSectionSelected}) {
+  DrawerPage({
+    required this.onSectionSelected,
+  }) {
     print("Callback set: $onSectionSelected");
   }
 
@@ -35,11 +38,14 @@ List<ButtonsInfo> _buttonNames = [
 class _DrawerPageState extends State<DrawerPage> {
   @override
   Widget build(BuildContext context) {
+    final themeProvider = Provider.of<ThemeProvider>(context);
+    final themeColors = themeProvider.themeColors;
+
     return ClipPath(
       clipper: ResponsiveLayout.isComputer(context) ? CurveClipper() : null,
       child: Drawer(
         child: Container(
-          color: Theme.of(context).canvasColor,
+          color: themeColors['panelBackground'],
           child: SingleChildScrollView(
             child: Padding(
               padding: const EdgeInsets.all(Constants.kPadding),
@@ -49,7 +55,7 @@ class _DrawerPageState extends State<DrawerPage> {
                     title: Text(
                       'Menu',
                       style: TextStyle(
-                        color: Colors.white,
+                        color: themeColors['textColor'],
                         shadows: [
                           Shadow(
                             offset: Offset(5.0, 1.0),
@@ -69,7 +75,7 @@ class _DrawerPageState extends State<DrawerPage> {
                             },
                             icon: Icon(
                               Icons.close,
-                              color: Colors.white,
+                              color: themeColors['textColor'],
                             )),
                   ),
                   ...List.generate(
@@ -82,8 +88,8 @@ class _DrawerPageState extends State<DrawerPage> {
                                   borderRadius: BorderRadius.circular(20),
                                   gradient: LinearGradient(
                                     colors: [
-                                      Constants.beginGradient.withOpacity(0.9),
-                                      Constants.endGradient.withOpacity(0.9),
+                                      themeColors['gradientBegin']!.withOpacity(0.9),
+                                      themeColors['gradientEnd']!.withOpacity(0.9),
                                     ],
                                   ),
                                 )
@@ -92,7 +98,7 @@ class _DrawerPageState extends State<DrawerPage> {
                             title: Text(
                               _buttonNames[index].title,
                               style: TextStyle(
-                                color: Colors.white,
+                                color: themeColors['textColor'],
                                 fontFamily: 'Rastaglion',
                                 shadows: [
                                   Shadow(
@@ -107,7 +113,7 @@ class _DrawerPageState extends State<DrawerPage> {
                               padding: const EdgeInsets.all(Constants.kPadding),
                               child: Icon(
                                 _buttonNames[index].icon,
-                                color: Colors.white,
+                                color: themeColors['textColor'],
                               ),
                             ),
                             onTap: () {
@@ -122,7 +128,7 @@ class _DrawerPageState extends State<DrawerPage> {
                           ),
                         ),
                         Divider(
-                          color: Colors.white,
+                          color: themeColors['dividerColor'],
                           thickness: 0.1,
                         ),
                       ],

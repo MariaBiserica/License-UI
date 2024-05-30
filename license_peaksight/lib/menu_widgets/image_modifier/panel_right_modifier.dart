@@ -5,8 +5,12 @@ import 'package:license_peaksight/constants.dart';
 
 class PanelRightImageModifier extends StatefulWidget {
   final Function(String imagePath)? onImageSelected;
+  final Map<String, Color> themeColors;
 
-  PanelRightImageModifier({this.onImageSelected});
+  PanelRightImageModifier({
+    this.onImageSelected,
+    required this.themeColors,
+  });
 
   @override
   _PanelRightImageModifierState createState() => _PanelRightImageModifierState();
@@ -121,7 +125,7 @@ class _PanelRightImageModifierState extends State<PanelRightImageModifier> with 
       body: Container(
         padding: const EdgeInsets.all(Constants.kPadding),
         child: Card(
-          color: Constants.purpleLight,
+          color: widget.themeColors['panelBackground'],
           elevation: 3,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
           child: Padding(
@@ -133,8 +137,8 @@ class _PanelRightImageModifierState extends State<PanelRightImageModifier> with 
                   onPressed: pickImages,
                   child: Text('Upload Images'),
                   style: ElevatedButton.styleFrom(
-                    foregroundColor: Colors.white, 
-                    backgroundColor: Constants.panelForeground,
+                    foregroundColor: widget.themeColors['textColor'], 
+                    backgroundColor: widget.themeColors['panelForeground'],
                   ),
                 ),
                 SizedBox(height: 20), // Adjust the space as needed
@@ -149,11 +153,11 @@ class _PanelRightImageModifierState extends State<PanelRightImageModifier> with 
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     IconButton(
-                      icon: Icon(Icons.arrow_left, color: Constants.panelForeground),
+                      icon: Icon(Icons.arrow_left, color: widget.themeColors['panelForeground']),
                       onPressed: images.isEmpty ? null : previousImage,
                     ),
                     IconButton(
-                      icon: Icon(Icons.arrow_right, color: Constants.panelForeground),
+                      icon: Icon(Icons.arrow_right, color: widget.themeColors['panelForeground']),
                       onPressed: images.isEmpty ? null : nextImage,
                     ),
                   ],

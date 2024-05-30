@@ -8,8 +8,13 @@ import '../../server_requests/get_quality_scores.dart';
 class PanelCenterPage extends StatefulWidget {
   final String imagePath;
   final Set<String> selectedMetrics;
+  final Map<String, Color> themeColors;
 
-  PanelCenterPage({required this.imagePath, required this.selectedMetrics});
+  PanelCenterPage({
+    required this.imagePath,
+    required this.selectedMetrics,
+    required this.themeColors,
+  });
 
   @override
   _PanelCenterPageState createState() => _PanelCenterPageState();
@@ -74,6 +79,10 @@ class _PanelCenterPageState extends State<PanelCenterPage> {
             scoreMap['VGG16'] = scores.vgg16Score;
             metricTiming['VGG16'] = "${scores.vgg16Time}";
           }
+          if (widget.selectedMetrics.contains('BIQA Noise Stats')) {
+            scoreMap['BIQA Noise Stats'] = scores.biqaScore;
+            metricTiming['BIQA Noise Stats'] = "${scores.biqaTime}";
+          }
           
         });
       } else {
@@ -129,7 +138,7 @@ class _PanelCenterPageState extends State<PanelCenterPage> {
     return Padding(
         padding: const EdgeInsets.symmetric(horizontal: Constants.kPadding / 2, vertical: Constants.kPadding / 2),
         child: Card(
-            color: Constants.purpleLight,
+            color: widget.themeColors['panelBackground'],
             elevation: 3,
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(30),
@@ -144,7 +153,7 @@ class _PanelCenterPageState extends State<PanelCenterPage> {
                             style: TextStyle(
                             fontFamily: 'HeaderFont', 
                               fontSize: 35, 
-                              color: Color.fromARGB(215, 255, 255, 255),
+                              color: widget.themeColors['textColor'],
                               shadows: <Shadow>[
                                 Shadow(
                                   color: Colors.black.withOpacity(0.5),
@@ -157,7 +166,7 @@ class _PanelCenterPageState extends State<PanelCenterPage> {
                         SizedBox(height: 8),  // Space between title and subtitle
                         Text(
                             "Image quality MOS scale scores",
-                            style: TextStyle(color: Color.fromARGB(156, 158, 158, 158)),
+                            style: TextStyle(color: widget.themeColors['subtitleColor']),
                         ),
                         SizedBox(height: 8), // Additional space before the table
                         Container(
@@ -194,10 +203,10 @@ class _PanelCenterPageState extends State<PanelCenterPage> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                   Text(score, style: TextStyle(
-                      color: Colors.white,
+                      color: widget.themeColors['textColor'],
                       fontWeight: isHeader ? FontWeight.bold : FontWeight.normal)),
                   Text(label, style: TextStyle(
-                      color: Colors.white,
+                      color: widget.themeColors['textColor'],
                       fontWeight: isHeader ? FontWeight.bold : FontWeight.normal)),
               ],
           ),
@@ -208,7 +217,7 @@ class _PanelCenterPageState extends State<PanelCenterPage> {
     return Padding(
       padding: const EdgeInsets.all(Constants.kPadding),
       child: Card(
-        color: Constants.purpleLight,
+        color: widget.themeColors['panelBackground'],
         elevation: 3,
         shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(20)),
@@ -231,7 +240,7 @@ class _PanelCenterPageState extends State<PanelCenterPage> {
           fontFamily: 'Rastaglion',
           fontSize: 15,
           fontWeight: FontWeight.bold,
-          color: Colors.white
+          color: widget.themeColors['textColor'],
         ),
       ),
       subtitle: Text(
@@ -239,7 +248,7 @@ class _PanelCenterPageState extends State<PanelCenterPage> {
           style: TextStyle(
               fontFamily: 'TellMeAJoke',
               fontSize: 17,
-              color: Colors.grey[400]
+              color: widget.themeColors['subitleColor'],
           ),
       ),
       trailing: isCalculating
@@ -247,13 +256,13 @@ class _PanelCenterPageState extends State<PanelCenterPage> {
             width: 60,  // Set a specific width for the SizedBox
             height: 20, // Set a specific height for the animation
             child: SpinKitThreeBounce(
-              color: Colors.white,
+              color: widget.themeColors['textColor'],
               size: 20.0,
             ),
           )
         : Text(
             metricTiming[metric] ?? "Calculating...",
-            style: TextStyle(color: Colors.grey[400]),
+            style: TextStyle(color: widget.themeColors['subitleColor']),
           ),
     );
   }

@@ -5,6 +5,8 @@ import 'package:license_peaksight/menu_widgets/batch_processing/panel_center_bat
 import 'package:license_peaksight/menu_widgets/batch_processing/panel_left_batch.dart';
 import 'package:license_peaksight/menu_widgets/batch_processing/panel_right_batch.dart';
 import 'package:license_peaksight/responsive_layout.dart';
+import 'package:provider/provider.dart';
+import 'package:license_peaksight/theme_provider.dart';
 
 class BatchProcessingWidget extends StatefulWidget {
   final List<String> imagePaths;
@@ -23,34 +25,36 @@ class BatchProcessingWidget extends StatefulWidget {
 
 class _BatchProcessingWidgetState extends State<BatchProcessingWidget> {
   String selectedMetric = '';
-  List<double> scores = []; // Add this to store the scores
+  List<double> scores = [];
 
   void handleMetricSelected(String metric) {
-    print("Selected metric: $metric"); // Debug print to check the callback
+    print("Selected metric: $metric");
     setState(() {
-      selectedMetric = metric; // Update the selected metric
+      selectedMetric = metric;
     });
   }
 
   void handleScoresCalculated(List<double> calculatedScores) {
     setState(() {
-      scores = calculatedScores; // Update the scores when calculated
+      scores = calculatedScores;
     });
   }
 
   @override
   Widget build(BuildContext context) {
+    final themeProvider = Provider.of<ThemeProvider>(context);
+    final themeColors = themeProvider.themeColors;
+
     return ResponsiveLayout(
-      tiny: _buildScrollableColumnLayout(), // Single column for tiny layout
-      phone: _buildScrollableColumnLayout(), // Single column for phone layout
-      tablet: _buildTabletLayout(), // Custom layout for tablet
-      largeTablet: _buildLargeTabletLayout(), // Side by side layout for large tablet
-      computer: _buildComputerLayout(), // Side by side layout for computer
+      tiny: _buildScrollableColumnLayout(themeColors),
+      phone: _buildScrollableColumnLayout(themeColors),
+      tablet: _buildTabletLayout(themeColors),
+      largeTablet: _buildLargeTabletLayout(themeColors),
+      computer: _buildComputerLayout(themeColors),
     );
   }
 
-  // Build a scrollable column layout for tiny and phone
-  Widget _buildScrollableColumnLayout() {
+  Widget _buildScrollableColumnLayout(Map<String, Color> themeColors) {
     return SingleChildScrollView(
       child: Column(
         children: [
@@ -60,6 +64,7 @@ class _BatchProcessingWidgetState extends State<BatchProcessingWidget> {
               onMetricSelected: handleMetricSelected,
               scores: scores,
               imagePaths: widget.imagePaths,
+              themeColors: themeColors,
             ),
           ),
           SizedBox(
@@ -68,12 +73,14 @@ class _BatchProcessingWidgetState extends State<BatchProcessingWidget> {
               imagePaths: widget.imagePaths,
               selectedMetric: selectedMetric,
               onScoresCalculated: handleScoresCalculated,
+              themeColors: themeColors,
             ),
           ),
           SizedBox(
             height: 500,
             child: PanelRightBatchProcessing(
               onImagesSelected: widget.onImagesSelected,
+              themeColors: themeColors,
             ),
           ),
           SizedBox(height: 100),
@@ -82,8 +89,7 @@ class _BatchProcessingWidgetState extends State<BatchProcessingWidget> {
     );
   }
 
-  // Build a custom layout for tablet
-  Widget _buildTabletLayout() {
+  Widget _buildTabletLayout(Map<String, Color> themeColors) {
     return Column(
       children: [
         Row(
@@ -95,6 +101,7 @@ class _BatchProcessingWidgetState extends State<BatchProcessingWidget> {
                   onMetricSelected: handleMetricSelected,
                   scores: scores,
                   imagePaths: widget.imagePaths,
+                  themeColors: themeColors,
                 ),
               ),
             ),
@@ -106,6 +113,7 @@ class _BatchProcessingWidgetState extends State<BatchProcessingWidget> {
                   imagePaths: widget.imagePaths,
                   selectedMetric: selectedMetric,
                   onScoresCalculated: handleScoresCalculated,
+                  themeColors: themeColors,
                 ),
               ),
             ),
@@ -115,14 +123,14 @@ class _BatchProcessingWidgetState extends State<BatchProcessingWidget> {
           height: 330,
           child: PanelRightBatchProcessing(
             onImagesSelected: widget.onImagesSelected,
+            themeColors: themeColors,
           ),
         ),
       ],
     );
   }
 
-  // Build a custom layout for large tablet
-  Widget _buildLargeTabletLayout() {
+  Widget _buildLargeTabletLayout(Map<String, Color> themeColors) {
     return Row(
       children: [
         Expanded(
@@ -131,6 +139,7 @@ class _BatchProcessingWidgetState extends State<BatchProcessingWidget> {
             onMetricSelected: handleMetricSelected,
             scores: scores,
             imagePaths: widget.imagePaths,
+            themeColors: themeColors,
           ),
         ),
         Expanded(
@@ -139,25 +148,28 @@ class _BatchProcessingWidgetState extends State<BatchProcessingWidget> {
             imagePaths: widget.imagePaths,
             selectedMetric: selectedMetric,
             onScoresCalculated: handleScoresCalculated,
+            themeColors: themeColors,
           ),
         ),
         Expanded(
           flex: 3,
           child: PanelRightBatchProcessing(
             onImagesSelected: widget.onImagesSelected,
+            themeColors: themeColors,
           ),
         ),
       ],
     );
   }
 
-  // Build a custom layout for computer
-  Widget _buildComputerLayout() {
+  Widget _buildComputerLayout(Map<String, Color> themeColors) {
     return Row(
       children: [
         Expanded(
           flex: 2,
-          child: DrawerPage(onSectionSelected: widget.onSectionSelected),
+          child: DrawerPage(
+            onSectionSelected: widget.onSectionSelected,
+          ),
         ),
         Expanded(
           flex: 2,
@@ -165,6 +177,7 @@ class _BatchProcessingWidgetState extends State<BatchProcessingWidget> {
             onMetricSelected: handleMetricSelected,
             scores: scores,
             imagePaths: widget.imagePaths,
+            themeColors: themeColors,
           ),
         ),
         Expanded(
@@ -173,12 +186,14 @@ class _BatchProcessingWidgetState extends State<BatchProcessingWidget> {
             imagePaths: widget.imagePaths,
             selectedMetric: selectedMetric,
             onScoresCalculated: handleScoresCalculated,
+            themeColors: themeColors,
           ),
         ),
         Expanded(
           flex: 3,
           child: PanelRightBatchProcessing(
             onImagesSelected: widget.onImagesSelected,
+            themeColors: themeColors,
           ),
         ),
       ],

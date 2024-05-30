@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:license_peaksight/drawer/drawer_page.dart';
 import 'package:license_peaksight/responsive_layout.dart';
+import 'package:provider/provider.dart';
+import 'package:license_peaksight/theme_provider.dart';
 
 class HelpAndDocumentationWidget extends StatefulWidget {
   final Function(String) onSectionSelected;
@@ -109,51 +111,59 @@ class _HelpAndDocumentationWidgetState extends State<HelpAndDocumentationWidget>
 
   @override
   Widget build(BuildContext context) {
+    final themeProvider = Provider.of<ThemeProvider>(context);
+    final themeColors = themeProvider.themeColors;
+
     return ResponsiveLayout(
-      tiny: _buildScrollableColumnLayout(),
-      phone: _buildScrollableColumnLayout(),
-      tablet: _buildScrollableColumnLayout(),
-      largeTablet: _buildLargeTabletLayout(),
-      computer: _buildComputerLayout(),
+      tiny: _buildScrollableColumnLayout(themeColors),
+      phone: _buildScrollableColumnLayout(themeColors),
+      tablet: _buildScrollableColumnLayout(themeColors),
+      largeTablet: _buildLargeTabletLayout(themeColors),
+      computer: _buildComputerLayout(themeColors),
     );
   }
 
-  Widget _buildScrollableColumnLayout() {
+  Widget _buildScrollableColumnLayout(Map<String, Color> themeColors) {
     return SingleChildScrollView(
       child: Column(
         children: [
-          _buildHelpSection(),
+          _buildHelpSection(themeColors),
           SizedBox(height: 20),
-          _buildTutorialSection(),
+          _buildTutorialSection(themeColors),
         ],
       ),
     );
   }
 
-  Widget _buildLargeTabletLayout() {
+  Widget _buildLargeTabletLayout(Map<String, Color> themeColors) {
     return Row(
       children: [
-        Expanded(flex: 2, child: _buildHelpSection()),
-        Expanded(flex: 3, child: _buildTutorialSection()),
+        Expanded(flex: 2, child: _buildHelpSection(themeColors)),
+        Expanded(flex: 3, child: _buildTutorialSection(themeColors)),
       ],
     );
   }
 
-  Widget _buildComputerLayout() {
+  Widget _buildComputerLayout(Map<String, Color> themeColors) {
     return Row(
       children: [
-        Expanded(flex: 2, child: DrawerPage(onSectionSelected: widget.onSectionSelected)),
-        Expanded(flex: 2, child: _buildHelpSection()),
-        Expanded(flex: 3, child: _buildTutorialSection()),
+        Expanded(
+          flex: 2,
+          child: DrawerPage(
+            onSectionSelected: widget.onSectionSelected,
+          ),
+        ),
+        Expanded(flex: 2, child: _buildHelpSection(themeColors)),
+        Expanded(flex: 3, child: _buildTutorialSection(themeColors)),
       ],
     );
   }
 
-  Widget _buildHelpSection() {
+  Widget _buildHelpSection(Map<String, Color> themeColors) {
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: Card(
-        color: Color.fromARGB(255, 232, 225, 254),
+        color: themeColors['helpPanelBackground'],
         elevation: 5,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(15),
@@ -169,7 +179,7 @@ class _HelpAndDocumentationWidgetState extends State<HelpAndDocumentationWidget>
                   style: TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
-                    color: Colors.purple,
+                    color: themeColors['panelBackground'],
                   ),
                 ),
                 SizedBox(height: 10),
@@ -186,14 +196,14 @@ class _HelpAndDocumentationWidgetState extends State<HelpAndDocumentationWidget>
                   style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
-                    color: Colors.purple,
+                    color: themeColors['panelBackground'],
                   ),
                 ),
                 SizedBox(height: 10),
                 DropdownButton<int>(
                   padding: EdgeInsets.symmetric(horizontal: 10, vertical: 7),
                   borderRadius: BorderRadius.circular(10),
-                  dropdownColor: Color.fromARGB(255, 232, 225, 254),
+                  dropdownColor: themeColors['helpPanelBackground'],
                   value: _selectedTutorialIndex,
                   items: List.generate(tutorials.length, (index) {
                     return DropdownMenuItem<int>(
@@ -209,7 +219,7 @@ class _HelpAndDocumentationWidgetState extends State<HelpAndDocumentationWidget>
                   isExpanded: true,
                 ),
                 SizedBox(height: 10),
-                _buildTutorialSteps(),
+                _buildTutorialSteps(themeColors),
               ],
             ),
           ),
@@ -218,11 +228,11 @@ class _HelpAndDocumentationWidgetState extends State<HelpAndDocumentationWidget>
     );
   }
 
-  Widget _buildTutorialSection() {
+  Widget _buildTutorialSection(Map<String, Color> themeColors) {
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: Card(
-        color: Color.fromARGB(255, 232, 225, 254),
+        color: themeColors['helpPanelBackground'],
         elevation: 5,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(15),
@@ -238,13 +248,13 @@ class _HelpAndDocumentationWidgetState extends State<HelpAndDocumentationWidget>
                   style: TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
-                    color: Colors.purple,
+                    color: themeColors['panelBackground'],
                   ),
                 ),
                 SizedBox(height: 10),
-                _buildAlgorithmsGrid(),
+                _buildAlgorithmsGrid(themeColors),
                 SizedBox(height: 20),
-                if (_selectedAlgorithmIndex != -1) _buildAlgorithmSteps(),
+                if (_selectedAlgorithmIndex != -1) _buildAlgorithmSteps(themeColors),
               ],
             ),
           ),
@@ -253,7 +263,7 @@ class _HelpAndDocumentationWidgetState extends State<HelpAndDocumentationWidget>
     );
   }
 
-  Widget _buildAlgorithmsGrid() {
+  Widget _buildAlgorithmsGrid(Map<String, Color> themeColors) {
     return GridView.builder(
       shrinkWrap: true,
       physics: NeverScrollableScrollPhysics(),
@@ -283,7 +293,7 @@ class _HelpAndDocumentationWidgetState extends State<HelpAndDocumentationWidget>
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
-                  color: Colors.purple,
+                  color: themeColors['panelBackground'],
                 ),
               ),
             ),
@@ -293,7 +303,7 @@ class _HelpAndDocumentationWidgetState extends State<HelpAndDocumentationWidget>
     );
   }
 
-  Widget _buildAlgorithmSteps() {
+  Widget _buildAlgorithmSteps(Map<String, Color> themeColors) {
     String selectedAlgorithm = algorithms[_selectedAlgorithmIndex];
     List<String> steps = algorithmSteps[selectedAlgorithm]!;
 
@@ -305,7 +315,7 @@ class _HelpAndDocumentationWidgetState extends State<HelpAndDocumentationWidget>
           style: TextStyle(
             fontSize: 20,
             fontWeight: FontWeight.bold,
-            color: Colors.purple,
+            color: themeColors['panelBackground'],
           ),
         ),
         SizedBox(height: 10),
@@ -320,7 +330,7 @@ class _HelpAndDocumentationWidgetState extends State<HelpAndDocumentationWidget>
               },
               child: Text('${index + 1}', style: TextStyle(color: Colors.white)),
               style: ElevatedButton.styleFrom(
-                backgroundColor: _currentStep == index ? Color.fromARGB(255, 199, 13, 250) : Colors.grey,
+                backgroundColor: _currentStep == index ? themeColors['panelForeground'] : themeColors['subtitleColor'],
                 shape: CircleBorder(),
                 padding: EdgeInsets.all(20),
               ),
@@ -348,7 +358,7 @@ class _HelpAndDocumentationWidgetState extends State<HelpAndDocumentationWidget>
     );
   }
 
-  Widget _buildTutorialSteps() {
+  Widget _buildTutorialSteps(Map<String, Color> themeColors) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: List.generate(tutorialSteps[tutorials[_selectedTutorialIndex]]!.length, (index) {
@@ -361,7 +371,7 @@ class _HelpAndDocumentationWidgetState extends State<HelpAndDocumentationWidget>
                 '${index + 1}.',
                 style: TextStyle(
                   fontSize: 16,
-                  color: Colors.purple,
+                  color: themeColors['panelBackground'],
                 ),
               ),
               SizedBox(width: 10),

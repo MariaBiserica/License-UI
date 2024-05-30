@@ -2,9 +2,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:license_peaksight/authentication/login_page.dart';
-import 'package:license_peaksight/constants.dart';
 import 'package:license_peaksight/firebase_options.dart';
+import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
+import 'package:license_peaksight/theme_provider.dart';
 
 Future<void> testInternetConnection() async {
   try {
@@ -19,7 +20,7 @@ Future<void> testInternetConnection() async {
   }
 }
 
-Future <void> main() async {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   
   await Firebase.initializeApp(
@@ -37,20 +38,27 @@ Future <void> main() async {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Peak Sight',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-        scaffoldBackgroundColor: Constants.purpleDark,
-        canvasColor: Constants.purpleLight
+    return ChangeNotifierProvider(
+      create: (context) => ThemeProvider(),
+      child: Consumer<ThemeProvider>(
+        builder: (context, themeProvider, child) {
+          return MaterialApp(
+            debugShowCheckedModeBanner: false,
+            title: 'Peak Sight',
+            theme: ThemeData(
+              primaryColor: themeProvider.themeColors['panelBackground'],
+              scaffoldBackgroundColor: themeProvider.themeColors['appBackground'],
+              canvasColor: themeProvider.themeColors['panelBackground'],
+            ),
+            initialRoute: '/',  // Set the initial route
+            routes: {
+              '/': (context) => LoginPage(),  // Home page
+              '/login': (context) => LoginPage(),  // Login page
+              // Add other routes as needed
+            },
+          );
+        },
       ),
-      initialRoute: '/',  // Set the initial route
-      routes: {
-        '/': (context) => LoginPage(),  // Home page
-        '/login': (context) => LoginPage(),  // Login page
-        // Add other routes as needed
-      },
     );
   }
 }

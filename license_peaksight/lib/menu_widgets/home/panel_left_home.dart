@@ -5,6 +5,10 @@ import 'package:license_peaksight/authentication/authentication_service.dart';
 import 'package:license_peaksight/menu_widgets/home/task.dart';
 
 class LeftPanelHome extends StatefulWidget {
+  final Map<String, Color> themeColors;
+
+  LeftPanelHome({required this.themeColors});
+
   @override
   _LeftPanelHomeState createState() => _LeftPanelHomeState();
 }
@@ -20,7 +24,7 @@ class _LeftPanelHomeState extends State<LeftPanelHome> {
           padding: EdgeInsets.all(Constants.kPaddingHome / 2),
           margin: EdgeInsets.all(Constants.kPaddingHome), // Adds margin around the container
           decoration: BoxDecoration(
-            color: Constants.panelBackground,
+            color: widget.themeColors['panelBackground'],
             borderRadius: BorderRadius.circular(Constants.borderRadius), // Rounded corners
             boxShadow: [
               BoxShadow(
@@ -40,7 +44,7 @@ class _LeftPanelHomeState extends State<LeftPanelHome> {
                 style: TextStyle(
                   fontFamily: 'HeaderFont', 
                   fontSize: 34, 
-                  color: Color.fromARGB(215, 255, 255, 255),
+                  color: widget.themeColors['textColor'],
                   shadows: <Shadow>[
                     Shadow(
                       color: Colors.black.withOpacity(0.5),
@@ -93,7 +97,7 @@ class _LeftPanelHomeState extends State<LeftPanelHome> {
 
   Widget _buildStatsOverview(int completedTasks, int inProgressTasks, int queuedTasks) {
     return Card(
-      color: Constants.panelForeground,
+      color: widget.themeColors['panelForeground'],
       elevation: 3,
       margin: EdgeInsets.all(Constants.kPaddingHome / 2),
       shape: RoundedRectangleBorder(
@@ -109,10 +113,10 @@ class _LeftPanelHomeState extends State<LeftPanelHome> {
                 fontFamily: 'Rastaglion',
                 fontSize: 18, 
                 fontWeight: FontWeight.bold, 
-                color: Colors.white
+                color: widget.themeColors['textColor'],
               ),
             ),
-            Divider(color: Colors.white54),
+            Divider(color: widget.themeColors['dividerColor']),
             _buildStatItem("Tasks Completed", completedTasks.toString()),
             _buildStatItem("Tasks In Progress", inProgressTasks.toString()),
             _buildStatItem("Tasks Queued", queuedTasks.toString()),
@@ -134,7 +138,7 @@ class _LeftPanelHomeState extends State<LeftPanelHome> {
               style: TextStyle(
                 fontFamily: 'Voguella',
                 fontSize: 16,
-                color: Colors.white
+                color: widget.themeColors['textColor'],
               ),
               overflow: TextOverflow.fade,  // Prevents text from overflowing
             ),
@@ -143,7 +147,7 @@ class _LeftPanelHomeState extends State<LeftPanelHome> {
           Container(
             padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
             decoration: BoxDecoration(
-              color: Constants.panelForeground, // Slightly darker background for the value
+              color: widget.themeColors['panelForeground'],
               borderRadius: BorderRadius.circular(10), // Rounded corners
               boxShadow: [
                 BoxShadow(
@@ -154,7 +158,13 @@ class _LeftPanelHomeState extends State<LeftPanelHome> {
                 ),
               ],
             ),
-            child: Text(value, style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold,),),
+            child: Text(
+              value, 
+              style: TextStyle(
+                color: widget.themeColors['textColor'],
+                fontWeight: FontWeight.bold,
+              ),
+            ),
           ),
         ],
       ),

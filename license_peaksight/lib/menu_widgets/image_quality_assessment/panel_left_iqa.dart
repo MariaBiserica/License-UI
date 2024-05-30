@@ -3,8 +3,12 @@ import 'package:license_peaksight/constants.dart';
 
 class PanelLeftPage extends StatefulWidget {
   final Function(Set<String>) onMetricsSelected;
+  final Map<String, Color> themeColors;
 
-  PanelLeftPage({required this.onMetricsSelected});
+  PanelLeftPage({
+    required this.onMetricsSelected,
+    required this.themeColors,
+  });
 
   @override
   _PanelLeftPageState createState() => _PanelLeftPageState();
@@ -56,7 +60,7 @@ class _PanelLeftPageState extends State<PanelLeftPage> {
         child: Container(
           padding: const EdgeInsets.all(Constants.kPadding),
           child: Card(
-            color: Constants.purpleLight,
+            color: widget.themeColors['panelBackground'],
             elevation: 3,
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
             child: Padding(
@@ -69,7 +73,7 @@ class _PanelLeftPageState extends State<PanelLeftPage> {
                     style: TextStyle(
                       fontFamily: 'HeaderFont', 
                       fontSize: 35, 
-                      color: Color.fromARGB(215, 255, 255, 255),
+                      color: widget.themeColors['textColor'],
                       shadows: <Shadow>[
                         Shadow(
                           color: Colors.black.withOpacity(0.5),
@@ -83,23 +87,23 @@ class _PanelLeftPageState extends State<PanelLeftPage> {
                     "Select which metrics you want to assess!",
                     style: TextStyle(
                       fontSize: 14, 
-                      color: Color.fromARGB(156, 158, 158, 158)
+                      color: widget.themeColors['subtitleColor'],
                     ),
                   ),
-                  Divider(color: Colors.white30),
+                  Divider(color: widget.themeColors['dividerColor']),
                   ...metrics.map((metric) => CheckboxListTile(
                     title: Text(
                       metric, 
                       style: TextStyle(
                         fontFamily: 'TellMeAJoke',
                         fontSize: 21, 
-                        color: Colors.white
+                        color: widget.themeColors['textColor'],
                       ),
                     ),
                     value: selectedMetrics[metric],
                     onChanged: (_) => toggleMetric(metric),
-                    activeColor: Constants.endGradient,
-                    checkColor: Colors.white,
+                    activeColor: widget.themeColors['gradientEnd'],
+                    checkColor: widget.themeColors['textColor'],
                   )),
                   ListTile(
                     title: Text(
@@ -108,12 +112,12 @@ class _PanelLeftPageState extends State<PanelLeftPage> {
                         fontFamily: 'TellMeAJoke',
                         fontSize: 21, 
                         fontWeight: FontWeight.bold,
-                        color: Colors.white
+                        color: widget.themeColors['textColor'],
                       ),
                     ),
                     trailing: Icon(
                       showQualityOptions ? Icons.arrow_drop_up : Icons.arrow_drop_down,
-                      color: Colors.white
+                      color: widget.themeColors['textColor'],
                     ),
                     onTap: toggleQualityOptions,
                   ),
@@ -124,20 +128,20 @@ class _PanelLeftPageState extends State<PanelLeftPage> {
                         style: TextStyle(
                           fontFamily: 'TellMeAJoke',
                           fontSize: 21, 
-                          color: Colors.white
+                          color: widget.themeColors['textColor'],
                         ),
                       ),
                       value: selectedMetrics[metric],
                       onChanged: (_) => toggleMetric(metric),
-                      activeColor: Constants.endGradient,
-                      checkColor: Colors.white,
+                      activeColor: widget.themeColors['gradientEnd'],
+                      checkColor: widget.themeColors['textColor'],
                     )).toList(),
                   ),
                   ElevatedButton(
                     onPressed: startAnalysis,
-                    child: Text('Start Analysis', style: TextStyle(color: Colors.white)),
+                    child: Text('Start Analysis', style: TextStyle(color: widget.themeColors['textColor'])),
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Constants.panelForeground,
+                      backgroundColor: widget.themeColors['panelForeground'],
                     ),
                   ),
                 ],

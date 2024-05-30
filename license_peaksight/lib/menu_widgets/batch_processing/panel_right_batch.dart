@@ -7,8 +7,12 @@ import 'dart:ui' as ui;
 
 class PanelRightBatchProcessing extends StatefulWidget {
   final Function(List<String> imagePaths)? onImagesSelected;  // Changed to handle a list of File
+  final Map<String, Color> themeColors;
 
-  PanelRightBatchProcessing({this.onImagesSelected});
+  PanelRightBatchProcessing({
+    this.onImagesSelected,
+    required this.themeColors,
+  });
 
   @override
   _PanelRightBatchProcessingState createState() => _PanelRightBatchProcessingState();
@@ -52,7 +56,7 @@ class _PanelRightBatchProcessingState extends State<PanelRightBatchProcessing> {
       body: Container(
         padding: const EdgeInsets.all(Constants.kPadding),
         child: Card(
-          color: Constants.purpleLight,
+          color: widget.themeColors['panelBackground'],
           elevation: 3,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
           child: Column(
@@ -62,14 +66,14 @@ class _PanelRightBatchProcessingState extends State<PanelRightBatchProcessing> {
                 onPressed: pickImages,
                 child: Text('Upload Images'),
                 style: ElevatedButton.styleFrom(
-                  foregroundColor: Colors.white, 
-                  backgroundColor: Constants.panelForeground,
+                  foregroundColor: widget.themeColors['textColor'], 
+                  backgroundColor: widget.themeColors['panelForeground'],
                 ),
               ),
               SizedBox(height: 10),
               Expanded(
                 child: images.isEmpty
-                  ? Center(child: Text("No images uploaded.", style: TextStyle(color: Colors.white)))
+                  ? Center(child: Text("No images uploaded.", style: TextStyle(color: widget.themeColors['textColor'])))
                   : ListView.builder(
                   itemCount: images.length,
                   itemBuilder: (context, index) {
@@ -90,7 +94,7 @@ class _PanelRightBatchProcessingState extends State<PanelRightBatchProcessing> {
                             imagePath.split('/').last,
                             style: TextStyle(
                               fontSize: 14,
-                              color: Colors.white,
+                              color: widget.themeColors['textColor'],
                             ),
                           ),
                           subtitle: Text(
@@ -98,7 +102,7 @@ class _PanelRightBatchProcessingState extends State<PanelRightBatchProcessing> {
                             style: TextStyle(
                               fontFamily: 'TellMeAJoke',
                               fontSize: 14,
-                              color: Color.fromARGB(156, 158, 158, 158),
+                              color: widget.themeColors['subtitleColor'],
                             ),
                           ),
                         );

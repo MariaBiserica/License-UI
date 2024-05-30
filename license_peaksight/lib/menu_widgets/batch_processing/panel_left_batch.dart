@@ -8,11 +8,13 @@ class PanelLeftBatchProcessing extends StatefulWidget {
   final Function(String) onMetricSelected;
   final List<double> scores;
   final List<String> imagePaths;
+  final Map<String, Color> themeColors;
 
   PanelLeftBatchProcessing({
     required this.onMetricSelected,
     required this.scores,
     required this.imagePaths,
+    required this.themeColors,
   });
 
   @override
@@ -58,7 +60,7 @@ class _PanelLeftBatchProcessingState extends State<PanelLeftBatchProcessing> {
             return Container(
               padding: const EdgeInsets.all(Constants.kPadding),
               child: Card(
-                color: Constants.purpleLight,
+                color: widget.themeColors['panelBackground'],
                 elevation: 3,
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
                 child: Padding(
@@ -73,7 +75,7 @@ class _PanelLeftBatchProcessingState extends State<PanelLeftBatchProcessing> {
                           style: TextStyle(
                             fontFamily: 'HeaderFont', 
                             fontSize: 35, 
-                            color: Color.fromARGB(215, 255, 255, 255),
+                            color: widget.themeColors['textColor'],
                             shadows: <Shadow>[
                               Shadow(
                                 color: Colors.black.withOpacity(0.5),
@@ -91,7 +93,7 @@ class _PanelLeftBatchProcessingState extends State<PanelLeftBatchProcessing> {
                           style: TextStyle(
                             fontFamily: 'Voguella',
                             fontSize: 14,
-                            color: Color.fromARGB(156, 158, 158, 158),
+                            color: widget.themeColors['subtitleColor'],
                           ),
                         ),
                       ),
@@ -104,9 +106,9 @@ class _PanelLeftBatchProcessingState extends State<PanelLeftBatchProcessing> {
                           child: DropdownButton<String>(
                             isExpanded: true,
                             value: selectedMetric,
-                            icon: Icon(Icons.arrow_downward, color: Colors.white),
-                            dropdownColor: Constants.purpleLight,
-                            underline: Container(height: 2, color: Colors.white),
+                            icon: Icon(Icons.arrow_downward, color: widget.themeColors['textColor']),
+                            dropdownColor: widget.themeColors['panelBackground'],
+                            underline: Container(height: 2, color: widget.themeColors['textColor']),
                             onChanged: (String? newValue) {
                               setState(() {
                                 selectedMetric = newValue!;
@@ -125,7 +127,7 @@ class _PanelLeftBatchProcessingState extends State<PanelLeftBatchProcessing> {
                           style: TextStyle(
                             fontFamily: 'Voguella',
                             fontSize: 14,
-                            color: Colors.white,
+                            color: widget.themeColors['textColor'],
                           ),
                         ),
                         SizedBox(height: 5),
@@ -138,9 +140,9 @@ class _PanelLeftBatchProcessingState extends State<PanelLeftBatchProcessing> {
                             child: DropdownButton<String>(
                               isExpanded: true,
                               value: selectedOverallQualityMetric,
-                              icon: Icon(Icons.arrow_downward, color: Colors.white),
-                              dropdownColor: Constants.purpleLight,
-                              underline: Container(height: 2, color: Colors.white),
+                              icon: Icon(Icons.arrow_downward, color: widget.themeColors['textColor']),
+                              dropdownColor: widget.themeColors['panelBackground'],
+                              underline: Container(height: 2, color: widget.themeColors['textColor']),
                               onChanged: (String? newValue) {
                                 setState(() {
                                   selectedOverallQualityMetric = newValue!;
@@ -154,17 +156,17 @@ class _PanelLeftBatchProcessingState extends State<PanelLeftBatchProcessing> {
                       ],
                       ElevatedButton(
                         onPressed: startAnalysis,
-                        child: Text('Start Analysis', style: TextStyle(color: Colors.white)),
+                        child: Text('Start Analysis', style: TextStyle(color: widget.themeColors['textColor'])),
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: Constants.panelForeground,
+                          backgroundColor: widget.themeColors['panelForeground'],
                         ),
                       ),
                       SizedBox(height: 10),
                       ElevatedButton(
                         onPressed: toggleChart,
-                        child: Text(showChart ? 'Hide Data Distribution' : 'Show Data Distribution', style: TextStyle(color: Colors.white)),
+                        child: Text(showChart ? 'Hide Data Distribution' : 'Show Data Distribution', style: TextStyle(color: widget.themeColors['textColor']),),
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: Constants.panelForeground,
+                          backgroundColor: widget.themeColors['panelForeground'],
                         ),
                       ),
                       if (showChart) buildLineChart(), // Conditionally show the chart
@@ -194,12 +196,12 @@ class _PanelLeftBatchProcessingState extends State<PanelLeftBatchProcessing> {
         value: key,
         child: Row(
           children: [
-            Icon(icons[key], color: Colors.white),
+            Icon(icons[key], color: widget.themeColors['textColor']),
             SizedBox(width: 8),
             Flexible(
               child: Text(
                 key,
-                style: TextStyle(fontSize: 15, color: Colors.white),
+                style: TextStyle(fontSize: 15, color: widget.themeColors['textColor']),
                 overflow: TextOverflow.visible,
                 softWrap: true,
               ),
@@ -224,12 +226,12 @@ class _PanelLeftBatchProcessingState extends State<PanelLeftBatchProcessing> {
         value: key,
         child: Row(
           children: [
-            Icon(icons[key], color: Colors.white),
+            Icon(icons[key], color: widget.themeColors['textColor']),
             SizedBox(width: 8),
             Flexible(
               child: Text(
                 key,
-                style: TextStyle(fontSize: 15, color: Colors.white),
+                style: TextStyle(fontSize: 15, color: widget.themeColors['textColor']),
                 overflow: TextOverflow.visible,
                 softWrap: true,
               ),
@@ -253,7 +255,7 @@ class _PanelLeftBatchProcessingState extends State<PanelLeftBatchProcessing> {
           child: Container(
             width: widget.scores.length * 50.0, // Adjust width based on number of scores
             child: Card(
-              color: Constants.purpleLight,
+              color: widget.themeColors['panelBackground'],
               elevation: 3,
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
               child: Padding(
