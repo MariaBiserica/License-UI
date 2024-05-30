@@ -14,7 +14,7 @@ class _PanelLeftPageState extends State<PanelLeftPage> {
   final List<String> metrics = [
     'Noise', 'Contrast', 'Brightness', 'Sharpness', 'Chromatic Quality'
   ];
-  final List<String> qualityMetrics = ['BRISQUE', 'NIQE', 'ILNIQE', 'VGG16', 'BIQA using Three Noise-related Statistical Features'];
+  final List<String> qualityMetrics = ['BRISQUE', 'NIQE', 'ILNIQE', 'VGG16', 'BIQA Noise Stats'];
   final Map<String, bool> selectedMetrics = {};
   bool showQualityOptions = false; // Flag to show/hide quality metrics
 
@@ -103,7 +103,7 @@ class _PanelLeftPageState extends State<PanelLeftPage> {
                   )),
                   ListTile(
                     title: Text(
-                      'Overall Quality Score',
+                      'Overall Quality',
                       style: TextStyle(
                         fontFamily: 'TellMeAJoke',
                         fontSize: 21, 

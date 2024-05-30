@@ -110,7 +110,7 @@ class _PanelLeftBatchProcessingState extends State<PanelLeftBatchProcessing> {
                             onChanged: (String? newValue) {
                               setState(() {
                                 selectedMetric = newValue!;
-                                isOverallQualitySelected = newValue == 'Overall Quality Score';
+                                isOverallQualitySelected = newValue == 'Overall Quality';
                                 selectedOverallQualityMetric = null; // Reset secondary selection if metric changes
                               });
                             },
@@ -186,7 +186,7 @@ class _PanelLeftBatchProcessingState extends State<PanelLeftBatchProcessing> {
       'Brightness': Icons.brightness_6,
       'Sharpness': Icons.details,
       'Chromatic Quality': Icons.palette,
-      'Overall Quality Score': Icons.score,
+      'Overall Quality': Icons.score,
     };
 
     return icons.keys.map((String key) {
@@ -196,7 +196,14 @@ class _PanelLeftBatchProcessingState extends State<PanelLeftBatchProcessing> {
           children: [
             Icon(icons[key], color: Colors.white),
             SizedBox(width: 8),
-            Text(key, style: TextStyle(color: Colors.white)),
+            Flexible(
+              child: Text(
+                key,
+                style: TextStyle(fontSize: 15, color: Colors.white),
+                overflow: TextOverflow.visible,
+                softWrap: true,
+              ),
+            ),
           ],
         ),
       );
@@ -209,6 +216,7 @@ class _PanelLeftBatchProcessingState extends State<PanelLeftBatchProcessing> {
       'NIQE': Icons.filter_2,
       'ILNIQE': Icons.filter_3,
       'VGG16': Icons.filter_4,
+      'BIQA Noise Stats': Icons.filter_5,
     };
 
     return icons.keys.map((String key) {
@@ -218,7 +226,14 @@ class _PanelLeftBatchProcessingState extends State<PanelLeftBatchProcessing> {
           children: [
             Icon(icons[key], color: Colors.white),
             SizedBox(width: 8),
-            Text(key, style: TextStyle(color: Colors.white)),
+            Flexible(
+              child: Text(
+                key,
+                style: TextStyle(fontSize: 15, color: Colors.white),
+                overflow: TextOverflow.visible,
+                softWrap: true,
+              ),
+            ),
           ],
         ),
       );
