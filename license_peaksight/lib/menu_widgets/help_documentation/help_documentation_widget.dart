@@ -177,10 +177,18 @@ class _HelpAndDocumentationWidgetState extends State<HelpAndDocumentationWidget>
                 Text(
                   'Help',
                   style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                    color: themeColors['panelBackground'],
-                  ),
+                  fontFamily: 'HeaderFont', 
+                  fontSize: 34, 
+                  fontWeight: FontWeight.bold,
+                  color: themeColors['panelBackground'],
+                  shadows: <Shadow>[
+                    Shadow(
+                      color: Colors.black.withOpacity(0.5),
+                      offset: Offset(1, 1),
+                      blurRadius: 2,
+                    ),
+                  ],
+                ),
                 ),
                 SizedBox(height: 10),
                 Text(
@@ -194,10 +202,18 @@ class _HelpAndDocumentationWidgetState extends State<HelpAndDocumentationWidget>
                 Text(
                   'Select a Topic:',
                   style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    color: themeColors['panelBackground'],
-                  ),
+                  fontFamily: 'HeaderFont', 
+                  fontSize: 21, 
+                  fontWeight: FontWeight.bold,
+                  color: themeColors['panelBackground'],
+                  shadows: <Shadow>[
+                    Shadow(
+                      color: Colors.black.withOpacity(0.5),
+                      offset: Offset(1, 1),
+                      blurRadius: 2,
+                    ),
+                  ],
+                ),
                 ),
                 SizedBox(height: 10),
                 DropdownButton<int>(
@@ -246,10 +262,18 @@ class _HelpAndDocumentationWidgetState extends State<HelpAndDocumentationWidget>
                 Text(
                   'Tutorials',
                   style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                    color: themeColors['panelBackground'],
-                  ),
+                  fontFamily: 'HeaderFont', 
+                  fontSize: 34, 
+                  fontWeight: FontWeight.bold,
+                  color: themeColors['panelBackground'],
+                  shadows: <Shadow>[
+                    Shadow(
+                      color: Colors.black.withOpacity(0.5),
+                      offset: Offset(1, 1),
+                      blurRadius: 2,
+                    ),
+                  ],
+                ),
                 ),
                 SizedBox(height: 10),
                 _buildAlgorithmsGrid(themeColors),
@@ -313,9 +337,17 @@ class _HelpAndDocumentationWidgetState extends State<HelpAndDocumentationWidget>
         Text(
           selectedAlgorithm,
           style: TextStyle(
-            fontSize: 20,
+            fontFamily: 'HeaderFont', 
+            fontSize: 24, 
             fontWeight: FontWeight.bold,
             color: themeColors['panelBackground'],
+            shadows: <Shadow>[
+              Shadow(
+                color: Colors.black.withOpacity(0.5),
+                offset: Offset(1, 1),
+                blurRadius: 2,
+              ),
+            ],
           ),
         ),
         SizedBox(height: 10),
