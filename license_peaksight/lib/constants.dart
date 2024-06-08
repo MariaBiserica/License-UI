@@ -25,6 +25,7 @@ class Constants {
       'notificationBadge': Color.fromARGB(255, 255, 99, 71), // Tomato
       'dividerColor': Color.fromARGB(136, 255, 255, 255), // Semi-Transparent White
       'textColor': Color.fromARGB(255, 210, 210, 210), // Light Grey
+      'scoresColor': Color.fromARGB(255, 30, 30, 60), // Dark Slate Blue
       'subtitleColor': Color.fromARGB(156, 180, 180, 180), // Soft Grey
       'detailsColor': Color.fromARGB(255, 200, 200, 200), // Light Grey
       'selectedColor': Color.fromARGB(215, 100, 149, 237), // Cornflower Blue
@@ -39,6 +40,7 @@ class Constants {
       'notificationBadge': Color.fromARGB(255, 153, 221, 200), // Pale Green
       'dividerColor': Colors.white54, // Semi-Transparent White
       'textColor': Colors.white, // White
+      'scoresColor': Color.fromARGB(255, 53, 69, 42), // Dark Olive Green
       'subtitleColor': Color.fromARGB(156, 158, 158, 158), // Soft Grey
       'detailsColor': Color.fromARGB(255, 224, 224, 224), // Light Grey
       'selectedColor': Color.fromARGB(255, 133, 209, 123), // Light Green
@@ -53,6 +55,7 @@ class Constants {
       'notificationBadge': Colors.pink, // Pink
       'dividerColor': Colors.white54, // Semi-Transparent White
       'textColor': Colors.white, // White
+      'scoresColor': Color.fromARGB(255, 55, 2, 60), // Deep Purple
       'subtitleColor': Color.fromARGB(156, 158, 158, 158), // Soft Grey
       'detailsColor': Color.fromARGB(255, 224, 224, 224), // Light Grey
       'selectedColor': Color.fromARGB(215, 253, 141, 169), // Light Pink
@@ -67,6 +70,7 @@ class Constants {
       'notificationBadge': Color.fromARGB(255, 255, 99, 71), // Tomato
       'dividerColor': Color.fromARGB(136, 255, 255, 255), // Semi-Transparent White
       'textColor': Color.fromARGB(255, 230, 230, 230), // Light Grey
+      'scoresColor': Color.fromARGB(255, 60, 2, 2), // Dark Red
       'subtitleColor': Color.fromARGB(156, 200, 200, 200), // Soft Grey
       'detailsColor': Color.fromARGB(255, 210, 210, 210), // Light Grey
       'selectedColor': Color.fromARGB(215, 255, 160, 160), // Light Coral
@@ -81,6 +85,7 @@ class Constants {
       'notificationBadge': Color.fromARGB(255, 255, 165, 0), // Orange
       'dividerColor': Color.fromARGB(136, 160, 160, 160), // Semi-Transparent Grey
       'textColor': Colors.white, // White
+      'scoresColor': Color.fromARGB(255, 72, 71, 71), // Dark Silver
       'subtitleColor': Color.fromARGB(156, 180, 180, 180), // Soft Grey
       'detailsColor': Color.fromARGB(255, 200, 200, 200), // Light Grey
       'selectedColor': Color.fromARGB(215, 255, 228, 181), // Moccasin

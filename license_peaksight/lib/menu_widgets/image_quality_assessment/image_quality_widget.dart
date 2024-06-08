@@ -162,7 +162,7 @@ class _ImageQualityWidgetState extends State<ImageQualityWidget> {
           ),
         ),
         Expanded(
-          flex: 2,
+          flex: 3,
           child: PanelCenterPage(
             imagePath: widget.imagePath,
             selectedMetrics: selectedMetrics,
@@ -170,7 +170,7 @@ class _ImageQualityWidgetState extends State<ImageQualityWidget> {
           ),
         ),
         Expanded(
-          flex: 4,
+          flex: 3,
           child: PanelRightPage(
             onImageSelected: widget.onImageSelected,
             themeColors: themeColors,

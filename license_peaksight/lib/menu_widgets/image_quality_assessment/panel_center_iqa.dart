@@ -238,18 +238,34 @@ class _PanelCenterPageState extends State<PanelCenterPage> {
         "$metric Score",
         style: TextStyle(
           fontFamily: 'Rastaglion',
-          fontSize: 15,
+          fontSize: 17,
           fontWeight: FontWeight.bold,
           color: widget.themeColors['textColor'],
         ),
       ),
-      subtitle: Text(
+      subtitle: Container(
+        padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+        decoration: BoxDecoration(
+          color: widget.themeColors['subtitleBackgroundColor'], // Add background color
+          borderRadius: BorderRadius.circular(10), // Rounded corners
+          boxShadow: [
+            BoxShadow(
+              color: Color.fromARGB(255, 254, 254, 255).withOpacity(0.3), // Shadow color with opacity
+              spreadRadius: 1,
+              blurRadius: 5,
+              offset: Offset(0, 3), // Offset the shadow
+            ),
+          ],
+        ),
+        child: Text(
           score != null ? (metricTiming[metric] == null ? "Recalculating..." : "$score - ${getQualityLevelMessage(score)}") : "No score calculated",
           style: TextStyle(
-              fontFamily: 'TellMeAJoke',
-              fontSize: 17,
-              color: widget.themeColors['subitleColor'],
+            fontFamily: 'TellMeAJoke',
+            fontWeight: FontWeight.bold,
+            fontSize: 28,
+            color: widget.themeColors['scoresColor'],
           ),
+        ),
       ),
       trailing: isCalculating
         ? SizedBox(
@@ -260,9 +276,28 @@ class _PanelCenterPageState extends State<PanelCenterPage> {
               size: 20.0,
             ),
           )
-        : Text(
-            metricTiming[metric] ?? "Calculating...",
-            style: TextStyle(color: widget.themeColors['subitleColor']),
+        : Container(
+            padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+            decoration: BoxDecoration(
+              color: widget.themeColors['trailingBackgroundColor'], // Add background color
+              borderRadius: BorderRadius.circular(10), // Rounded corners
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.3), // Shadow color with opacity
+                  spreadRadius: 1,
+                  blurRadius: 5,
+                  offset: Offset(0, 3), // Offset the shadow
+                ),
+              ],
+            ),
+            child: Text(
+              metricTiming[metric] ?? "Calculating...",
+              style: TextStyle(
+                color: widget.themeColors['textColor'], 
+                fontWeight: FontWeight.bold,
+                fontSize: 16
+              ),
+            ),
           ),
     );
   }

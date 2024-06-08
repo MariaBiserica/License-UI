@@ -486,32 +486,74 @@ class _PanelCenterBatchProcessingState extends State<PanelCenterBatchProcessing>
       title: Text(
         path.basename(imagePath),
         style: TextStyle(
-          fontSize: 15,
+          fontSize: 20,
           color: widget.themeColors['textColor'],
+          shadows: <BoxShadow>[
+            BoxShadow(
+              color: Colors.black.withOpacity(0.5),
+              offset: Offset(1, 3),
+              blurRadius: 2,
+            ),
+          ],
         ),
       ),
-      subtitle: Text(
-        score != null
-            ? (metricTiming[imagePath] == null ? "Recalculating..." : "$score - ${getQualityLevelMessage(score)}")
-            : "No score calculated",
-        style: TextStyle(
-          fontFamily: 'TellMeAJoke',
-          fontSize: 17,
-          color: widget.themeColors['subtitleColor'],
+      subtitle: Container(
+        padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+        decoration: BoxDecoration(
+          color: widget.themeColors['subtitleBackgroundColor'], // Add background color
+          borderRadius: BorderRadius.circular(10), // Rounded corners
+          boxShadow: [
+            BoxShadow(
+              color: Color.fromARGB(255, 254, 254, 255).withOpacity(0.3), // Shadow color with opacity
+              spreadRadius: 1,
+              blurRadius: 5,
+              offset: Offset(0, 3), // Offset the shadow
+            ),
+          ],
+        ),
+        child: Text(
+          score != null
+              ? (metricTiming[imagePath] == null ? "Recalculating..." : "$score - ${getQualityLevelMessage(score)}")
+              : "No score calculated",
+          style: TextStyle(
+            fontFamily: 'TellMeAJoke',
+            fontWeight: FontWeight.bold,
+            fontSize: 28,
+            color: widget.themeColors['scoresColor'],
+          ),
         ),
       ),
       trailing: isCalculating
           ? SizedBox(
-              width: 60,
-              height: 20,
+              width: 60,  // Set a specific width for the SizedBox
+              height: 20, // Set a specific height for the animation
               child: SpinKitThreeBounce(
                 color: widget.themeColors['textColor'],
                 size: 20.0,
               ),
             )
-          : Text(
-              metricTiming[imagePath] ?? "Calculating...",
-              style: TextStyle(color: widget.themeColors['subtitleColor']),
+          : Container(
+              padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+              decoration: BoxDecoration(
+                color: widget.themeColors['trailingBackgroundColor'], // Add background color
+                borderRadius: BorderRadius.circular(10), // Rounded corners
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.3), // Shadow color with opacity
+                    spreadRadius: 1,
+                    blurRadius: 5,
+                    offset: Offset(0, 3), // Offset the shadow
+                  ),
+                ],
+              ),
+              child: Text(
+                metricTiming[imagePath] ?? "Calculating...",
+                style: TextStyle(
+                  color: widget.themeColors['textColor'], 
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16
+                ),
+              ),
             ),
     );
   }
