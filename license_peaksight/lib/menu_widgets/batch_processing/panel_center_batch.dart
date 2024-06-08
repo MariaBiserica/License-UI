@@ -99,6 +99,10 @@ class _PanelCenterBatchProcessingState extends State<PanelCenterBatchProcessing>
               score = scoresResult.vgg16Score;
               metricTiming[imagePath] = "${scoresResult.vgg16Time}";
             }
+            if (widget.selectedMetric == 'BIQA Noise Stats') {
+              score = scoresResult.biqaScore;
+              metricTiming[imagePath] = "${scoresResult.biqaTime}";
+            }
 
             if (score != null) {
               scoreMap[imagePath] = score;
@@ -236,6 +240,25 @@ class _PanelCenterBatchProcessingState extends State<PanelCenterBatchProcessing>
     );
   }
 
+  void clearPanel() {
+    setState(() {
+      scoreMap.clear();
+      progress = 0.0;
+      metricTiming.clear();
+      excellentImages.clear();
+      goodImages.clear();
+      fairImages.clear();
+      poorImages.clear();
+      badImages.clear();
+      outlierImages.clear();
+      selectedQualityFilter = null;
+      showDropdown = false;
+      showSaveButton = false;
+      showTop10 = false;
+      widget.imagePaths.clear();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     List<String> displayImagePaths = showTop10 ? getTop10PercentImages() : widget.imagePaths;
@@ -271,6 +294,16 @@ class _PanelCenterBatchProcessingState extends State<PanelCenterBatchProcessing>
                     ),
                   ),
                 ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(Constants.kPadding),
+              child: ElevatedButton(
+                onPressed: clearPanel,
+                child: Text('Clear Panel', style: TextStyle(color: widget.themeColors['textColor'])),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: widget.themeColors['panelForeground'],
+                ),
               ),
             ),
             if (showDropdown)
@@ -513,7 +546,7 @@ class _PanelCenterBatchProcessingState extends State<PanelCenterBatchProcessing>
         ),
         child: Text(
           score != null
-              ? (metricTiming[imagePath] == null ? "Recalculating..." : "$score - ${getQualityLevelMessage(score)}")
+              ? (metricTiming[imagePath] == null ? "Recalculating..." : "$score \n> ${getQualityLevelMessage(score)}")
               : "No score calculated",
           style: TextStyle(
             fontFamily: 'TellMeAJoke',
