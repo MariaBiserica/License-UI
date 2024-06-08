@@ -25,7 +25,6 @@ class _PanelLeftBatchProcessingState extends State<PanelLeftBatchProcessing> {
   String selectedMetric = 'Noise';
   String? selectedOverallQualityMetric;
   bool isOverallQualitySelected = false;
-  bool showChart = false;
 
   final ScrollController _scrollController = ScrollController();
 
@@ -39,10 +38,58 @@ class _PanelLeftBatchProcessingState extends State<PanelLeftBatchProcessing> {
     }
   }
 
-  void toggleChart() {
-    setState(() {
-      showChart = !showChart;
-    });
+  void showChartDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          backgroundColor: Colors.transparent,
+          child: Container(
+            width: MediaQuery.of(context).size.width * 0.6, // Set the width of the dialog
+            padding: EdgeInsets.all(Constants.kPadding),
+            decoration: BoxDecoration(
+              color: widget.themeColors['panelBackground'],
+              borderRadius: BorderRadius.circular(20),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.5),
+                  blurRadius: 10,
+                  offset: Offset(0, 5),
+                ),
+              ],
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  "Data Distribution",
+                  style: TextStyle(
+                    fontFamily: 'HeaderFont',
+                    fontSize: 25,
+                    color: widget.themeColors['textColor'],
+                  ),
+                ),
+                SizedBox(height: 20),
+                buildLineChart(),
+                SizedBox(height: 20),
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Text(
+                    'Close',
+                    style: TextStyle(color: widget.themeColors['textColor']),
+                  ),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: widget.themeColors['panelForeground'],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
   }
 
   @override
@@ -73,8 +120,8 @@ class _PanelLeftBatchProcessingState extends State<PanelLeftBatchProcessing> {
                         child: Text(
                           "Control Center",
                           style: TextStyle(
-                            fontFamily: 'HeaderFont', 
-                            fontSize: 35, 
+                            fontFamily: 'HeaderFont',
+                            fontSize: 35,
                             color: widget.themeColors['textColor'],
                             shadows: <Shadow>[
                               Shadow(
@@ -163,13 +210,15 @@ class _PanelLeftBatchProcessingState extends State<PanelLeftBatchProcessing> {
                       ),
                       SizedBox(height: 10),
                       ElevatedButton(
-                        onPressed: toggleChart,
-                        child: Text(showChart ? 'Hide Data Distribution' : 'Show Data Distribution', style: TextStyle(color: widget.themeColors['textColor']),),
+                        onPressed: showChartDialog,
+                        child: Text(
+                          'Show Data Distribution',
+                          style: TextStyle(color: widget.themeColors['textColor']),
+                        ),
                         style: ElevatedButton.styleFrom(
                           backgroundColor: widget.themeColors['panelForeground'],
                         ),
                       ),
-                      if (showChart) buildLineChart(), // Conditionally show the chart
                     ],
                   ),
                 ),
@@ -249,6 +298,8 @@ class _PanelLeftBatchProcessingState extends State<PanelLeftBatchProcessing> {
       child: Scrollbar(
         thumbVisibility: true, // Ensure the thumb is always visible
         controller: _scrollController,
+        thickness: 15, // Increase the thickness of the scrollbar
+        radius: Radius.circular(10), // Make the scrollbar rounded
         child: SingleChildScrollView(
           scrollDirection: Axis.horizontal, // Enable horizontal scrolling
           controller: _scrollController,
