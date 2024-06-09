@@ -6,7 +6,7 @@ import 'dart:async';
 import 'dart:ui' as ui;
 
 class PanelRightBatchProcessing extends StatefulWidget {
-  final Function(List<String> imagePaths)? onImagesSelected;  // Changed to handle a list of File
+  final Function(List<String> imagePaths)? onImagesSelected;
   final Map<String, Color> themeColors;
 
   PanelRightBatchProcessing({
@@ -29,16 +29,79 @@ class _PanelRightBatchProcessingState extends State<PanelRightBatchProcessing> {
 
     if (result != null) {
       List<String> paths = result.paths.whereType<String>().toList();
-      // List<String> paths = result.paths.map((path) => path!).toList();
       setState(() {
-          images.addAll(paths);
-          print("Images added to state: ${images.join(', ')}");
+        images.addAll(paths);
+        print("Images added to state: ${images.join(', ')}");
       });
-      // Ensures the selected image paths are communicated back right after picking
-      if (images.isNotEmpty) { 
-        widget.onImagesSelected?.call(images);  // Call the callback with the list of images
+
+      if (images.isNotEmpty) {
+        widget.onImagesSelected?.call(images);
       }
     }
+  }
+
+  Future<void> pickFolder() async {
+    String? selectedDirectory = await FilePicker.platform.getDirectoryPath();
+
+    if (selectedDirectory != null) {
+      List<String> paths = [];
+      await _traverseDirectory(selectedDirectory, paths, true);
+
+      setState(() {
+        images.addAll(paths);
+        print("Images added to state: ${images.join(', ')}");
+      });
+
+      if (images.isNotEmpty) {
+        widget.onImagesSelected?.call(images);
+      }
+    }
+  }
+
+  Future<void> _traverseDirectory(String dirPath, List<String> paths, bool includeSubfolders) async {
+    Directory dir = Directory(dirPath);
+
+    await for (var entity in dir.list(recursive: false, followLinks: false)) {
+      if (entity is File && _isImageFile(entity.path)) {
+        paths.add(entity.path);
+      } else if (entity is Directory) {
+        bool shouldIncludeSubfolder = await _promptIncludeSubfolder(entity.path);
+        if (shouldIncludeSubfolder) {
+          await _traverseDirectory(entity.path, paths, true);
+        }
+      }
+    }
+  }
+
+  bool _isImageFile(String path) {
+    final extension = path.split('.').last.toLowerCase();
+    return ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'tiff'].contains(extension);
+  }
+
+  Future<bool> _promptIncludeSubfolder(String subfolderPath) async {
+    return (await showDialog<bool>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Include Subfolder?'),
+          content: Text('Do you want to include images from the subfolder "$subfolderPath"?'),
+          actions: <Widget>[
+            TextButton(
+              child: Text('No'),
+              onPressed: () {
+                Navigator.of(context).pop(false);
+              },
+            ),
+            TextButton(
+              child: Text('Yes'),
+              onPressed: () {
+                Navigator.of(context).pop(true);
+              },
+            ),
+          ],
+        );
+      },
+    )) ?? false;
   }
 
   void viewImage(BuildContext context, String imagePath) {
@@ -62,13 +125,27 @@ class _PanelRightBatchProcessingState extends State<PanelRightBatchProcessing> {
           child: Column(
             children: [
               SizedBox(height: 10),
-              ElevatedButton(
-                onPressed: pickImages,
-                child: Text('Upload Images'),
-                style: ElevatedButton.styleFrom(
-                  foregroundColor: widget.themeColors['textColor'], 
-                  backgroundColor: widget.themeColors['panelForeground'],
-                ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  ElevatedButton(
+                    onPressed: pickImages,
+                    child: Text('Upload Images'),
+                    style: ElevatedButton.styleFrom(
+                      foregroundColor: widget.themeColors['textColor'], 
+                      backgroundColor: widget.themeColors['panelForeground'],
+                    ),
+                  ),
+                  SizedBox(width: 10),
+                  ElevatedButton(
+                    onPressed: pickFolder,
+                    child: Text('Upload Folder'),
+                    style: ElevatedButton.styleFrom(
+                      foregroundColor: widget.themeColors['textColor'], 
+                      backgroundColor: widget.themeColors['panelForeground'],
+                    ),
+                  ),
+                ],
               ),
               SizedBox(height: 10),
               Expanded(
