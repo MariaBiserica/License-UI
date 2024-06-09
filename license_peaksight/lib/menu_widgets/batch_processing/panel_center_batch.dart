@@ -29,6 +29,7 @@ class PanelCenterBatchProcessing extends StatefulWidget {
 class _PanelCenterBatchProcessingState extends State<PanelCenterBatchProcessing> {
   Map<String, double?> scoreMap = {};
   double progress = 0.0;
+  int processedCount = 0;
   Map<String, String> metricTiming = {};
   bool showTop10 = false;
 
@@ -48,6 +49,7 @@ class _PanelCenterBatchProcessingState extends State<PanelCenterBatchProcessing>
     super.didUpdateWidget(oldWidget);
     if (widget.selectedMetric != oldWidget.selectedMetric || widget.imagePaths != oldWidget.imagePaths) {
       progress = 0.0;
+      processedCount = 0;  // Reset the processed count
       metricTiming.clear();
       calculateQualityScores();
     }
@@ -55,6 +57,7 @@ class _PanelCenterBatchProcessingState extends State<PanelCenterBatchProcessing>
 
   void calculateQualityScores() async {
     List<double> scores = [];
+    processedCount = 0;  // Ensure reset of processed count each time the method is called
 
     if (widget.imagePaths.isNotEmpty && widget.selectedMetric.isNotEmpty) {
       for (String imagePath in widget.imagePaths) {
@@ -107,7 +110,10 @@ class _PanelCenterBatchProcessingState extends State<PanelCenterBatchProcessing>
             if (score != null) {
               scoreMap[imagePath] = score;
               scores.add(score);
+              processedCount++;
             }
+
+            progress = processedCount / widget.imagePaths.length;
           });
         } else {
           showDialog(
@@ -244,6 +250,7 @@ class _PanelCenterBatchProcessingState extends State<PanelCenterBatchProcessing>
     setState(() {
       scoreMap.clear();
       progress = 0.0;
+      processedCount = 0;  // Reset processed count when panel is cleared
       metricTiming.clear();
       excellentImages.clear();
       goodImages.clear();
@@ -377,6 +384,80 @@ class _PanelCenterBatchProcessingState extends State<PanelCenterBatchProcessing>
                   ),
                 ),
               ),
+            Padding(
+              padding: const EdgeInsets.all(Constants.kPadding),
+              child: Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: widget.themeColors['panelBackground'],
+                  borderRadius: BorderRadius.circular(10),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black26,
+                      blurRadius: 6,
+                      offset: Offset(0, 2),
+                    ),
+                  ],
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "Processed $processedCount / ${widget.imagePaths.length} images",
+                      style: TextStyle(
+                        fontFamily: 'MenuFont',
+                        fontSize: 18,
+                        color: widget.themeColors['textColor'],
+                        shadows: <Shadow>[
+                          Shadow(
+                            color: Colors.black.withOpacity(0.5),
+                            offset: Offset(1, 3),
+                            blurRadius: 2,
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(height: 5),
+                    Container(
+                      height: 20,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        gradient: LinearGradient(
+                          colors: [
+                            widget.themeColors['gradientBegin']!,
+                            widget.themeColors['gradientEnd']!,
+                          ],
+                        ),
+                      ),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.5),
+                              spreadRadius: 2,
+                              blurRadius: 5,
+                              offset: Offset(0, 3), // changes position of shadow
+                            ),
+                          ],
+                        ),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(10),
+                          child: LinearProgressIndicator(
+                            value: progress,
+                            backgroundColor: widget.themeColors['panelBackground'],
+                            color: Colors.transparent,
+                            valueColor: AlwaysStoppedAnimation<Color>(
+                              widget.themeColors['textColor']!,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
             buildMetricsList(displayImagePaths),
           ],
         ),
