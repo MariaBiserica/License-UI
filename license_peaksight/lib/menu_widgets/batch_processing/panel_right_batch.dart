@@ -164,7 +164,10 @@ class _PanelRightBatchProcessingState extends State<PanelRightBatchProcessing> {
                             onTap: () => viewImage(context, imagePath),
                             child: Hero(
                               tag: imagePath,
-                              child: Image.file(File(imagePath), width: 50, height: 50, fit: BoxFit.cover),
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(8.0),
+                                child: Image.file(File(imagePath), width: 50, height: 50, fit: BoxFit.cover),
+                              ),
                             ),
                           ),
                           title: Text(
@@ -172,14 +175,37 @@ class _PanelRightBatchProcessingState extends State<PanelRightBatchProcessing> {
                             style: TextStyle(
                               fontSize: 14,
                               color: widget.themeColors['textColor'],
+                              shadows: [
+                                Shadow(
+                                  color: Colors.black,
+                                  offset: Offset(1, 2),
+                                  blurRadius: 2,
+                                ),
+                              ],
                             ),
                           ),
-                          subtitle: Text(
-                            '${File(imagePath).lengthSync()} bytes - $imageSize',
-                            style: TextStyle(
-                              fontFamily: 'TellMeAJoke',
-                              fontSize: 14,
-                              color: widget.themeColors['subtitleColor'],
+                          subtitle: Container(
+                            padding: EdgeInsets.all(8),
+                            decoration: BoxDecoration(
+                              color: widget.themeColors['subtitleBackgroundColor'],
+                              borderRadius: BorderRadius.circular(10),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.white.withOpacity(0.3),
+                                  spreadRadius: 0.2,
+                                  blurRadius: 5,
+                                  offset: Offset(0, 3),
+                                ),
+                              ],
+                            ),
+                            child: Text(
+                              '${File(imagePath).lengthSync()} bytes - $imageSize',
+                              style: TextStyle(
+                                fontFamily: 'TellMeAJoke',
+                                fontWeight: FontWeight.bold,
+                                fontSize: 20,
+                                color: widget.themeColors['scoresColor'],
+                              ),
                             ),
                           ),
                         );
@@ -200,14 +226,12 @@ class _PanelRightBatchProcessingState extends State<PanelRightBatchProcessing> {
     Completer<ui.Image> completer = Completer<ui.Image>();
     ImageStream stream = provider.resolve(ImageConfiguration());
 
-    ImageStreamListener? listener; // Declare listener as nullable
+    ImageStreamListener? listener;
     listener = ImageStreamListener(
       (ImageInfo info, bool _) {
         completer.complete(info.image);
-        if (listener != null) {
-          stream.removeListener(listener); // Use non-null assertion
-        }
-      }
+        stream.removeListener(listener!);
+      },
     );
 
     stream.addListener(listener);
