@@ -40,7 +40,7 @@ class PanelLeftImageModifier extends StatefulWidget {
 
 class _PanelLeftImageModifierState extends State<PanelLeftImageModifier> {
   final List<String> metrics = [
-    'Spline Interpolation',
+    'Curves Adjustment',
     'Gaussian Blur',
     'Edge Detection',
     'Color Space Conversion',
@@ -204,9 +204,10 @@ class _PanelLeftImageModifierState extends State<PanelLeftImageModifier> {
                           child: Center(
                             child: Text(
                               metric,
+                              textAlign: TextAlign.center,
                               style: TextStyle(
                                 fontFamily: 'TellMeAJoke',
-                                fontSize: 25.0,
+                                fontSize: 33.0,
                                 color: widget.themeColors['textColor'],
                                 fontWeight: FontWeight.bold,
                                 shadows: <Shadow>[
@@ -455,7 +456,7 @@ class _PanelLeftImageModifierState extends State<PanelLeftImageModifier> {
                                   ),
                                 ],
                               ),
-                            if (selectedMetric == 'Spline Interpolation')
+                            if (selectedMetric == 'Curves Adjustment')
                               Consumer<PointProvider>(
                                 builder: (context, pointProvider, child) {
                                   // Schedule the callback after the build process is complete
