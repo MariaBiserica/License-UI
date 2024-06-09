@@ -4,7 +4,6 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:license_peaksight/menu_widgets/image_modifier/hermite_curve_painter.dart';
 import 'package:provider/provider.dart';
 import 'package:license_peaksight/constants.dart';
-import 'dart:io';
 
 class PointProvider with ChangeNotifier {
   List<Offset> _points = [Offset(0, 255), Offset(255, 0)];
@@ -90,6 +89,17 @@ class _PanelLeftImageModifierState extends State<PanelLeftImageModifier> {
       saturationScalar = preset['saturationScalar']!;
       valueScalar = preset['valueScalar']!;
     });
+  }
+
+  String getPreviewImagePath() {
+    switch (selectedMetric) {
+      case 'Color Space Conversion':
+        return 'images/previews/Color Space Conversion_$selectedColorSpace.jpg';
+      case 'Morphological Transformation':
+        return 'images/previews/Morphological Transformation_$morphOperation.jpg';
+      default:
+        return 'images/previews/$selectedMetric.jpg';
+    }
   }
 
   void startAnalysis() {
@@ -184,7 +194,7 @@ class _PanelLeftImageModifierState extends State<PanelLeftImageModifier> {
                           color: widget.themeColors['panelBackground'],
                           borderRadius: BorderRadius.circular(20),
                           image: DecorationImage(
-                            image: AssetImage('images/previews/$metric.jpg'),
+                            image: AssetImage(getPreviewImagePath()),
                             fit: BoxFit.cover,
                             colorFilter: ColorFilter.mode(
                               Colors.black.withOpacity(0.5),
@@ -281,19 +291,23 @@ class _PanelLeftImageModifierState extends State<PanelLeftImageModifier> {
                               ],
                             ),
                           if (selectedMetric == 'Color Space Conversion')
-                            DropdownButton<String>(
-                              value: selectedColorSpace,
-                              items: <String>['HSV', 'LAB', 'YCrCb'].map((String value) {
-                                return DropdownMenuItem<String>(
-                                  value: value,
-                                  child: Text(value, style: TextStyle(color: widget.themeColors['textColor'])),
-                                );
-                              }).toList(),
-                              onChanged: (String? newValue) {
-                                setState(() {
-                                  selectedColorSpace = newValue!;
-                                });
-                              },
+                            Column(
+                              children: [
+                                DropdownButton<String>(
+                                  value: selectedColorSpace,
+                                  items: <String>['HSV', 'LAB', 'YCrCb'].map((String value) {
+                                    return DropdownMenuItem<String>(
+                                      value: value,
+                                      child: Text(value, style: TextStyle(color: widget.themeColors['textColor'])),
+                                    );
+                                  }).toList(),
+                                  onChanged: (String? newValue) {
+                                    setState(() {
+                                      selectedColorSpace = newValue!;
+                                    });
+                                  },
+                                ),
+                              ],
                             ),
                           if (selectedMetric == 'Morphological Transformation')
                             Column(
