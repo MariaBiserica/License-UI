@@ -73,14 +73,14 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
                                 Padding(
                                   padding: const EdgeInsets.all(20.0),
                                   child: Text(
-                                    'Welcome Back!',
+                                    'Welcome to PeakSight!',
                                     style: TextStyle(
-                                      fontSize: 24,
+                                      fontSize: 25,
                                       color: Colors.white,
                                       fontWeight: FontWeight.bold,
                                       shadows: [
                                         Shadow( // Shadow for text outline effect
-                                          blurRadius: 3.0,
+                                          blurRadius: 1.0,
                                           color: Colors.black,
                                           offset: Offset(2.0, 2.0),
                                         ),
@@ -91,9 +91,10 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
                                 Padding(
                                   padding: const EdgeInsets.all(20.0),
                                   child: Text(
-                                    'Sign in to continue.',
+                                    'Enhance your visual content with reliable analysis and efficient processing. Get started now!',
                                     style: TextStyle(
-                                      fontSize: 18,
+                                      fontFamily: 'TellMeAJoke',
+                                      fontSize: 25,
                                       color: Colors.white,
                                       shadows: [
                                         Shadow( // Shadow for text outline effect
