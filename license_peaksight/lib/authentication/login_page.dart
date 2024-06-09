@@ -48,7 +48,7 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
             child: Padding(
               padding: EdgeInsets.all(60),
               // Card widget for the login form
-              child: Card( 
+              child: Card(
                 elevation: 5.0,
                 margin: EdgeInsets.symmetric(horizontal: 250), // Increased padding for the card
                 child: Row(
@@ -72,37 +72,71 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
                               children: [
                                 Padding(
                                   padding: const EdgeInsets.all(20.0),
-                                  child: Text(
-                                    'Welcome to PeakSight!',
-                                    style: TextStyle(
-                                      fontSize: 25,
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold,
-                                      shadows: [
-                                        Shadow( // Shadow for text outline effect
-                                          blurRadius: 1.0,
-                                          color: Colors.black,
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      color: Color.fromARGB(255, 85, 3, 249).withOpacity(0.1),
+                                      borderRadius: BorderRadius.circular(10),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Color.fromARGB(255, 85, 3, 249).withOpacity(0.1),
+                                          blurRadius: 5.0,
+                                          spreadRadius: 2.0,
                                           offset: Offset(2.0, 2.0),
                                         ),
                                       ],
+                                    ),
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Text(
+                                        'Welcome to PeakSight!',
+                                        style: TextStyle(
+                                          fontSize: 24,
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold,
+                                          shadows: [
+                                            Shadow( // Shadow for text outline effect
+                                              blurRadius: 2.0,
+                                              color: Colors.black,
+                                              offset: Offset(2.0, 2.0),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
                                     ),
                                   ),
                                 ),
                                 Padding(
                                   padding: const EdgeInsets.all(20.0),
-                                  child: Text(
-                                    'Enhance your visual content with reliable analysis and efficient processing. Get started now!',
-                                    style: TextStyle(
-                                      fontFamily: 'TellMeAJoke',
-                                      fontSize: 25,
-                                      color: Colors.white,
-                                      shadows: [
-                                        Shadow( // Shadow for text outline effect
-                                          blurRadius: 3.0,
-                                          color: Colors.black,
-                                          offset: Offset(1.5, 1.5),
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      color: Color.fromARGB(255, 85, 3, 249).withOpacity(0.1),
+                                      borderRadius: BorderRadius.circular(10),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Color.fromARGB(255, 85, 3, 249).withOpacity(0.1),
+                                          blurRadius: 5.0,
+                                          spreadRadius: 2.0,
+                                          offset: Offset(2.0, 2.0),
                                         ),
                                       ],
+                                    ),
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Text(
+                                        'Enhance your visual content with reliable analysis and efficient processing. Get started now!',
+                                        style: TextStyle(
+                                          fontFamily: 'TellMeAJoke',
+                                          fontSize: 25,
+                                          color: Colors.white,
+                                          shadows: [
+                                            Shadow( // Shadow for text outline effect
+                                              blurRadius: 3.0,
+                                              color: Colors.black,
+                                              offset: Offset(1.5, 1.5),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
                                     ),
                                   ),
                                 ),
@@ -286,5 +320,4 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
       },
     );
   }
-
 }
