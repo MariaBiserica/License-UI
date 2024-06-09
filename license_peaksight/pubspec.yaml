@@ -111,6 +111,24 @@ flutter:
     - images/profile_avatars/avatar3.png
     - images/profile_avatars/avatar4.png
     - images/profile_avatars/avatar5.png
+    - images/previews/Color Enhancement.jpg
+    - images/previews/Color Space Conversion_HSV.jpg
+    - images/previews/Color Space Conversion_LAB.jpg
+    - images/previews/Color Space Conversion_YCrCb.jpg
+    - images/previews/Edge Detection.jpg
+    - images/previews/Gaussian Blur.jpg
+    - images/previews/Histogram Equalization.jpg
+    - images/previews/Image Rotation.jpg
+    - images/previews/Inverse Color.jpg
+    - images/previews/Median Blur.jpg
+    - images/previews/Morphological Transformation_closing.jpg
+    - images/previews/Morphological Transformation_dilation.jpg
+    - images/previews/Morphological Transformation_erosion.jpg
+    - images/previews/Morphological Transformation_opening.jpg
+    - images/previews/Noise Reduction.jpg
+    - images/previews/Sharpening.jpg
+    - images/previews/Spline Interpolation.jpg
+
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
