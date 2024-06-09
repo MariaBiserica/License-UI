@@ -236,14 +236,14 @@ class _ImageModifierWidgetState extends State<ImageModifierWidget> {
           ),
         ),
         Expanded(
-          flex: 3,
+          flex: 2,
           child: PanelCenterImageModifier(
             imagePathFuture: modifiedImagePathFuture,
             themeColors: themeColors,
           ),
         ),
         Expanded(
-          flex: 3,
+          flex: 2,
           child: PanelRightImageModifier(
             onImageSelected: widget.onImageSelected,
             themeColors: themeColors,

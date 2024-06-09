@@ -206,9 +206,17 @@ class _PanelLeftImageModifierState extends State<PanelLeftImageModifier> {
                           child: Text(
                             metric,
                             style: TextStyle(
-                              fontSize: 16.0,
+                              fontFamily: 'TellMeAJoke',
+                              fontSize: 25.0,
                               color: widget.themeColors['textColor'],
                               fontWeight: FontWeight.bold,
+                              shadows: <Shadow>[
+                                Shadow(
+                                  color: Colors.black.withOpacity(1),
+                                  offset: Offset(1, 3),
+                                  blurRadius: 2,
+                                ),
+                              ],
                             ),
                           ),
                         ),
