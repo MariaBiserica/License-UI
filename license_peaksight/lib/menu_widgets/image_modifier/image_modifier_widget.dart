@@ -51,7 +51,7 @@ class _ImageModifierWidgetState extends State<ImageModifierWidget> {
         valueScalar = options['valueScalar'] ?? valueScalar;
       }
 
-      if (metric == 'Spline Interpolation') {
+      if (metric == 'Curves Adjustment') {
         modifiedImagePathFuture = modifyImageSpline();
       } else if (metric == 'Gaussian Blur') {
         modifiedImagePathFuture = applyGaussianBlur(widget.imagePath, blurAmount);
