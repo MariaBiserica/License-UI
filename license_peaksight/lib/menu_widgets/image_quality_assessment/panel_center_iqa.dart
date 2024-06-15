@@ -166,7 +166,10 @@ class _PanelCenterPageState extends State<PanelCenterPage> {
                         SizedBox(height: 8),  // Space between title and subtitle
                         Text(
                             "Image quality MOS scale scores",
-                            style: TextStyle(color: widget.themeColors['subtitleColor']),
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: widget.themeColors['subtitleColor'],
+                            ),
                         ),
                         SizedBox(height: 8), // Additional space before the table
                         Container(

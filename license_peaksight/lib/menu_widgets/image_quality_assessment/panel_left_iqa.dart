@@ -86,7 +86,7 @@ class _PanelLeftPageState extends State<PanelLeftPage> {
                   Text(
                     "Select which metrics you want to assess!",
                     style: TextStyle(
-                      fontSize: 14, 
+                      fontSize: 16, 
                       color: widget.themeColors['subtitleColor'],
                     ),
                   ),

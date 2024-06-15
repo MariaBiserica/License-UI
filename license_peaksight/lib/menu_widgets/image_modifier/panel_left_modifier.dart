@@ -177,7 +177,7 @@ class _PanelLeftImageModifierState extends State<PanelLeftImageModifier> {
                         Text(
                           "Select what kind of adjustments you want to make to the image.",
                           style: TextStyle(
-                            fontSize: 14,
+                            fontSize: 16,
                             color: widget.themeColors['subtitleColor'],
                           ),
                         ),

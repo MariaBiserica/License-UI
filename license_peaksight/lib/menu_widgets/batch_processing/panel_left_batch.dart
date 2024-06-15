@@ -138,8 +138,7 @@ class _PanelLeftBatchProcessingState extends State<PanelLeftBatchProcessing> {
                         child: Text(
                           "Select which metric to assess:",
                           style: TextStyle(
-                            fontFamily: 'Voguella',
-                            fontSize: 14,
+                            fontSize: 15,
                             color: widget.themeColors['subtitleColor'],
                           ),
                         ),

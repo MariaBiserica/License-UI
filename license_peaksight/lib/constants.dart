@@ -41,7 +41,7 @@ class Constants {
       'dividerColor': Colors.white54, // Semi-Transparent White
       'textColor': Colors.white, // White
       'scoresColor': Color.fromARGB(255, 53, 69, 42), // Dark Olive Green
-      'subtitleColor': Color.fromARGB(156, 158, 158, 158), // Soft Grey
+      'subtitleColor': Color.fromARGB(156, 209, 208, 208), // Soft Grey
       'detailsColor': Color.fromARGB(255, 224, 224, 224), // Light Grey
       'selectedColor': Color.fromARGB(255, 133, 209, 123), // Light Green
     },

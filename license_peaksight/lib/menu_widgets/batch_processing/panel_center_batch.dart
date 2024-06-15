@@ -516,7 +516,10 @@ class _PanelCenterBatchProcessingState extends State<PanelCenterBatchProcessing>
               SizedBox(height: 8),
               Text(
                 "Image quality MOS scale scores",
-                style: TextStyle(color: Color.fromARGB(156, 158, 158, 158)),
+                style: TextStyle(
+                  fontSize: 16,
+                  color: widget.themeColors['subtitleColor'],
+                ),
               ),
               SizedBox(height: 8),
               Container(
