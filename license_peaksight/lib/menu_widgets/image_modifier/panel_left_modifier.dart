@@ -54,6 +54,21 @@ class _PanelLeftImageModifierState extends State<PanelLeftImageModifier> {
     'Noise Reduction',
   ];
 
+  final Map<String, String> metricDescriptions = {
+  'Curves Adjustment': 'For adjusting the tonal curves of the image. Modifies contrast and luminosity.',
+  'Gaussian Blur': 'For noise reduction.',
+  'Edge Detection': 'For image transformation and adjustment.',
+  'Color Space Conversion': 'For image transformation and adjustment.',
+  'Histogram Equalization': 'For highlighting details.',
+  'Image Rotation': 'For image transformation and adjustment.',
+  'Morphological Transformation': 'For image transformation and adjustment.',
+  'Inverse Color': 'For special effects and color adjustments.',
+  'Color Enhancement': 'For special effects and color adjustments.',
+  'Sharpening': 'For improving clarity and contrast.',
+  'Median Blur': 'For noise reduction.',
+  'Noise Reduction': 'For noise reduction.',
+};
+
   String? selectedMetric;
   double rotationAngle = 45.0;
   double blurAmount = 15.0;
@@ -166,6 +181,23 @@ class _PanelLeftImageModifierState extends State<PanelLeftImageModifier> {
                             color: widget.themeColors['subtitleColor'],
                           ),
                         ),
+                        Divider(color: widget.themeColors['dividerColor']),
+                        if (selectedMetric != null)
+                          Text(
+                            metricDescriptions[selectedMetric!] ?? '',
+                            style: TextStyle(
+                              fontSize: 20,
+                              color: widget.themeColors['textColor'],
+                              shadows: <Shadow>[
+                                Shadow(
+                                  color: Colors.black.withOpacity(0.8),
+                                  offset: Offset(1, 2),
+                                  blurRadius: 2,
+                                ),
+                              ],
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
                       ],
                     ),
                   ),
