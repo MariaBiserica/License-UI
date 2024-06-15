@@ -33,7 +33,7 @@ class _EditPageState extends State<EditPage> {
   final ImagePicker _picker = ImagePicker();
   
   late String email;
-  late String password;
+  String password = ''; // Initialize password as empty string
   bool _isPasswordVisible = false; // State to toggle password visibility
   late String username;
   String? avatarUrl; // URL for the uploaded or selected avatar
@@ -42,6 +42,7 @@ class _EditPageState extends State<EditPage> {
   bool _showCarouselArrows = false; // Controls the visibility of carousel arrows
   int _hoverIndex = -1; // To keep track of which image is hovered in the carousel
   String? currentAvatarOption; // Holds the current selection from the dropdown
+  String passwordMessage = '';
 
   // Dropdown menu options
   final List<DropdownMenuItem<String>> avatarOptions = [
@@ -157,8 +158,15 @@ class _EditPageState extends State<EditPage> {
                             ),
                           ),
                           obscureText: !_isPasswordVisible, // Use the state to toggle visibility
-                          validator: (val) => val!.length < 6 ? 'Enter a password 6+ chars long' : null,
-                          onChanged: (val) => setState(() => password = val),
+                          onChanged: (val) => _validatePassword(val),
+                        ),
+                        SizedBox(height: 20),
+                        Text(
+                          passwordMessage,
+                          style: TextStyle(
+                            color: passwordMessage == 'Password is strong' ? Colors.green : Colors.red,
+                            fontSize: 14.0,
+                          ),
                         ),
                         SizedBox(height: 20),
                         DropdownButtonFormField<String>(
@@ -295,6 +303,7 @@ class _EditPageState extends State<EditPage> {
                             backgroundColor: MaterialStateProperty.all(Color.fromARGB(255, 239, 219, 255)),
                           ),
                         ),
+                        SizedBox(height: 40),
                       ],
                     ),
                   ),
@@ -353,6 +362,31 @@ class _EditPageState extends State<EditPage> {
         _currentAvatarIndex = -1; // Reset the predefined avatar selection
       });
     }
+  }
+
+  void _validatePassword(String value) {
+    final lengthRegex = RegExp(r'.{6,}');
+    final numberRegex = RegExp(r'[0-9]');
+    final lowercaseRegex = RegExp(r'[a-z]');
+    final uppercaseRegex = RegExp(r'[A-Z]');
+    final specialCharRegex = RegExp(r'[!@#$%^&*(),.?":{}|<>]');
+
+    setState(() {
+      password = value;
+      if (!lengthRegex.hasMatch(value)) {
+        passwordMessage = 'Password must be at least 6 characters long';
+      } else if (!numberRegex.hasMatch(value)) {
+        passwordMessage = 'Password must contain at least one number';
+      } else if (!lowercaseRegex.hasMatch(value)) {
+        passwordMessage = 'Password must contain at least one lowercase letter';
+      } else if (!uppercaseRegex.hasMatch(value)) {
+        passwordMessage = 'Password must contain at least one uppercase letter';
+      } else if (!specialCharRegex.hasMatch(value)) {
+        passwordMessage = 'Password must contain at least one special character';
+      } else {
+        passwordMessage = 'Password is strong';
+      }
+    });
   }
 
   Future<void> _updateUser() async {
@@ -433,5 +467,4 @@ class _EditPageState extends State<EditPage> {
       return null;
     }
   }
-
 }

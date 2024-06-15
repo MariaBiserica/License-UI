@@ -61,6 +61,12 @@ class _RegisterPageState extends State<RegisterPage> {
   CarouselController _carouselController = CarouselController();
   int _currentAvatarIndex = -1; // No avatar selected by default
 
+  final _passwordRegex = RegExp(r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#\$%\^&\*])(?=.{6,})');
+
+  bool get _isPasswordValid {
+    return _passwordRegex.hasMatch(password);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -147,9 +153,39 @@ class _RegisterPageState extends State<RegisterPage> {
                             ),
                           ),
                           obscureText: !_isPasswordVisible, // Use the state to toggle visibility
-                          validator: (val) => val!.length < 6 ? 'Enter a password 6+ chars long' : null,
+                          validator: (val) {
+                            if (val == null || val.isEmpty) {
+                              return 'Enter a password 6+ chars long';
+                            } else if (!_passwordRegex.hasMatch(val)) {
+                              return 'Password must be 6+ chars long, include an uppercase letter, a number, and a special character';
+                            }
+                            return null;
+                          },
                           onChanged: (val) => setState(() => password = val),
                         ),
+                        SizedBox(height: 10),
+                        if (!_isPasswordValid && password.isNotEmpty)
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Password must contain:',
+                                style: TextStyle(color: Colors.red),
+                              ),
+                              if (!RegExp(r'.{6,}').hasMatch(password))
+                                Text('• At least 6 characters', style: TextStyle(color: Colors.red)),
+                              if (!RegExp(r'(?=.*[a-z])').hasMatch(password))
+                                Text('• At least one lowercase letter', style: TextStyle(color: Colors.red)),
+                              if (!RegExp(r'(?=.*[A-Z])').hasMatch(password))
+                                Text('• At least one uppercase letter', style: TextStyle(color: Colors.red)),
+                              if (!RegExp(r'(?=.*\d)').hasMatch(password))
+                                Text('• At least one number', style: TextStyle(color: Colors.red)),
+                              if (!RegExp(r'(?=.*[!@#\$%\^&\*])').hasMatch(password))
+                                Text('• At least one special character', style: TextStyle(color: Colors.red)),
+                            ],
+                          ),
+                        if (_isPasswordValid && password.isNotEmpty)
+                          Text('Password is strong', style: TextStyle(color: Colors.green)),
                         SizedBox(height: 20),
                         TextFormField(
                           decoration: InputDecoration(
@@ -297,6 +333,7 @@ class _RegisterPageState extends State<RegisterPage> {
                             backgroundColor: MaterialStateProperty.all(Color.fromARGB(255, 239, 219, 255)),
                           ),
                         ),
+                        SizedBox(height: 40),
                       ],
                     ),
                   ),
