@@ -112,7 +112,7 @@ class _LeftPanelHomeState extends State<LeftPanelHome> {
               'Stats Overview',
               style: TextStyle(
                 fontFamily: 'Rastaglion',
-                fontSize: 20,
+                fontSize: 22,
                 fontWeight: FontWeight.bold,
                 color: widget.themeColors['textColor'],
                 shadows: [
@@ -126,7 +126,7 @@ class _LeftPanelHomeState extends State<LeftPanelHome> {
             ),
             Divider(color: widget.themeColors['dividerColor']),
             _buildStatItem("Tasks Completed", completedTasks.toString()),
-            _buildStatItem("Tasks In Progress", inProgressTasks.toString()),
+            _buildStatItem("Tasks in Progress", inProgressTasks.toString()),
             _buildStatItem("Tasks Queued", queuedTasks.toString()),
           ],
         ),
@@ -144,9 +144,16 @@ class _LeftPanelHomeState extends State<LeftPanelHome> {
             child: Text(
               title,
               style: TextStyle(
-                fontFamily: 'Voguella',
-                fontSize: 16,
+                fontFamily: 'Rastsaglion',
+                fontSize: 18,
                 color: widget.themeColors['textColor'],
+                shadows: [
+                  Shadow(
+                    color: Colors.black.withOpacity(0.5),
+                    offset: Offset(1, 1),
+                    blurRadius: 2,
+                  ),
+                ],
               ),
               overflow: TextOverflow.fade,
             ),
@@ -194,7 +201,7 @@ class _LeftPanelHomeState extends State<LeftPanelHome> {
               'Recent Tasks',
               style: TextStyle(
                 fontFamily: 'Rastaglion',
-                fontSize: 20,
+                fontSize: 22,
                 fontWeight: FontWeight.bold,
                 color: widget.themeColors['textColor'],
                 shadows: [

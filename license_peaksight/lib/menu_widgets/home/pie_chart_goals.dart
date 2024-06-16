@@ -31,9 +31,9 @@ class _PieChartGoalsState extends State<PieChartGoals> {
             child: Text(
               data.category + " Goals",
               style: TextStyle(
-                fontFamily: 'Voguella',
+                fontFamily: 'Rastaglion',
                 color: Colors.white,
-                fontSize: 20,
+                fontSize: 22,
                 fontWeight: FontWeight.bold,
                 shadows: [
                   Shadow( // Text shadow for better readability

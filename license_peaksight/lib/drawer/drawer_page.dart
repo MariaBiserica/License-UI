@@ -100,6 +100,8 @@ class _DrawerPageState extends State<DrawerPage> {
                               style: TextStyle(
                                 color: themeColors['textColor'],
                                 fontFamily: 'Rastaglion',
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
                                 shadows: [
                                   Shadow(
                                     offset: Offset(3.0, 1.0),
