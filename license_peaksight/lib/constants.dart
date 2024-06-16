@@ -38,7 +38,7 @@ class Constants {
       'gradientBegin': Color.fromARGB(255, 117, 150, 92), // Olive Drab
       'gradientEnd': Color.fromARGB(255, 153, 221, 200), // Pale Green
       'notificationBadge': Color.fromARGB(255, 153, 221, 200), // Pale Green
-      'dividerColor': Colors.white54, // Semi-Transparent White
+      'dividerColor': Color.fromARGB(202, 255, 255, 255), // Semi-Transparent White
       'textColor': Colors.white, // White
       'scoresColor': Color.fromARGB(255, 53, 69, 42), // Dark Olive Green
       'subtitleColor': Color.fromARGB(156, 209, 208, 208), // Soft Grey
@@ -83,11 +83,11 @@ class Constants {
       'gradientBegin': Color.fromARGB(255, 109, 137, 43), // Golden Yellow
       'gradientEnd': Color.fromARGB(255, 215, 241, 153), // Lemon Chiffon
       'notificationBadge': Color.fromARGB(255, 255, 165, 0), // Orange
-      'dividerColor': Color.fromARGB(136, 160, 160, 160), // Semi-Transparent Grey
+      'dividerColor': Color.fromARGB(135, 255, 254, 254), // Semi-Transparent Grey
       'textColor': Colors.white, // White
       'scoresColor': Color.fromARGB(255, 72, 71, 71), // Dark Silver
-      'subtitleColor': Color.fromARGB(156, 180, 180, 180), // Soft Grey
-      'detailsColor': Color.fromARGB(255, 200, 200, 200), // Light Grey
+      'subtitleColor': Color.fromARGB(156, 232, 231, 231), // Soft Grey
+      'detailsColor': Color.fromARGB(255, 231, 227, 227), // Light Grey
       'selectedColor': Color.fromARGB(215, 255, 228, 181), // Moccasin
     },
   };

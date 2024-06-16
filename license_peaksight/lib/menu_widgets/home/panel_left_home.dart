@@ -22,16 +22,16 @@ class _LeftPanelHomeState extends State<LeftPanelHome> {
       body: SingleChildScrollView(
         child: Container(
           padding: EdgeInsets.all(Constants.kPaddingHome / 2),
-          margin: EdgeInsets.all(Constants.kPaddingHome), // Adds margin around the container
+          margin: EdgeInsets.all(Constants.kPaddingHome),
           decoration: BoxDecoration(
             color: widget.themeColors['panelBackground'],
-            borderRadius: BorderRadius.circular(Constants.borderRadius), // Rounded corners
+            borderRadius: BorderRadius.circular(Constants.borderRadius),
             boxShadow: [
               BoxShadow(
                 color: Colors.black.withOpacity(0.2),
                 spreadRadius: 1,
                 blurRadius: 20,
-                offset: Offset(0, 10), // Changes position of shadow
+                offset: Offset(0, 10),
               ),
             ],
           ),
@@ -42,10 +42,10 @@ class _LeftPanelHomeState extends State<LeftPanelHome> {
               Text(
                 'Quick Access',
                 style: TextStyle(
-                  fontFamily: 'HeaderFont', 
-                  fontSize: 34, 
+                  fontFamily: 'HeaderFont',
+                  fontSize: 34,
                   color: widget.themeColors['textColor'],
-                  shadows: <Shadow>[
+                  shadows: [
                     Shadow(
                       color: Colors.black.withOpacity(0.5),
                       offset: Offset(1, 1),
@@ -80,6 +80,7 @@ class _LeftPanelHomeState extends State<LeftPanelHome> {
                   return CircularProgressIndicator();
                 },
               ),
+              _buildRecentTasksTitle(),
             ],
           ),
         ),
@@ -99,7 +100,7 @@ class _LeftPanelHomeState extends State<LeftPanelHome> {
     return Card(
       color: widget.themeColors['panelForeground'],
       elevation: 3,
-      margin: EdgeInsets.all(Constants.kPaddingHome / 2),
+      margin: EdgeInsets.symmetric(vertical: Constants.kPaddingHome / 2),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(Constants.borderRadius),
       ),
@@ -111,9 +112,16 @@ class _LeftPanelHomeState extends State<LeftPanelHome> {
               'Stats Overview',
               style: TextStyle(
                 fontFamily: 'Rastaglion',
-                fontSize: 18, 
-                fontWeight: FontWeight.bold, 
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
                 color: widget.themeColors['textColor'],
+                shadows: [
+                  Shadow(
+                    color: Colors.black.withOpacity(0.8),
+                    offset: Offset(1, 1),
+                    blurRadius: 2,
+                  ),
+                ],
               ),
             ),
             Divider(color: widget.themeColors['dividerColor']),
@@ -132,7 +140,7 @@ class _LeftPanelHomeState extends State<LeftPanelHome> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
-          Expanded(  // Makes the title flexible, wrapping text if needed
+          Expanded(
             child: Text(
               title,
               style: TextStyle(
@@ -140,26 +148,26 @@ class _LeftPanelHomeState extends State<LeftPanelHome> {
                 fontSize: 16,
                 color: widget.themeColors['textColor'],
               ),
-              overflow: TextOverflow.fade,  // Prevents text from overflowing
+              overflow: TextOverflow.fade,
             ),
           ),
-          SizedBox(width: 10), // Adds space between title and value
+          SizedBox(width: 10),
           Container(
             padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
             decoration: BoxDecoration(
               color: widget.themeColors['panelForeground'],
-              borderRadius: BorderRadius.circular(10), // Rounded corners
+              borderRadius: BorderRadius.circular(10),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.5), // Shadow with some opacity
+                  color: Colors.black.withOpacity(0.5),
                   spreadRadius: 1,
                   blurRadius: 2,
-                  offset: Offset(0, 1), // Position of shadow
+                  offset: Offset(0, 1),
                 ),
               ],
             ),
             child: Text(
-              value, 
+              value,
               style: TextStyle(
                 color: widget.themeColors['textColor'],
                 fontWeight: FontWeight.bold,
@@ -169,5 +177,157 @@ class _LeftPanelHomeState extends State<LeftPanelHome> {
         ],
       ),
     );
+  }
+
+  Widget _buildRecentTasksTitle() {
+    return Card(
+      color: widget.themeColors['panelForeground'],
+      elevation: 3,
+      margin: EdgeInsets.symmetric(vertical: Constants.kPaddingHome / 2),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(Constants.borderRadius)),
+      child: Padding(
+        padding: EdgeInsets.all(Constants.kPaddingHome / 2),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Text(
+              'Recent Tasks',
+              style: TextStyle(
+                fontFamily: 'Rastaglion',
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: widget.themeColors['textColor'],
+                shadows: [
+                  Shadow(
+                    color: Colors.black.withOpacity(0.8),
+                    offset: Offset(1, 1),
+                    blurRadius: 2,
+                  ),
+                ],
+              ),
+            ),
+            Divider(color: widget.themeColors['dividerColor']),
+            _buildRecentTasksWidget(),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildRecentTasksWidget() {
+    return StreamBuilder<List<Task>>(
+      stream: recentTasksStream(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return CircularProgressIndicator();
+        }
+        if (snapshot.hasData && snapshot.data!.isNotEmpty) {
+          return Card(
+            color: widget.themeColors['panelForeground'],
+            elevation: 5,
+            margin: EdgeInsets.all(Constants.kPaddingHome / 4),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(Constants.borderRadius)),
+            child: Column(
+              children: snapshot.data!.map((task) => ListTile(
+                title: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text(
+                      task.title,
+                      style: TextStyle(
+                        color: widget.themeColors['textColor'],
+                        fontSize: 16, // Larger font size for better visibility
+                        fontWeight: FontWeight.bold, // Make text bold
+                      ),
+                    ),
+                    Container(
+                      margin: EdgeInsets.only(top: 4), // Space between title and status
+                      padding: EdgeInsets.symmetric(vertical: 2, horizontal: 8),
+                      decoration: BoxDecoration(
+                        color: _statusColor(task.status), // Use status color
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Text(
+                        task.status.toUpperCase(), // Display status in uppercase
+                        style: TextStyle(
+                          color: widget.themeColors['textColor'],
+                          fontSize: 12,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                subtitle: Text(
+                  'Tap for details', // or use task.description for more details
+                  style: TextStyle(color: widget.themeColors['detailsColor']),
+                ),
+                onTap: () => showDialog(
+                  context: context,
+                  builder: (_) => Dialog(
+                    child: Container(
+                      height: 300, // Set the fixed height of the dialog
+                      width: 300, // Set the fixed width of the dialog
+                      child: AlertDialog(
+                        title: Text('Task Details'),
+                        content: SingleChildScrollView( // Makes the content scrollable
+                          child: Text('${task.description}'),
+                        ),
+                        actions: <Widget>[
+                          TextButton(
+                            child: Text('Close'),
+                            onPressed: () {
+                              Navigator.of(context).pop(); // Close the dialog
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              )).toList(),
+            ),
+          );
+        } else if (snapshot.hasError) {
+          return Text("Error: ${snapshot.error}");
+        }
+        return Text(
+          "No recent tasks found",
+          style: TextStyle(
+            fontFamily: 'TellMeAJoke',
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+            color: widget.themeColors['textColor'],
+          ),
+        );
+      },
+    );
+  }
+
+  Color _statusColor(String status) {
+    switch (status) {
+      case 'completed':
+        return Colors.green;
+      case 'queued':
+        return Colors.orange;
+      case 'in progress':
+        return Colors.blue;
+      case 'new':
+        return Colors.grey;
+      default:
+        return Colors.black; // Default color if none of the statuses match
+    }
+  }
+
+  Stream<List<Task>> recentTasksStream() async* {
+    String? userId = _authService.getCurrentUserId();
+    if (userId != null) {
+      yield* FirebaseFirestore.instance
+          .collection('tasks')
+          .where('userId', isEqualTo: userId)
+          .limit(5)
+          .snapshots()
+          .map((snapshot) => snapshot.docs.map((doc) => Task.fromMap(doc.data() as Map<String, dynamic>, doc.id)).toList());
+    }
   }
 }
