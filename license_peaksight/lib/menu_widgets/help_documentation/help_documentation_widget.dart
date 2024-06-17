@@ -55,6 +55,7 @@ class _HelpAndDocumentationWidgetState extends State<HelpAndDocumentationWidget>
     'ILNIQE',
     'Contrast Metric',
     'Chromatic Metric',
+    'Noise Metric',
   ];
 
   final Map<String, List<String>> algorithmSteps = {
@@ -108,6 +109,14 @@ class _HelpAndDocumentationWidgetState extends State<HelpAndDocumentationWidget>
       'Integrating Color and Texture Features',
       'Chromatic Quality Scores and MOS Scaling'
     ],
+    'Noise Metric': [
+      'Introduction to Noise Metric',
+      'Noise Estimation in Image',
+      'Statistical Features of Noise',
+      'Weighted Average of Noise Estimations',
+      'Noise Quality Scores and MOS Scaling',
+      'Examples and Interpretation'
+    ],
   };
 
   final Map<String, List<String>> algorithmDetails = {
@@ -160,6 +169,14 @@ class _HelpAndDocumentationWidgetState extends State<HelpAndDocumentationWidget>
       'Inspired by the perceptual characteristics of the HVS, which is highly sensitive to regions with high-frequency information, texture features are extracted using the Log-Gabor filter to perceive image quality degradation. The real part of the Log-Gabor filter is used to extract texture features. The energy sum of the filter responses is calculated at different scales and orientations to capture texture distortions.',
       'The extracted color and texture features are integrated to form a comprehensive feature vector. This feature vector represents the combined color and texture information of the image, providing a holistic measure of image quality.',
       'Chromatic quality scores are expressed on an open scale, with higher scores indicating better chromatic quality. These scores can be scaled to the MOS (Mean Opinion Score) range of 1 to 5 using a linear scaling method based on the minimum and maximum values from a reference dataset. The formula for scaling is: MOS = 1 + 4 * (chromatic_score - min_score) / (max_score - min_score), where MOS represents the scaled score, chromatic_score is the obtained chromatic score, min_score is the minimum chromatic score from the reference dataset, and max_score is the maximum chromatic score from the reference dataset.'
+    ],
+    'Noise Metric': [
+      'The methodology evaluates image quality affected by noise using statistical noise characteristics extracted from the image. These characteristics are estimated for each color channel, and the final quality score is calculated through a weighted average of these estimations.',
+      'Noise in the context of image quality evaluation refers to random variations in color or brightness in an image, which can make the image appear grainy or spotty. To estimate the level of noise present in each color channel of the image, the skimage library function estimate_sigma is used.',
+      'This function analyzes the image to determine the standard deviation of the noise for each color channel. Although "sigma" is often associated with the standard deviation used in Gaussian blur filters, in the context of image noise evaluation, sigma indicates how much the pixels deviate from their mean value in a region of the image.',
+      'The standard deviation of the noise for each color channel (R, G, B) is estimated. The final noise score is the mean of the estimated standard deviations for the three color channels.',
+      'The noise score is then transformed into a MOS score using a mapping function defined to better reflect human perception of image quality based on noise levels. Lower noise standard deviation indicates higher image quality and vice versa.',
+      'Examples demonstrate how noise scores reflect image quality. Lower noise scores translate into higher MOS scores, indicating better quality, while higher noise scores correspond to lower MOS scores, suggesting poorer quality due to more pronounced noise.'
     ],
   };
 
