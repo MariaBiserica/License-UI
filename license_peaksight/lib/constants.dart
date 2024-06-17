@@ -34,7 +34,7 @@ class Constants {
       'panelForeground': Color.fromARGB(255, 101, 155, 94), // Pistachio Green
       'panelBackground': Color.fromARGB(255, 85, 111, 68), // Olive Green
       'appBackground': Color.fromARGB(255, 53, 69, 42), // Dark Olive Green
-      'helpPanelBackground': Color.fromARGB(255, 143, 189, 136), // Light Olive Green
+      'helpPanelBackground': Color.fromARGB(255, 208, 255, 199), // Light Green
       'gradientBegin': Color.fromARGB(255, 117, 150, 92), // Olive Drab
       'gradientEnd': Color.fromARGB(255, 153, 221, 200), // Pale Green
       'notificationBadge': Color.fromARGB(255, 153, 221, 200), // Pale Green

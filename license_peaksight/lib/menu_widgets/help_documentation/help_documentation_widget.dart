@@ -53,6 +53,7 @@ class _HelpAndDocumentationWidgetState extends State<HelpAndDocumentationWidget>
     'BRISQUE',
     'NIQE',
     'ILNIQE',
+    'Contrast Metric'
   ];
 
   final Map<String, List<String>> algorithmSteps = {
@@ -90,6 +91,14 @@ class _HelpAndDocumentationWidgetState extends State<HelpAndDocumentationWidget>
       'Multivariate Gaussian Model',
       'IL-NIQE Scores and MOS Scaling'
     ],
+    'Contrast Metric': [
+      'Introduction to Contrast Metric',
+      'Human Visual System (HVS) Model for Contrast',
+      'Luminance Contrast Using JND',
+      'Color Contrast Using Chrominance Differences',
+      'Integrating Luminance and Color Contrast Measures',
+      'Contrast Scores and MOS Scaling'
+    ],
   };
 
   final Map<String, List<String>> algorithmDetails = {
@@ -126,6 +135,14 @@ class _HelpAndDocumentationWidgetState extends State<HelpAndDocumentationWidget>
       'Color statistics are captured using a classical NSS model in the log-opponent color space. The distributions of the log-opponent color components are fitted to a Gaussian model, and the parameters are used as quality features. These features capture both local and global image distortions.',
       'A simple model of the NSS features calculated from natural image patches can be obtained by fitting them to a multivariate Gaussian density (MVG), providing a rich representation of these features. The quality of the distorted image is expressed as the distance between the NSS model of natural images and the MVG fit of the test image features.',
       'IL-NIQE scores are expressed on an open scale, with lower scores indicating better image quality. These scores can be scaled to the MOS (Mean Opinion Score) range of 1 to 5 for subjective interpretation. For example, a IL-NIQE score can be scaled using the minimum and maximum scores from a reference dataset to ensure comparability between objective IL-NIQE scores and subjective human evaluations of image quality.'
+    ],
+    'Contrast Metric': [
+      'Contrast is a crucial factor in image quality assessment, as it significantly influences users’ visual perception of quality. The method developed by K. S. Song, M. Kim and M. G. Kang in 2018 measures contrast for color images based on the Human Visual System (HVS) model. This method evaluates luminance contrast using the Just-Noticeable Difference (JND) to reflect the local contrast perceived by the HVS, and color contrast is evaluated based on a model of color stimuli in the primary visual cortex (V1).',
+      'Luminance contrast is calculated using the formula: L = 0.299 * R + 0.587 * G + 0.114 * B, where R, G, and B are the intensities of the red, green, and blue channels. The processing begins with converting the input image to the YCbCr color space, then measuring contrast using two main approaches: grayscale-based contrast measurement (JND and SAD) and color difference-based quality evaluation (RRF and SAD). These measurements are integrated to provide a no-reference contrast estimate.',
+      'The local contrast in grayscale is measured first. The luminance component is used to measure the local contrast of the grayscale image. The local visibility threshold is measured with JND expressed as a function of background luminance. The local contrast factor is expressed as the product of SAD and FJND, which are the mean absolute difference and the degree to which the visibility threshold is satisfied, respectively. The overall luminance contrast of the image is measured using the average local contrast factor.',
+      'The color contrast model addresses the issue that in some cases, contrast differences cannot be distinguished solely by luminance. The saturation component in the HSI color space is expressed in terms of local saturation and brightness. The relationship between saturation and brightness is measured using the region response factor (RRF), reflecting the relative change in color saturation at different brightness levels in V1.',
+      'The final measurement of image contrast in the color difference domain is integrated as the product of the luminance contrast and the color contrast measures. This methodology measures the local luminance contrast using JND and the relationship between brightness and color saturation in V1 for color contrast measurement. Experimental results showed that the proposed method has a higher correlation with subjective human evaluations compared to conventional no-reference contrast measurement methods.',
+      'Contrast scores are expressed on an open scale, with higher scores indicating better contrast. These scores can be scaled to the MOS (Mean Opinion Score) range of 1 to 5 using a linear scaling method based on the minimum and maximum values from a reference dataset. The formula for scaling is: MOS = 1 + 4 * (contrast_score - min_score) / (max_score - min_score), where MOS represents the scaled score, contrast_score is the obtained contrast score, min_score is the minimum contrast score from the reference dataset, and max_score is the maximum contrast score from the reference dataset.'
     ],
   };
 
