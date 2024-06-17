@@ -73,6 +73,17 @@ class _PanelLeftBatchProcessingState extends State<PanelLeftBatchProcessing> {
                 buildLineChart(),
                 SizedBox(height: 20),
                 ElevatedButton(
+                  onPressed: showClassificationStats,
+                  child: Text(
+                    'Show Classification Stats',
+                    style: TextStyle(color: widget.themeColors['textColor']),
+                  ),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: widget.themeColors['panelForeground'],
+                  ),
+                ),
+                SizedBox(height: 10),
+                ElevatedButton(
                   onPressed: () {
                     Navigator.of(context).pop();
                   },
@@ -87,6 +98,56 @@ class _PanelLeftBatchProcessingState extends State<PanelLeftBatchProcessing> {
               ],
             ),
           ),
+        );
+      },
+    );
+  }
+
+  void showClassificationStats() {
+    Map<String, int> classificationCounts = {
+      'Excellent': 0,
+      'Good': 0,
+      'Fair': 0,
+      'Poor': 0,
+      'Bad': 0,
+      'Outlier': 0,
+    };
+
+    for (var score in widget.scores) {
+      if (score > 5 || score < 1) classificationCounts['Outlier'] = classificationCounts['Outlier']! + 1;
+      else if (score > 4 && score <= 5) classificationCounts['Excellent'] = classificationCounts['Excellent']! + 1;
+      else if (score > 3 && score <= 4) classificationCounts['Good'] = classificationCounts['Good']! + 1;
+      else if (score > 2 && score <= 3) classificationCounts['Fair'] = classificationCounts['Fair']! + 1;
+      else if (score > 1.50 && score <= 2) classificationCounts['Poor'] = classificationCounts['Poor']! + 1;
+      else classificationCounts['Bad'] = classificationCounts['Bad']! + 1;
+    }
+
+    int total = widget.scores.length;
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          backgroundColor: widget.themeColors['panelBackground'],
+          title: Text("Classification Stats", style: TextStyle(color: widget.themeColors['textColor'])),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: classificationCounts.entries.map((entry) {
+              double percentage = (entry.value / total) * 100;
+              return Text(
+                "${entry.key}: ${percentage.toStringAsFixed(2)}%",
+                style: TextStyle(color: widget.themeColors['textColor']),
+              );
+            }).toList(),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text("Close", style: TextStyle(color: widget.themeColors['textColor'])),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
         );
       },
     );
