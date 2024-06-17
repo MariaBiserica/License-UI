@@ -82,10 +82,13 @@ class _HelpAndDocumentationWidgetState extends State<HelpAndDocumentationWidget>
       'NIQE Scores and MOS Scaling'
     ],
     'ILNIQE': [
-      'Introduction',
-      'What it does',
-      'How to use it',
-      'Effects',
+      'Introduction to IL-NIQE',
+      'Quality Sensitive Features',
+      'Gradient Statistics',
+      'Log-Gabor Responses',
+      'Color Statistics',
+      'Multivariate Gaussian Model',
+      'IL-NIQE Scores and MOS Scaling'
     ],
   };
 
@@ -116,10 +119,13 @@ class _HelpAndDocumentationWidgetState extends State<HelpAndDocumentationWidget>
       'NIQE scores are expressed on an open scale, with lower scores indicating better image quality. These scores can be scaled to the MOS (Mean Opinion Score) range of 1 to 5 for subjective interpretation. For example, a NIQE score can be scaled using the minimum and maximum scores from a reference dataset to ensure comparability between objective NIQE scores and subjective human evaluations of image quality.'
     ],
     'ILNIQE': [
-      'ILNIQE Introduction: ILNIQE stands for Integrated Local NIQE...',
-      'What ILNIQE does: ILNIQE evaluates the quality of images using local metrics...',
-      'How to use ILNIQE: To use ILNIQE, you need to...',
-      'Effects of ILNIQE: The effects of using ILNIQE include...',
+      'IL-NIQE (Integrated Local Natural Image Quality Evaluator) is an opinion-unaware NR-IQA model that integrates natural scene statistics (NSS) features from multiple indices to evaluate image quality without requiring subjective human scores for training. IL-NIQE constructs a multivariate Gaussian model from natural, undistorted images and measures quality using a Bhattacharyya distance.',
+      'IL-NIQE uses five types of NSS features to improve image quality assessment: normalized luminance statistics, MSCN product statistics, gradient statistics, Log-Gabor responses, and color statistics. These features help capture the degree of degradation in distorted images.',
+      'Gradient statistics describe the local structure and quality of an image. The gradient components (horizontal and vertical) are obtained using a Gaussian derivative filter. The gradients follow a generalized Gaussian distribution (GGD), and the Weibull distribution models the gradient magnitudes. The parameters of these distributions are used as quality features.',
+      'Log-Gabor filters are used for multi-scale and multi-orientation analysis, capturing perceptually relevant details. The filter responses are modeled using GGD and Weibull distributions. The parameters from these distributions serve as additional quality features.',
+      'Color statistics are captured using a classical NSS model in the log-opponent color space. The distributions of the log-opponent color components are fitted to a Gaussian model, and the parameters are used as quality features. These features capture both local and global image distortions.',
+      'A simple model of the NSS features calculated from natural image patches can be obtained by fitting them to a multivariate Gaussian density (MVG), providing a rich representation of these features. The quality of the distorted image is expressed as the distance between the NSS model of natural images and the MVG fit of the test image features.',
+      'IL-NIQE scores are expressed on an open scale, with lower scores indicating better image quality. These scores can be scaled to the MOS (Mean Opinion Score) range of 1 to 5 for subjective interpretation. For example, a IL-NIQE score can be scaled using the minimum and maximum scores from a reference dataset to ensure comparability between objective IL-NIQE scores and subjective human evaluations of image quality.'
     ],
   };
 
