@@ -152,7 +152,7 @@ class _PanelCenterBatchProcessingState extends State<PanelCenterBatchProcessing>
 
   List<String> getTop10PercentImages() {
     List<MapEntry<String, double?>> sortedEntries = scoreMap.entries
-        .where((entry) => entry.value != null)
+        .where((entry) => entry.value != null && entry.value! <= 5) // Exclude outliers
         .toList()
         ..sort((a, b) => b.value!.compareTo(a.value!));
     int top10Count = (sortedEntries.length * 0.1).ceil();
