@@ -53,7 +53,8 @@ class _HelpAndDocumentationWidgetState extends State<HelpAndDocumentationWidget>
     'BRISQUE',
     'NIQE',
     'ILNIQE',
-    'Contrast Metric'
+    'Contrast Metric',
+    'Chromatic Metric',
   ];
 
   final Map<String, List<String>> algorithmSteps = {
@@ -99,6 +100,14 @@ class _HelpAndDocumentationWidgetState extends State<HelpAndDocumentationWidget>
       'Integrating Luminance and Color Contrast Measures',
       'Contrast Scores and MOS Scaling'
     ],
+    'Chromatic Metric': [
+      'Introduction to Chromatic Metric',
+      'Human Visual System (HVS) Model for Chromatic Quality',
+      'Color Feature Extraction Using Moments',
+      'Texture Feature Extraction Using Log-Gabor Filters',
+      'Integrating Color and Texture Features',
+      'Chromatic Quality Scores and MOS Scaling'
+    ],
   };
 
   final Map<String, List<String>> algorithmDetails = {
@@ -143,6 +152,14 @@ class _HelpAndDocumentationWidgetState extends State<HelpAndDocumentationWidget>
       'The color contrast model addresses the issue that in some cases, contrast differences cannot be distinguished solely by luminance. The saturation component in the HSI color space is expressed in terms of local saturation and brightness. The relationship between saturation and brightness is measured using the region response factor (RRF), reflecting the relative change in color saturation at different brightness levels in V1.',
       'The final measurement of image contrast in the color difference domain is integrated as the product of the luminance contrast and the color contrast measures. This methodology measures the local luminance contrast using JND and the relationship between brightness and color saturation in V1 for color contrast measurement. Experimental results showed that the proposed method has a higher correlation with subjective human evaluations compared to conventional no-reference contrast measurement methods.',
       'Contrast scores are expressed on an open scale, with higher scores indicating better contrast. These scores can be scaled to the MOS (Mean Opinion Score) range of 1 to 5 using a linear scaling method based on the minimum and maximum values from a reference dataset. The formula for scaling is: MOS = 1 + 4 * (contrast_score - min_score) / (max_score - min_score), where MOS represents the scaled score, contrast_score is the obtained contrast score, min_score is the minimum contrast score from the reference dataset, and max_score is the maximum contrast score from the reference dataset.'
+    ],
+    'Chromatic Metric': [
+      'The method proposed by J. Yan, Z. Zhang, Y. Fang and R. Du in 2020 evaluates image quality by analyzing color information and texture components. The input image is first converted from the RGB color space to the HSV color space, taking advantage of its perceptual properties in the Human Visual System (HVS). Then, color moments are extracted to capture color degradations effectively.',
+      'An image in the HSV color space is composed of Hue, Saturation, and Value, representing the main color, purity of color, and intensity of color. The color moment is scale and rotation invariant. Most color distribution information is contained in the lower-order moments, so typically, only the first three color moments are used as color features.',
+      'The first color moment is the mean, representing the average color of the image. The second color moment is the standard deviation, representing the spread of color distribution. The third color moment is skewness, representing the asymmetry of the color distribution. These calculations yield a feature vector of nine elements representing the color information.',
+      'Inspired by the perceptual characteristics of the HVS, which is highly sensitive to regions with high-frequency information, texture features are extracted using the Log-Gabor filter to perceive image quality degradation. The real part of the Log-Gabor filter is used to extract texture features. The energy sum of the filter responses is calculated at different scales and orientations to capture texture distortions.',
+      'The extracted color and texture features are integrated to form a comprehensive feature vector. This feature vector represents the combined color and texture information of the image, providing a holistic measure of image quality.',
+      'Chromatic quality scores are expressed on an open scale, with higher scores indicating better chromatic quality. These scores can be scaled to the MOS (Mean Opinion Score) range of 1 to 5 using a linear scaling method based on the minimum and maximum values from a reference dataset. The formula for scaling is: MOS = 1 + 4 * (chromatic_score - min_score) / (max_score - min_score), where MOS represents the scaled score, chromatic_score is the obtained chromatic score, min_score is the minimum chromatic score from the reference dataset, and max_score is the maximum chromatic score from the reference dataset.'
     ],
   };
 
