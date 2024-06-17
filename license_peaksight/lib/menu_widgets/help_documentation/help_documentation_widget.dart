@@ -57,10 +57,12 @@ class _HelpAndDocumentationWidgetState extends State<HelpAndDocumentationWidget>
 
   final Map<String, List<String>> algorithmSteps = {
     'VGG16': [
-      'Introduction',
-      'What it does',
-      'How to use it',
-      'Effects',
+      'Introduction and Justification',
+      'Impact in Machine Learning',
+      'Classic Architecture',
+      'Advantages for Regression Tasks',
+      'Adaptation for Regression',
+      'Loss Functions'
     ],
     'BRISQUE': [
       'Introduction',
@@ -84,10 +86,12 @@ class _HelpAndDocumentationWidgetState extends State<HelpAndDocumentationWidget>
 
   final Map<String, List<String>> algorithmDetails = {
     'VGG16': [
-      'VGG16 Introduction: VGG16 is a convolutional neural network model...',
-      'What VGG16 does: VGG16 is used for image classification...',
-      'How to use VGG16: To use VGG16, you need to...',
-      'Effects of VGG16: The effects of using VGG16 include...',
+      'VGG16 is a deep convolutional neural network (CNN) introduced by Simonyan and Zisserman in 2014. It gained popularity due to its remarkable performance in the ImageNet Large Scale Visual Recognition Challenge (ILSVRC) 2014. VGG16 was chosen for this work due to its solid reputation and well-studied structure, making it ideal for adaptations and experiments. Despite newer models like ResNet showing superior performance in many applications, VGG16’s simplicity and efficiency make it a valuable choice for research and development in image quality assessment systems.',
+      'VGG16 had a significant impact on machine learning by demonstrating that deeper neural networks can significantly improve image recognition accuracy. Its straightforward structure, based on 3x3 convolution layers and 2x2 max-pooling layers, facilitated a clearer understanding of how network depth affects performance.',
+      'The classic architecture of VGG16 consists of 16 layers, including 13 convolutional layers and 3 fully connected layers. Each convolutional layer uses 3x3 filters, followed by a 2x2 max-pooling layer after each set of convolutional layers. The final network structure includes: 2 convolutional layers (64 filters) + max-pooling, 2 convolutional layers (128 filters) + max-pooling, 3 convolutional layers (256 filters) + max-pooling, 3 convolutional layers (512 filters) + max-pooling, 3 convolutional layers (512 filters) + max-pooling, 3 fully connected layers + softmax for classification.',
+      'Adapting VGG16 for regression tasks offers several advantages: Transfer Learning: Pre-trained weights from large datasets like ImageNet can be used to extract relevant features from images, reducing training time and resources. Accuracy: VGG16’s deep architecture and small convolutional layers (3x3) capture fine details at each depth level, contributing to high accuracy. Flexibility: VGG16 can be easily adapted to different data types and tasks by modifying the output layers. Reduced Overfitting: Transfer learning and built-in regularization help reduce overfitting, improving model generalization on unseen data. Computational Efficiency: Despite its depth, VGG16’s simplified structure and efficient use of convolutions and max-pooling make training and inference faster compared to other deep networks.',
+      'To adapt VGG16 for regression tasks, modifications were made to the original architecture. The upper layers of the original VGG16 model were removed to allow the addition of customized dense layers for regression tasks. After flattening the extracted features, dense layers were added to process these features, culminating in an output layer with linear activation to produce a continuous score. Dropout layers were introduced before the output layer to reduce overfitting.',
+      'Various loss functions were tested to optimize the model effectively for regression tasks. These include: Mean Squared Error (MSE), Mean Absolute Error (MAE), and Huber loss. These functions were chosen for their ability to handle different aspects of error penalization during training, improving the overall performance of the model. By constantly adjusting the parameters and architecture, VGG16 was optimized for the specific regression task, demonstrating its adaptability beyond traditional image classification.'
     ],
     'BRISQUE': [
       'BRISQUE Introduction: BRISQUE stands for Blind/Referenceless Image Spatial Quality Evaluator...',
