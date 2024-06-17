@@ -341,27 +341,27 @@ class _PanelCenterBatchProcessingState extends State<PanelCenterBatchProcessing>
                         value: null,
                       ),
                       DropdownMenuItem(
-                        child: Text("Excellent", style: TextStyle(color: widget.themeColors['textColor'])),
+                        child: Text("Excellent (${excellentImages.length})", style: TextStyle(color: widget.themeColors['textColor'])),
                         value: "Excellent",
                       ),
                       DropdownMenuItem(
-                        child: Text("Good", style: TextStyle(color: widget.themeColors['textColor'])),
+                        child: Text("Good (${goodImages.length})", style: TextStyle(color: widget.themeColors['textColor'])),
                         value: "Good",
                       ),
                       DropdownMenuItem(
-                        child: Text("Fair", style: TextStyle(color: widget.themeColors['textColor'])),
+                        child: Text("Fair (${fairImages.length})", style: TextStyle(color: widget.themeColors['textColor'])),
                         value: "Fair",
                       ),
                       DropdownMenuItem(
-                        child: Text("Poor", style: TextStyle(color: widget.themeColors['textColor'])),
+                        child: Text("Poor (${poorImages.length})", style: TextStyle(color: widget.themeColors['textColor'])),
                         value: "Poor",
                       ),
                       DropdownMenuItem(
-                        child: Text("Bad", style: TextStyle(color: widget.themeColors['textColor'])),
+                        child: Text("Bad (${badImages.length})", style: TextStyle(color: widget.themeColors['textColor'])),
                         value: "Bad",
                       ),
                       DropdownMenuItem(
-                        child: Text("Outlier", style: TextStyle(color: widget.themeColors['textColor'])),
+                        child: Text("Outlier (${outlierImages.length})", style: TextStyle(color: widget.themeColors['textColor'])),
                         value: "Outlier",
                       ),
                     ],
