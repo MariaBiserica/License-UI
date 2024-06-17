@@ -213,6 +213,27 @@ class _PanelCenterBatchProcessingState extends State<PanelCenterBatchProcessing>
       return;
     }
 
+    if (saveOption == 'Move' && !isSameDisk(selectedDirectory)) {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text("Error"),
+            content: Text("Cannot move files to a different disk. Please choose a location on the same disk."),
+            actions: <Widget>[
+              TextButton(
+                child: Text("OK"),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        },
+      );
+      return;
+    }
+
     final folders = {
       'Excellent': excellentImages,
       'Good': goodImages,
@@ -285,6 +306,12 @@ class _PanelCenterBatchProcessingState extends State<PanelCenterBatchProcessing>
         );
       },
     );
+  }
+
+  bool isSameDisk(String selectedDirectory) {
+    String originalDrive = path.rootPrefix(widget.imagePaths.first);
+    String destinationDrive = path.rootPrefix(selectedDirectory);
+    return originalDrive == destinationDrive;
   }
 
   void clearPanel() {
