@@ -255,7 +255,7 @@ class _HelpAndDocumentationWidgetState extends State<HelpAndDocumentationWidget>
           ),
         ),
         Expanded(flex: 2, child: _buildHelpSection(themeColors)),
-        Expanded(flex: 3, child: _buildTutorialSection(themeColors)),
+        Expanded(flex: 4, child: _buildTutorialSection(themeColors)),
       ],
     );
   }
@@ -394,9 +394,9 @@ class _HelpAndDocumentationWidgetState extends State<HelpAndDocumentationWidget>
       physics: NeverScrollableScrollPhysics(),
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,
-        childAspectRatio: 3,
-        crossAxisSpacing: 10,
-        mainAxisSpacing: 10,
+        childAspectRatio: 4,
+        crossAxisSpacing: 6,
+        mainAxisSpacing: 6,
       ),
       itemCount: algorithms.length,
       itemBuilder: (context, index) {
