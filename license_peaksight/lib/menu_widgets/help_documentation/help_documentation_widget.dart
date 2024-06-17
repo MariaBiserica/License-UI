@@ -65,10 +65,12 @@ class _HelpAndDocumentationWidgetState extends State<HelpAndDocumentationWidget>
       'Loss Functions'
     ],
     'BRISQUE': [
-      'Introduction',
-      'What it does',
-      'How to use it',
-      'Effects',
+      'Introduction to BRISQUE',
+      'Natural Scene Statistics',
+      'Generalized Gaussian Distribution',
+      'Pairwise Products of MSCN Coefficients',
+      'Image Quality Evaluation with BRISQUE',
+      'BRISQUE Scores and MOS Scaling'
     ],
     'NIQE': [
       'Introduction',
@@ -94,10 +96,12 @@ class _HelpAndDocumentationWidgetState extends State<HelpAndDocumentationWidget>
       'Various loss functions were tested to optimize the model effectively for regression tasks. These include: Mean Squared Error (MSE), Mean Absolute Error (MAE), and Huber loss. These functions were chosen for their ability to handle different aspects of error penalization during training, improving the overall performance of the model. By constantly adjusting the parameters and architecture, VGG16 was optimized for the specific regression task, demonstrating its adaptability beyond traditional image classification.'
     ],
     'BRISQUE': [
-      'BRISQUE Introduction: BRISQUE stands for Blind/Referenceless Image Spatial Quality Evaluator...',
-      'What BRISQUE does: BRISQUE assesses image quality without reference...',
-      'How to use BRISQUE: To use BRISQUE, you need to...',
-      'Effects of BRISQUE: The effects of using BRISQUE include...',
+      'BRISQUE (Blind/Referenceless Image Spatial Quality Evaluator) is an NR-IQA model proposed by A. K. Moorthy, A. Mittal and A. C. Bovik. It evaluates image quality in the spatial domain using natural scene statistics. BRISQUE does not rely on specific distortion features but uses normalized luminance coefficients to quantify the loss of naturalness due to distortions, leading to a holistic measure of quality.',
+      'BRISQUE relies on the analysis of the distribution of normalized local luminance and its relationships. It operates in the spatial domain without requiring coordinate transformations like DCT or wavelet, making it different from previous NR-IQA approaches. Despite its simplicity, BRISQUE statistically outperforms many full-reference models like PSNR and SSIM and is competitive with generic NR-IQA algorithms.',
+      'BRISQUE uses a Generalized Gaussian Distribution (GGD) to model the distribution of MSCN (Mean Subtracted Contrast Normalized) coefficients. The GGD provides flexibility in modeling the coefficients, and the Asymmetric Generalized Gaussian Distribution (AGGD) captures asymmetries in statistical data, crucial for evaluating image quality under various distortions.',
+      'To model the statistical relationships between neighboring pixels, BRISQUE uses pairwise products of MSCN coefficients along four orientations: horizontal, vertical, main diagonal, and secondary diagonal. The distributions of these products are modeled using AGGD to better capture empirical densities observed in distorted images.',
+      'BRISQUE evaluates image quality by extracting features at two scales: the original resolution and a lower resolution (downsampled by a factor of 2). A total of 36 features (18 per scale) are used to identify distortions and evaluate quality. BRISQUE learns a mapping from feature space to quality scores using a regression module, typically an SVR (Support Vector Regressor).',
+      'BRISQUE scores range from 0 to 100, with lower scores indicating better quality. These scores can be scaled to the MOS (Mean Opinion Score) range of 1 to 5 for subjective interpretation. For example, a BRISQUE score of 0 corresponds to a MOS of 5, while a score of 100 corresponds to a MOS of 1. This scaling ensures direct comparability between objective BRISQUE scores and subjective human evaluations of image quality.'
     ],
     'NIQE': [
       'NIQE Introduction: NIQE stands for Natural Image Quality Evaluator...',
