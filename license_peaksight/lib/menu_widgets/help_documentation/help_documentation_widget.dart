@@ -56,6 +56,7 @@ class _HelpAndDocumentationWidgetState extends State<HelpAndDocumentationWidget>
     'Contrast Metric',
     'Chromatic Metric',
     'Noise Metric',
+    'Brightness Metric',
   ];
 
   final Map<String, List<String>> algorithmSteps = {
@@ -117,6 +118,14 @@ class _HelpAndDocumentationWidgetState extends State<HelpAndDocumentationWidget>
       'Noise Quality Scores and MOS Scaling',
       'Examples and Interpretation'
     ],
+    'Brightness Metric': [
+      'Introduction to Brightness Metric',
+      'Standard Methods for Measuring Brightness',
+      'Proposed Methodology',
+      'Weighting Pixel Contributions',
+      'Calculating RMS',
+      'Brightness Scores and MOS Scaling',
+    ],
   };
 
   final Map<String, List<String>> algorithmDetails = {
@@ -177,6 +186,14 @@ class _HelpAndDocumentationWidgetState extends State<HelpAndDocumentationWidget>
       'The standard deviation of the noise for each color channel (R, G, B) is estimated. The final noise score is the mean of the estimated standard deviations for the three color channels.',
       'The noise score is then transformed into a MOS score using a mapping function defined to better reflect human perception of image quality based on noise levels. Lower noise standard deviation indicates higher image quality and vice versa.',
       'Examples demonstrate how noise scores reflect image quality. Lower noise scores translate into higher MOS scores, indicating better quality, while higher noise scores correspond to lower MOS scores, suggesting poorer quality due to more pronounced noise.'
+    ],
+    'Brightness Metric': [
+      'The methodology evaluates brightness in HDR images considering light distribution, color intensity, and spatial localization of pixels to quantify brightness accurately.',
+      'In SDR imaging, common metrics for brightness quantification are Average Picture Level (APL) and Frame Average Luminance Level (FALL), based on the arithmetic mean of the image luminance channel. However, these metrics fail to capture the impact of the broader luminance range and larger color volume of HDR images on human visual perception.',
+      'The proposed method for HDR brightness quantification starts by converting images from the perceptually linear sRGB domain to absolute linear light (RGB) values, which avoids underestimating high luminance values.',
+      'Next, the RGB_max matrix is calculated by retaining the maximum value from the R, G, and B channels for each pixel. This matrix combines luminance and color distribution information.',
+      'Pixel contribution to image brightness is weighted based on their spatial location, with central pixels contributing more than edge pixels. The weighting filter is calculated by applying a 2D FIR filter followed by a 2D Gaussian kernel resized to the input image dimensions.',
+      'To quantify HDR brightness, both the mean and variation of pixel values in the weighted RGB_max matrix are captured. The statistical metric that meets these requirements is the Root Mean Square (RMS). RMS is calculated by combining the arithmetic mean with the standard deviation of the distribution, providing a robust brightness measure. \nBrightness scores are expressed on an open scale, with higher scores indicating better brightness. These scores can be scaled to the MOS range (1-5) using linear scaling based on observed typical values in practice.',
     ],
   };
 
