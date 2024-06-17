@@ -73,10 +73,13 @@ class _HelpAndDocumentationWidgetState extends State<HelpAndDocumentationWidget>
       'BRISQUE Scores and MOS Scaling'
     ],
     'NIQE': [
-      'Introduction',
-      'What it does',
-      'How to use it',
-      'Effects',
+      'Introduction to NIQE',
+      'NIQE Model for Image Quality Evaluation',
+      'Spatial Domain of NSS',
+      'Selecting Image Patches',
+      'Characterizing Image Patches',
+      'Multivariate Gaussian Model',
+      'NIQE Scores and MOS Scaling'
     ],
     'ILNIQE': [
       'Introduction',
@@ -104,10 +107,13 @@ class _HelpAndDocumentationWidgetState extends State<HelpAndDocumentationWidget>
       'BRISQUE scores range from 0 to 100, with lower scores indicating better quality. These scores can be scaled to the MOS (Mean Opinion Score) range of 1 to 5 for subjective interpretation. For example, a BRISQUE score of 0 corresponds to a MOS of 5, while a score of 100 corresponds to a MOS of 1. This scaling ensures direct comparability between objective BRISQUE scores and subjective human evaluations of image quality.'
     ],
     'NIQE': [
-      'NIQE Introduction: NIQE stands for Natural Image Quality Evaluator...',
-      'What NIQE does: NIQE evaluates the quality of images...',
-      'How to use NIQE: To use NIQE, you need to...',
-      'Effects of NIQE: The effects of using NIQE include...',
+      'NIQE (Natural Image Quality Evaluator) is a completely blind image quality assessment model that evaluates image quality using measurable deviations from statistical regularities observed in natural images. Unlike many NR-IQA models, NIQE does not require training on distorted images and human opinion scores, making it an "opinion unaware" model.',
+      'NIQE evaluates image quality by constructing a collection of "quality aware" statistical features based on a simple and successful model of natural scene statistics (NSS) in the spatial domain. The quality of a test image is expressed as the distance between the multivariate Gaussian fit of the NSS features extracted from the test image and a model of natural images.',
+      'The NIQE model relies on spatial domain NSS features extracted from local image patches. These features capture essential low-order statistics of natural images. Normalized local luminance, local mean, and local contrast are used to characterize the image patches. Natural images tend to follow a Gaussian distribution when these coefficients are calculated, and deviations from this ideal indicate the presence and severity of distortions.',
+      'To select the image patches used for feature extraction, a simple measure of local sharpness is employed. The local standard deviation quantifies the local sharpness, and patches with sharpness above a certain threshold are selected. This ensures that quality measurements are more meaningful as they focus on the clearer regions of the image.',
+      'Once the image patches are selected, their statistics are characterized using NSS "quality aware" features. The features are modeled using a generalized Gaussian distribution (GGD) and the asymmetric generalized Gaussian distribution (AGGD) to capture deviations caused by distortions. Parameters of the GGD and AGGD are estimated to characterize the NSS features of the patches.',
+      'A simple model of the NSS features calculated from natural image patches can be obtained by fitting them to a multivariate Gaussian density (MVG), providing a rich representation of these features. The quality of the distorted image is expressed as the distance between the NSS model of natural images and the MVG fit of the test image features.',
+      'NIQE scores are expressed on an open scale, with lower scores indicating better image quality. These scores can be scaled to the MOS (Mean Opinion Score) range of 1 to 5 for subjective interpretation. For example, a NIQE score can be scaled using the minimum and maximum scores from a reference dataset to ensure comparability between objective NIQE scores and subjective human evaluations of image quality.'
     ],
     'ILNIQE': [
       'ILNIQE Introduction: ILNIQE stands for Integrated Local NIQE...',
