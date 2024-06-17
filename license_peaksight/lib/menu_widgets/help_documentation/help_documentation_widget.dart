@@ -57,6 +57,7 @@ class _HelpAndDocumentationWidgetState extends State<HelpAndDocumentationWidget>
     'Chromatic Metric',
     'Noise Metric',
     'Brightness Metric',
+    'Sharpness Metric',
   ];
 
   final Map<String, List<String>> algorithmSteps = {
@@ -126,6 +127,12 @@ class _HelpAndDocumentationWidgetState extends State<HelpAndDocumentationWidget>
       'Calculating RMS',
       'Brightness Scores and MOS Scaling',
     ],
+    'Sharpness Metric': [
+      'Introduction to Sharpness Metric',
+      'Calculating Sharpness Using Laplacian Variance',
+      'Sharpness Score Calculation',
+      'Interpreting Sharpness Scores',
+    ],
   };
 
   final Map<String, List<String>> algorithmDetails = {
@@ -194,6 +201,12 @@ class _HelpAndDocumentationWidgetState extends State<HelpAndDocumentationWidget>
       'Next, the RGB_max matrix is calculated by retaining the maximum value from the R, G, and B channels for each pixel. This matrix combines luminance and color distribution information.',
       'Pixel contribution to image brightness is weighted based on their spatial location, with central pixels contributing more than edge pixels. The weighting filter is calculated by applying a 2D FIR filter followed by a 2D Gaussian kernel resized to the input image dimensions.',
       'To quantify HDR brightness, both the mean and variation of pixel values in the weighted RGB_max matrix are captured. The statistical metric that meets these requirements is the Root Mean Square (RMS). RMS is calculated by combining the arithmetic mean with the standard deviation of the distribution, providing a robust brightness measure. \nBrightness scores are expressed on an open scale, with higher scores indicating better brightness. These scores can be scaled to the MOS range (1-5) using linear scaling based on observed typical values in practice.',
+    ],
+    'Sharpness Metric': [
+      'Sharpness is a crucial factor in perceptual quality assessment as it directly influences the distinguishability of fine details in an image. This section describes a sharpness evaluation method based on the calculation of the variance of the Laplacian operator applied to the image.',
+      'To evaluate image sharpness, we use the Laplacian operator, which is sensitive to rapid intensity changes, thus highlighting edges and fine details. Applying the Laplacian operator to an image generates a measure of the rate of intensity change, and the variance of the resulting values can be used as an indicator of image sharpness. The formula represents the Laplacian operator application:',
+      'The sharpness metric based on Laplacian variance (LAPE) is calculated as follows: The variance of the values obtained by applying the Laplacian operator is calculated using the formula: \\sigma^2 = \\frac{1}{n} \\sum_{i=1}^{n} (L_i - \\mu)^2 where L_i are the Laplacian values for each pixel, \\mu is the mean of these values, and n is the total number of pixels. Higher variance values indicate higher image sharpness as it reflects increased variability in pixel intensity.',
+      'Sharpness scores are expressed on an open scale, with higher values indicating better image sharpness. These scores can be scaled to the MOS (Mean Opinion Score) range of 1 to 5 using a linear scaling method based on the values observed in practice. Examples illustrate how sharpness scores reflect image quality. Higher sharpness scores translate into higher MOS scores, indicating better quality, while lower sharpness scores correspond to lower MOS scores, suggesting poorer quality due to more pronounced blur.'
     ],
   };
 
