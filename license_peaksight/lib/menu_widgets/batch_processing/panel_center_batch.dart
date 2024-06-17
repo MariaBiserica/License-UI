@@ -532,11 +532,11 @@ class _PanelCenterBatchProcessingState extends State<PanelCenterBatchProcessing>
                   child: Column(
                     children: [
                       buildTableRow("Rating", "Quality Level", true),
-                      buildTableRow("5", "Excellent", false),
-                      buildTableRow("4", "Good", false),
-                      buildTableRow("3", "Fair", false),
-                      buildTableRow("2", "Poor", false),
-                      buildTableRow("1", "Bad", false),
+                      buildTableRow("4.01 - 5", "Excellent", false),
+                      buildTableRow("3.01 - 4", "Good", false),
+                      buildTableRow("2.01 - 3", "Fair", false),
+                      buildTableRow("1.51 - 2", "Poor", false),
+                      buildTableRow("1 - 1.50", "Bad", false),
                     ],
                   ),
                 ),
