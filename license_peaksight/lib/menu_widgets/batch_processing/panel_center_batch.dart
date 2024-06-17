@@ -208,6 +208,11 @@ class _PanelCenterBatchProcessingState extends State<PanelCenterBatchProcessing>
       return;
     }
 
+    final saveOption = await _showSaveOptionDialog();
+    if (saveOption == null) {
+      return;
+    }
+
     final folders = {
       'Excellent': excellentImages,
       'Good': goodImages,
@@ -223,7 +228,11 @@ class _PanelCenterBatchProcessingState extends State<PanelCenterBatchProcessing>
       for (var imagePath in entry.value) {
         final imageFileName = path.basename(imagePath);
         final newImagePath = path.join(folderPath, imageFileName);
-        await File(imagePath).copy(newImagePath);
+        if (saveOption == 'Copy') {
+          await File(imagePath).copy(newImagePath);
+        } else if (saveOption == 'Move') {
+          await File(imagePath).rename(newImagePath);
+        }
       }
     }
 
@@ -232,12 +241,44 @@ class _PanelCenterBatchProcessingState extends State<PanelCenterBatchProcessing>
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text("Classification Saved"),
-          content: Text("Images have been saved into folders based on their quality."),
+          content: Text("Images have been ${saveOption == 'Copy' ? 'copied' : 'moved'} into folders based on their quality."),
           actions: <Widget>[
             TextButton(
               child: Text("OK"),
               onPressed: () {
                 Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<String?> _showSaveOptionDialog() async {
+    return showDialog<String>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Save Options"),
+          content: Text("Do you want to copy or move the images to the selected location?"),
+          actions: <Widget>[
+            TextButton(
+              child: Text("Copy"),
+              onPressed: () {
+                Navigator.of(context).pop("Copy");
+              },
+            ),
+            TextButton(
+              child: Text("Move"),
+              onPressed: () {
+                Navigator.of(context).pop("Move");
+              },
+            ),
+            TextButton(
+              child: Text("Cancel"),
+              onPressed: () {
+                Navigator.of(context).pop(null);
               },
             ),
           ],
