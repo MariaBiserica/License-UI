@@ -23,9 +23,12 @@ class PanelCenterImageModifier extends StatelessWidget {
   }
 
   Future<void> saveImageLocally(BuildContext context, String imagePath) async {
+    String originalImageName = imagePath.split('/').last;
+
     String? result = await FilePicker.platform.saveFile(
       dialogTitle: 'Please select an output file:',
-      fileName: 'modified_image_${DateTime.now().millisecondsSinceEpoch}.jpg',
+      // Extracted the original image name and the "_modified" suffix along with the time stamp will be added automatically
+      fileName: '$originalImageName',
     );
 
     if (result != null) {
@@ -123,8 +126,8 @@ class PanelCenterImageModifier extends StatelessWidget {
                         child: Text(
                           "Modified Image",
                           style: TextStyle(
-                            fontFamily: 'HeaderFont', 
-                            fontSize: 35, 
+                            fontFamily: 'HeaderFont',
+                            fontSize: 35,
                             color: themeColors['textColor'],
                             shadows: <Shadow>[
                               Shadow(
