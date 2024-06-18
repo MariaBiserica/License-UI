@@ -16,6 +16,10 @@ add_executable(${BINARY_NAME} WIN32
   "runner.exe.manifest"
 )
 
+# Set the icon file
+set(APP_ICON "${CMAKE_SOURCE_DIR}/../assets/icon/icon.ico")
+set_source_files_properties("Runner.rc" PROPERTIES OBJECT_DEPENDS ${APP_ICON})
+
 # Apply the standard set of build settings. This can be removed for applications
 # that need different build settings.
 apply_standard_settings(${BINARY_NAME})
