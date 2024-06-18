@@ -4,14 +4,14 @@ import 'dart:convert';
 
 // class to hold the quality scores
 class QualityScores {
-  final double? noiseScore, contrastScore, brightnessScore, sharpnessScore, chromaticScore, brisqueScore, niqeScore, ilniqeScore, vgg16Score, biqaScore;
-  final String? noiseTime, contrastTime, brightnessTime, sharpnessTime, chromaticTime, brisqueTime, niqeTime, ilniqeTime, vgg16Time, biqaTime;
+  final double? noiseScore, contrastScore, brightnessScore, sharpnessScore, chromaticScore, brisqueScore, niqeScore, ilniqeScore, vgg16Score;
+  final String? noiseTime, contrastTime, brightnessTime, sharpnessTime, chromaticTime, brisqueTime, niqeTime, ilniqeTime, vgg16Time;
 
   QualityScores({
     this.noiseScore, this.contrastScore, this.brightnessScore, this.sharpnessScore, this.chromaticScore,
-    this.brisqueScore, this.niqeScore, this.ilniqeScore, this.vgg16Score, this.biqaScore,
+    this.brisqueScore, this.niqeScore, this.ilniqeScore, this.vgg16Score,
     this.noiseTime, this.contrastTime, this.brightnessTime, this.sharpnessTime, this.chromaticTime,
-    this.brisqueTime, this.niqeTime, this.ilniqeTime, this.vgg16Time, this.biqaTime
+    this.brisqueTime, this.niqeTime, this.ilniqeTime, this.vgg16Time,
   });
 
   factory QualityScores.fromJson(Map<String, dynamic> json) {
@@ -25,7 +25,6 @@ class QualityScores {
       niqeScore: _parseDouble(json['niqe_score']),
       ilniqeScore: _parseDouble(json['ilniqe_score']),
       vgg16Score: _parseDouble(json['vgg16_score']),
-      biqaScore: _parseDouble(json['biqa_score']),
       noiseTime: json['noise_time'],
       contrastTime: json['contrast_time'],
       brightnessTime: json['brightness_time'],
@@ -35,7 +34,6 @@ class QualityScores {
       niqeTime: json['niqe_time'],
       ilniqeTime: json['ilniqe_time'],
       vgg16Time: json['vgg16_time'],
-      biqaTime: json['biqa_time'],
     );
   }
 

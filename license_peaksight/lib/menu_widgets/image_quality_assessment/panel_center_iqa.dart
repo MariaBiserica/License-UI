@@ -59,9 +59,9 @@ class _PanelCenterPageState extends State<PanelCenterPage> {
             scoreMap['Sharpness'] = scores.sharpnessScore;
             metricTiming['Sharpness'] = "${scores.sharpnessTime}";
           }
-          if (widget.selectedMetrics.contains('Chromatic Quality')) {
-            scoreMap['Chromatic Quality'] = scores.chromaticScore;
-            metricTiming['Chromatic Quality'] = "${scores.chromaticTime}";
+          if (widget.selectedMetrics.contains('Chromatic')) {
+            scoreMap['Chromatic'] = scores.chromaticScore;
+            metricTiming['Chromatic'] = "${scores.chromaticTime}";
           }
           if (widget.selectedMetrics.contains('BRISQUE')) {
             scoreMap['BRISQUE'] = scores.brisqueScore;
@@ -79,11 +79,6 @@ class _PanelCenterPageState extends State<PanelCenterPage> {
             scoreMap['VGG16'] = scores.vgg16Score;
             metricTiming['VGG16'] = "${scores.vgg16Time}";
           }
-          if (widget.selectedMetrics.contains('BIQA Noise Stats')) {
-            scoreMap['BIQA Noise Stats'] = scores.biqaScore;
-            metricTiming['BIQA Noise Stats'] = "${scores.biqaTime}";
-          }
-          
         });
       } else {
         // Show a dialog if the scores are null

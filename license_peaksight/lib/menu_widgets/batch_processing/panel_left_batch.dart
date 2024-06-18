@@ -22,7 +22,7 @@ class PanelLeftBatchProcessing extends StatefulWidget {
 }
 
 class _PanelLeftBatchProcessingState extends State<PanelLeftBatchProcessing> {
-  String selectedMetric = 'Noise';
+  String selectedMetric = 'Contrast';
   String? selectedOverallQualityMetric;
   bool isOverallQualitySelected = false;
 
@@ -292,11 +292,11 @@ class _PanelLeftBatchProcessingState extends State<PanelLeftBatchProcessing> {
 
   List<DropdownMenuItem<String>> getDropdownMenuItems() {
     Map<String, IconData> icons = {
-      'Noise': Icons.waves,
       'Contrast': Icons.tonality,
+      'Chromatic': Icons.palette,
+      'Noise': Icons.waves,
       'Brightness': Icons.brightness_6,
       'Sharpness': Icons.details,
-      'Chromatic Quality': Icons.palette,
       'Overall Quality': Icons.score,
     };
 
@@ -327,7 +327,6 @@ class _PanelLeftBatchProcessingState extends State<PanelLeftBatchProcessing> {
       'NIQE': Icons.filter_2,
       'ILNIQE': Icons.filter_3,
       'VGG16': Icons.filter_4,
-      'BIQA Noise Stats': Icons.filter_5,
     };
 
     return icons.keys.map((String key) {

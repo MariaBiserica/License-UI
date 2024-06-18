@@ -82,7 +82,7 @@ class _PanelCenterBatchProcessingState extends State<PanelCenterBatchProcessing>
               score = scoresResult.sharpnessScore;
               metricTiming[imagePath] = "${scoresResult.sharpnessTime}";
             }
-            if (widget.selectedMetric == 'Chromatic Quality') {
+            if (widget.selectedMetric == 'Chromatic') {
               score = scoresResult.chromaticScore;
               metricTiming[imagePath] = "${scoresResult.chromaticTime}";
             }
@@ -101,10 +101,6 @@ class _PanelCenterBatchProcessingState extends State<PanelCenterBatchProcessing>
             if (widget.selectedMetric == 'VGG16') {
               score = scoresResult.vgg16Score;
               metricTiming[imagePath] = "${scoresResult.vgg16Time}";
-            }
-            if (widget.selectedMetric == 'BIQA Noise Stats') {
-              score = scoresResult.biqaScore;
-              metricTiming[imagePath] = "${scoresResult.biqaTime}";
             }
 
             if (score != null) {
