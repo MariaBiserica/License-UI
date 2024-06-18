@@ -49,15 +49,15 @@ class _HelpAndDocumentationWidgetState extends State<HelpAndDocumentationWidget>
   };
 
   final List<String> algorithms = [
-    'VGG16',
     'BRISQUE',
     'NIQE',
     'ILNIQE',
-    'Contrast Metric',
-    'Chromatic Metric',
-    'Noise Metric',
-    'Brightness Metric',
-    'Sharpness Metric',
+    'VGG16',
+    'Contrast',
+    'Chromatic',
+    'Noise',
+    'Brightness',
+    'Sharpness',
   ];
 
   final Map<String, List<String>> algorithmSteps = {
@@ -95,40 +95,40 @@ class _HelpAndDocumentationWidgetState extends State<HelpAndDocumentationWidget>
       'Multivariate Gaussian Model',
       'IL-NIQE Scores and MOS Scaling'
     ],
-    'Contrast Metric': [
-      'Introduction to Contrast Metric',
+    'Contrast': [
+      'Introduction to Contrast Assessment',
       'Human Visual System (HVS) Model for Contrast',
       'Luminance Contrast Using JND',
       'Color Contrast Using Chrominance Differences',
       'Integrating Luminance and Color Contrast Measures',
       'Contrast Scores and MOS Scaling'
     ],
-    'Chromatic Metric': [
-      'Introduction to Chromatic Metric',
+    'Chromatic': [
+      'Introduction to Chromatic Quality Assessment',
       'Human Visual System (HVS) Model for Chromatic Quality',
       'Color Feature Extraction Using Moments',
       'Texture Feature Extraction Using Log-Gabor Filters',
       'Integrating Color and Texture Features',
       'Chromatic Quality Scores and MOS Scaling'
     ],
-    'Noise Metric': [
-      'Introduction to Noise Metric',
+    'Noise': [
+      'Introduction to Noise Assessment',
       'Noise Estimation in Image',
       'Statistical Features of Noise',
       'Weighted Average of Noise Estimations',
       'Noise Quality Scores and MOS Scaling',
       'Examples and Interpretation'
     ],
-    'Brightness Metric': [
-      'Introduction to Brightness Metric',
+    'Brightness': [
+      'Introduction to Brightness Assessment',
       'Standard Methods for Measuring Brightness',
       'Proposed Methodology',
       'Weighting Pixel Contributions',
       'Calculating RMS',
       'Brightness Scores and MOS Scaling',
     ],
-    'Sharpness Metric': [
-      'Introduction to Sharpness Metric',
+    'Sharpness': [
+      'Introduction to Sharpness Assessment',
       'Calculating Sharpness Using Laplacian Variance',
       'Sharpness Score Calculation',
       'Interpreting Sharpness Scores',
@@ -170,7 +170,7 @@ class _HelpAndDocumentationWidgetState extends State<HelpAndDocumentationWidget>
       'A simple model of the NSS features calculated from natural image patches can be obtained by fitting them to a multivariate Gaussian density (MVG), providing a rich representation of these features. The quality of the distorted image is expressed as the distance between the NSS model of natural images and the MVG fit of the test image features.',
       'IL-NIQE scores are expressed on an open scale, with lower scores indicating better image quality. These scores can be scaled to the MOS (Mean Opinion Score) range of 1 to 5 for subjective interpretation. For example, an IL-NIQE score can be scaled using the minimum and maximum scores from a reference dataset to ensure comparability between objective IL-NIQE scores and subjective human evaluations of image quality.'
     ],
-    'Contrast Metric': [
+    'Contrast': [
       'Contrast is a crucial factor in image quality assessment, as it significantly influences users’ visual perception of quality. The method developed by K. S. Song, M. Kim, and M. G. Kang in 2018 measures contrast for color images based on the Human Visual System (HVS) model. This method evaluates luminance contrast using the Just-Noticeable Difference (JND) to reflect the local contrast perceived by the HVS, and color contrast is evaluated based on a model of color stimuli in the primary visual cortex (V1).',
       'Luminance contrast is calculated using the formula: \nL = 0.299 * R + 0.587 * G + 0.114 * B,\nwhere R, G, and B are the intensities of the red, green, and blue channels. The processing begins with converting the input image to the YCbCr color space, then measuring contrast using two main approaches: grayscale-based contrast measurement (JND and SAD) and color difference-based quality evaluation (RRF and SAD). These measurements are integrated to provide a no-reference contrast estimate.',
       'The local contrast in grayscale is measured first. The luminance component is used to measure the local contrast of the grayscale image. The local visibility threshold is measured with JND expressed as a function of background luminance. The local contrast factor is expressed as the product of SAD and FJND, which are the mean absolute difference and the degree to which the visibility threshold is satisfied, respectively. The overall luminance contrast of the image is measured using the average local contrast factor.',
@@ -178,7 +178,7 @@ class _HelpAndDocumentationWidgetState extends State<HelpAndDocumentationWidget>
       'The final measurement of image contrast in the color difference domain is integrated as the product of the luminance contrast and the color contrast measures. This methodology measures the local luminance contrast using JND and the relationship between brightness and color saturation in V1 for color contrast measurement. Experimental results showed that the proposed method has a higher correlation with subjective human evaluations compared to conventional no-reference contrast measurement methods.',
       'Contrast scores are expressed on an open scale, with higher scores indicating better contrast. These scores can be scaled to the MOS (Mean Opinion Score) range of 1 to 5 using a linear scaling method based on the minimum and maximum values from a reference dataset. The formula for scaling is:\nMOS = 1 + 4 * (contrast_score - min_score) / (max_score - min_score),\nwhere MOS represents the scaled score, contrast_score is the obtained contrast score, min_score is the minimum contrast score from the reference dataset, and max_score is the maximum contrast score from the reference dataset.'
     ],
-    'Chromatic Metric': [
+    'Chromatic': [
       'The method proposed by J. Yan, Z. Zhang, Y. Fang, and R. Du in 2020 evaluates image quality by analyzing color information and texture components. The input image is first converted from the RGB color space to the HSV color space, taking advantage of its perceptual properties in the Human Visual System (HVS). Then, color moments are extracted to capture color degradations effectively.',
       'An image in the HSV color space is composed of Hue, Saturation, and Value, representing the main color, purity of color, and intensity of color. The color moment is scale and rotation invariant. Most color distribution information is contained in the lower-order moments, so typically, only the first three color moments are used as color features.',
       'The first color moment is the mean, representing the average color of the image. The second color moment is the standard deviation, representing the spread of color distribution. The third color moment is skewness, representing the asymmetry of the color distribution. These calculations yield a feature vector of nine elements representing the color information.',
@@ -186,7 +186,7 @@ class _HelpAndDocumentationWidgetState extends State<HelpAndDocumentationWidget>
       'The extracted color and texture features are integrated to form a comprehensive feature vector. This feature vector represents the combined color and texture information of the image, providing a holistic measure of image quality.',
       'Chromatic quality scores are expressed on an open scale, with higher scores indicating better chromatic quality. These scores can be scaled to the MOS (Mean Opinion Score) range of 1 to 5 using a linear scaling method based on the minimum and maximum values from a reference dataset. The formula for scaling is:\nMOS = 1 + 4 * (chromatic_score - min_score) / (max_score - min_score),\nwhere MOS represents the scaled score, chromatic_score is the obtained chromatic score, min_score is the minimum chromatic score from the reference dataset, and max_score is the maximum chromatic score from the reference dataset.'
     ],
-    'Noise Metric': [
+    'Noise': [
       'The methodology evaluates image quality affected by noise using statistical noise characteristics extracted from the image. These characteristics are estimated for each color channel, and the final quality score is calculated through a weighted average of these estimations.',
       'Noise in the context of image quality evaluation refers to random variations in color or brightness in an image, which can make the image appear grainy or spotty. To estimate the level of noise present in each color channel of the image, the skimage library function estimate_sigma is used.',
       'This function analyzes the image to determine the standard deviation of the noise for each color channel. Although "sigma" is often associated with the standard deviation used in Gaussian blur filters, in the context of image noise evaluation, sigma indicates how much the pixels deviate from their mean value in a region of the image.',
@@ -194,7 +194,7 @@ class _HelpAndDocumentationWidgetState extends State<HelpAndDocumentationWidget>
       'The noise score is then transformed into a MOS score using a mapping function defined to better reflect human perception of image quality based on noise levels. Lower noise standard deviation indicates higher image quality and vice versa.',
       'Examples demonstrate how noise scores reflect image quality. Lower noise scores translate into higher MOS scores, indicating better quality, while higher noise scores correspond to lower MOS scores, suggesting poorer quality due to more pronounced noise.'
     ],
-    'Brightness Metric': [
+    'Brightness': [
       'The methodology evaluates brightness in HDR images considering light distribution, color intensity, and spatial localization of pixels to quantify brightness accurately.',
       'In SDR imaging, common metrics for brightness quantification are Average Picture Level (APL) and Frame Average Luminance Level (FALL), based on the arithmetic mean of the image luminance channel. However, these metrics fail to capture the impact of the broader luminance range and larger color volume of HDR images on human visual perception.',
       'The proposed method for HDR brightness quantification starts by converting images from the perceptually linear sRGB domain to absolute linear light (RGB) values, which avoids underestimating high luminance values.',
@@ -203,7 +203,7 @@ class _HelpAndDocumentationWidgetState extends State<HelpAndDocumentationWidget>
       'To quantify HDR brightness, both the mean and variation of pixel values in the weighted RGB_max matrix are captured. The statistical metric that meets these requirements is the Root Mean Square (RMS). RMS is calculated by combining the arithmetic mean with the standard deviation of the distribution, providing a robust brightness measure.',
       'Brightness scores are expressed on an open scale, with higher scores indicating better brightness. These scores can be scaled to the MOS range (1-5) using linear scaling based on observed typical values in practice.'
     ],
-    'Sharpness Metric': [
+    'Sharpness': [
       'Sharpness is a crucial factor in perceptual quality assessment as it directly influences the distinguishability of fine details in an image. This section describes a sharpness evaluation method based on the calculation of the variance of the Laplacian operator applied to the image.',
       'To evaluate image sharpness, we use the Laplacian operator, which is sensitive to rapid intensity changes, thus highlighting edges and fine details. Applying the Laplacian operator to an image generates a measure of the rate of intensity change, and the variance of the resulting values can be used as an indicator of image sharpness. The formula represents the Laplacian operator application:',
       'The sharpness metric based on Laplacian variance (LAPE) is calculated by determining the variance of the values obtained after applying the Laplacian operator to the image. This variance measures the rate of intensity change, and higher variance values indicate higher image sharpness, reflecting increased variability in pixel intensity.',
@@ -394,9 +394,9 @@ class _HelpAndDocumentationWidgetState extends State<HelpAndDocumentationWidget>
       shrinkWrap: true,
       physics: NeverScrollableScrollPhysics(),
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
-        childAspectRatio: 4,
-        crossAxisSpacing: 6,
+        crossAxisCount: 3,
+        childAspectRatio: 2.3,
+        crossAxisSpacing: 5,
         mainAxisSpacing: 6,
       ),
       itemCount: algorithms.length,
