@@ -160,7 +160,7 @@ class _PanelLeftImageModifierState extends State<PanelLeftImageModifier> {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Text(
-                          "Adjustments Presets",
+                          "Adjustment Tools",
                           style: TextStyle(
                             fontFamily: 'HeaderFont',
                             fontSize: 35,
