@@ -150,7 +150,7 @@ class _PanelRightBatchProcessingState extends State<PanelRightBatchProcessing> {
               SizedBox(height: 10),
               Expanded(
                 child: images.isEmpty
-                  ? Center(child: Text("No images uploaded.", style: TextStyle(color: widget.themeColors['textColor'])))
+                  ? Center(child: Text("No images uploaded.", style: TextStyle(color: widget.themeColors['textColor'], fontSize: 18)))
                   : ListView.builder(
                   itemCount: images.length,
                   itemBuilder: (context, index) {

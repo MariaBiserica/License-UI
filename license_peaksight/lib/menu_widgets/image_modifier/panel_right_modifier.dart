@@ -99,21 +99,9 @@ class _PanelRightImageModifierState extends State<PanelRightImageModifier> with 
       onTap: () => viewImage(context, images[currentIndex]),
       child: Hero(
         tag: images[currentIndex],
-        child: ScaleTransition(
-          scale: _scaleAnimation!,
-          child: FadeTransition(
-            opacity: _animationController!,
-            child: Container(
-              padding: EdgeInsets.all(20),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(20),
-                image: DecorationImage(
-                  image: FileImage(File(images[currentIndex])),
-                  fit: BoxFit.cover,
-                ),
-              ),
-            ),
-          ),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(20),
+          child: Image.file(File(images[currentIndex])),
         ),
       ),
     );
@@ -133,19 +121,62 @@ class _PanelRightImageModifierState extends State<PanelRightImageModifier> with 
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                ElevatedButton(
-                  onPressed: pickImages,
-                  child: Text('Upload Images'),
-                  style: ElevatedButton.styleFrom(
-                    foregroundColor: widget.themeColors['textColor'], 
-                    backgroundColor: widget.themeColors['panelForeground'],
+                Card(
+                  color: widget.themeColors['panelBackground']!.withOpacity(0.8),
+                  elevation: 5,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(Constants.kPadding),
+                    child: Text(
+                      "Original Image",
+                      style: TextStyle(
+                        fontFamily: 'HeaderFont',
+                        fontSize: 35,
+                        color: widget.themeColors['textColor'],
+                        shadows: <Shadow>[
+                          Shadow(
+                            color: Colors.black.withOpacity(0.5),
+                            offset: Offset(1, 1),
+                            blurRadius: 2,
+                          ),
+                        ],
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
                   ),
                 ),
                 SizedBox(height: 20), // Adjust the space as needed
                 if (images.isNotEmpty)
                   Expanded(
+                    child: Stack(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(top: 30.0), // Adjust padding to avoid overlap with title
+                          child: Center(
+                            child: ScaleTransition(
+                              scale: _scaleAnimation!,
+                              child: FadeTransition(
+                                opacity: _animationController!,
+                                child: buildImage(),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  )
+                else
+                  Expanded(
                     child: Center(
-                      child: buildImage(),
+                      child: Text(
+                        'No images uploaded.',
+                        style: TextStyle(
+                          fontSize: 18,
+                          color: widget.themeColors['textColor'],
+                        ),
+                      ),
                     ),
                   ),
                 SizedBox(height: 20), // Adjust the space as needed
@@ -162,6 +193,16 @@ class _PanelRightImageModifierState extends State<PanelRightImageModifier> with 
                     ),
                   ],
                 ),
+                SizedBox(height: 20),
+                ElevatedButton(
+                  onPressed: pickImages,
+                  child: Text('Upload Images'),
+                  style: ElevatedButton.styleFrom(
+                    foregroundColor: widget.themeColors['textColor'], 
+                    backgroundColor: widget.themeColors['panelForeground'],
+                  ),
+                ),
+                SizedBox(height: 10),
               ],
             ),
           ),
@@ -170,7 +211,6 @@ class _PanelRightImageModifierState extends State<PanelRightImageModifier> with 
     );
   }
 }
-
 
 class ImageDetailView extends StatelessWidget {
   final String imagePath;

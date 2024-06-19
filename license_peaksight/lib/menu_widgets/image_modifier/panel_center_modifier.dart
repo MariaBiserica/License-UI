@@ -92,7 +92,7 @@ class PanelCenterImageModifier extends StatelessWidget {
                           } else if (!snapshot.hasData || snapshot.data == null) {
                             return Text(
                               "No modified image.",
-                              style: TextStyle(color: themeColors['textColor'], fontSize: 16),
+                              style: TextStyle(color: themeColors['textColor'], fontSize: 18),
                             );
                           } else {
                             final imagePath = snapshot.data!;
