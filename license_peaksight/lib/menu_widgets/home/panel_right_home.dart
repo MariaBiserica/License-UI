@@ -192,16 +192,23 @@ class RightPanelHomeState extends State<RightPanelHome> {
     bool confirm = await showDialog(
         context: context,
         builder: (context) => AlertDialog(
-              title: Text('Confirm Delete'),
-              content: Text('Are you sure you want to delete this task?'),
+              backgroundColor: widget.themeColors['panelForeground'], // Set modal background color to theme color
+              title: Text(
+                'Confirm Delete',
+                style: TextStyle(color: widget.themeColors['textColor']), // Set title text color to theme color
+              ),
+              content: Text(
+                'Are you sure you want to delete this task?',
+                style: TextStyle(color: widget.themeColors['textColor']), // Set content text color to theme color
+              ),
               actions: <Widget>[
                 TextButton(
                   onPressed: () => Navigator.of(context).pop(false),
-                  child: Text('No'),
+                  child: Text('No', style: TextStyle(color: widget.themeColors['textColor'])), // Set button text color to theme color
                 ),
                 TextButton(
                   onPressed: () => Navigator.of(context).pop(true),
-                  child: Text('Yes'),
+                  child: Text('Yes', style: TextStyle(color: widget.themeColors['textColor'])), // Set button text color to theme color
                 ),
               ],
             ));
