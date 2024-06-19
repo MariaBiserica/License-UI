@@ -238,7 +238,21 @@ class _AppBarWidgetState extends State<AppBarWidget> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: Text("Notifications"),
+          title: Text(
+            "Notifications",
+            style: TextStyle(
+              fontFamily: 'HeaderFont',
+              fontSize: 36,
+              color: const Color.fromARGB(255, 64, 63, 63),
+              shadows: [
+                Shadow(
+                  color: Colors.black.withOpacity(0.5),
+                  offset: Offset(1, 1),
+                  blurRadius: 2,
+                ),
+              ],
+            ),
+          ),
           content: Container(
             width: double.minPositive, // Ensures the dialog is only as wide as the content needs it to be
             child: ListView.builder(
@@ -247,7 +261,18 @@ class _AppBarWidgetState extends State<AppBarWidget> {
               itemBuilder: (context, index) {
                 var notification = widget.notifications[index];
                 return ListTile(
-                  title: Text(notification.message),
+                  title: Text(
+                    notification.message,
+                    style: TextStyle(
+                      shadows: [
+                        Shadow(
+                          color: Colors.black.withOpacity(0.3),
+                          offset: Offset(1, 1),
+                          blurRadius: 2,
+                        ),
+                      ],
+                    ),
+                  ),
                   trailing: IconButton(
                     icon: Icon(Icons.restore),
                     onPressed: () {
@@ -284,12 +309,38 @@ class _AppBarWidgetState extends State<AppBarWidget> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: Text("Choose Theme"),
+          title: Text(
+            "Choose Theme",
+            style: TextStyle(
+              fontFamily: 'HeaderFont',
+              fontSize: 36,
+              color: const Color.fromARGB(255, 64, 63, 63),
+              shadows: [
+                Shadow(
+                  color: Colors.black.withOpacity(0.5),
+                  offset: Offset(1, 1),
+                  blurRadius: 2,
+                ),
+              ],
+            ),
+          ),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: Constants.themes.keys.map((theme) {
               return ListTile(
-                title: Text(theme),
+                title: Text(
+                  theme,
+                  style: TextStyle(
+                    color: Color.fromARGB(255, 75, 75, 75),
+                    shadows: [
+                      Shadow(
+                        color: Colors.black.withOpacity(0.3),
+                        offset: Offset(1, 1),
+                        blurRadius: 2,
+                      ),
+                    ],
+                  ),
+                ),
                 onTap: () {
                   Provider.of<ThemeProvider>(context, listen: false).changeTheme(theme);
                   Navigator.of(context).pop();
@@ -297,6 +348,14 @@ class _AppBarWidgetState extends State<AppBarWidget> {
               );
             }).toList(),
           ),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Close the dialog
+              },
+              child: Text('Close'),
+            ),
+          ],
         );
       },
     );
