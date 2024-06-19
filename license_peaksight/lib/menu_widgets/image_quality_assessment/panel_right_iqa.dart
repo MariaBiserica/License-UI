@@ -54,7 +54,7 @@ class _PanelRightPageState extends State<PanelRightPage> with SingleTickerProvid
         _animationController!.forward();
       });
       // Ensures the selected image path is communicated back right after picking
-      if(images.isNotEmpty) {
+      if (images.isNotEmpty) {
         widget.onImageSelected?.call(images[currentIndex]);
       }
     }
@@ -138,7 +138,7 @@ class _PanelRightPageState extends State<PanelRightPage> with SingleTickerProvid
                   onPressed: pickImages,
                   child: Text('Upload Images'),
                   style: ElevatedButton.styleFrom(
-                    foregroundColor: widget.themeColors['textColor'], 
+                    foregroundColor: widget.themeColors['textColor'],
                     backgroundColor: widget.themeColors['panelForeground'],
                   ),
                 ),
@@ -147,6 +147,18 @@ class _PanelRightPageState extends State<PanelRightPage> with SingleTickerProvid
                   Expanded(
                     child: Center(
                       child: buildImage(),
+                    ),
+                  )
+                else
+                  Expanded(
+                    child: Center(
+                      child: Text(
+                        'No images uploaded.',
+                        style: TextStyle(
+                          fontSize: 18,
+                          color: widget.themeColors['textColor'],
+                        ),
+                      ),
                     ),
                   ),
                 SizedBox(height: 20), // Adjust the space as needed
@@ -171,7 +183,6 @@ class _PanelRightPageState extends State<PanelRightPage> with SingleTickerProvid
     );
   }
 }
-
 
 class ImageDetailView extends StatelessWidget {
   final String imagePath;
