@@ -70,7 +70,11 @@ class RightPanelHomeState extends State<RightPanelHome> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: Text(task == null ? 'Add Task' : 'Edit Task'),
+          backgroundColor: widget.themeColors['panelForeground'], // Set modal background color to theme color
+          title: Text(
+            task == null ? 'Add Task' : 'Edit Task',
+            style: TextStyle(color: widget.themeColors['textColor']), // Set title text color to theme color
+          ),
           content: Container(
             width: double.minPositive, // Ensures the dialog is only as wide as the content needs it to be
             child: Form(
@@ -81,34 +85,48 @@ class RightPanelHomeState extends State<RightPanelHome> {
                   TextFormField(
                     controller: titleController,
                     validator: (value) => value!.isEmpty ? 'Please enter a task title' : null,
-                    decoration: InputDecoration(hintText: 'Task Title'),
+                    decoration: InputDecoration(
+                      hintText: 'Task Title',
+                      hintStyle: TextStyle(color: widget.themeColors['textColor']),
+                    ),
+                    style: TextStyle(color: widget.themeColors['textColor']),
                   ),
                   TextFormField(
                     controller: descriptionController,
-                    decoration: InputDecoration(hintText: 'Description'),
+                    decoration: InputDecoration(
+                      hintText: 'Description',
+                      hintStyle: TextStyle(color: widget.themeColors['textColor']),
+                    ),
+                    style: TextStyle(color: widget.themeColors['textColor']),
                   ),
                   DropdownButtonFormField<String>(
-                    dropdownColor: Colors.white,
+                    dropdownColor: widget.themeColors['panelForeground'],
                     value: category,
                     onChanged: (newValue) {
                       category = newValue!;
                     },
                     items: ['Daily', 'Weekly', 'Monthly']
                         .map((label) => DropdownMenuItem(
-                              child: Text(label),
+                              child: Text(
+                                label,
+                                style: TextStyle(color: widget.themeColors['textColor']),
+                              ),
                               value: label,
                             ))
                         .toList(),
                   ),
                   DropdownButtonFormField<String>(
-                    dropdownColor: Colors.white,
+                    dropdownColor: widget.themeColors['panelForeground'],
                     value: status,
                     onChanged: (newValue) {
                       status = newValue!;
                     },
                     items: ['new', 'in progress', 'queued', 'completed']
                         .map((label) => DropdownMenuItem(
-                              child: Text(label),
+                              child: Text(
+                                label,
+                                style: TextStyle(color: widget.themeColors['textColor']),
+                              ),
                               value: label,
                             ))
                         .toList(),
@@ -122,7 +140,7 @@ class RightPanelHomeState extends State<RightPanelHome> {
               onPressed: () {
                 Navigator.of(context).pop(); // Close the dialog
               },
-              child: Text('Cancel'),
+              child: Text('Cancel', style: TextStyle(color: widget.themeColors['textColor'])),
             ),
             TextButton(
               onPressed: () {
@@ -139,7 +157,7 @@ class RightPanelHomeState extends State<RightPanelHome> {
                   Navigator.of(context).pop();
                 }
               },
-              child: Text('Save'),
+              child: Text('Save', style: TextStyle(color: widget.themeColors['textColor'])),
             ),
           ],
         );

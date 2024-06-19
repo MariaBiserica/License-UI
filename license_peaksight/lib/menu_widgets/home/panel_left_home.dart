@@ -272,17 +272,29 @@ class _LeftPanelHomeState extends State<LeftPanelHome> {
                 onTap: () => showDialog(
                   context: context,
                   builder: (_) => Dialog(
+                    backgroundColor: widget.themeColors['panelForeground'], // Set modal background color to theme color
                     child: Container(
                       height: 300, // Set the fixed height of the dialog
                       width: 300, // Set the fixed width of the dialog
+                      decoration: BoxDecoration(
+                        color: widget.themeColors['panelForeground'],
+                        borderRadius: BorderRadius.circular(Constants.borderRadius), // Add rounded corners
+                      ),
                       child: AlertDialog(
-                        title: Text('Task Details'),
+                        backgroundColor: widget.themeColors['panelForeground'], // Set modal background color to theme color
+                        title: Text(
+                          'Task Details',
+                          style: TextStyle(color: widget.themeColors['textColor']), // Set title text color to theme color
+                        ),
                         content: SingleChildScrollView( // Makes the content scrollable
-                          child: Text('${task.description}'),
+                          child: Text(
+                            '${task.description}',
+                            style: TextStyle(color: widget.themeColors['textColor']), // Set content text color to theme color
+                          ),
                         ),
                         actions: <Widget>[
                           TextButton(
-                            child: Text('Close'),
+                            child: Text('Close', style: TextStyle(color: widget.themeColors['textColor'])), // Set button text color to theme color
                             onPressed: () {
                               Navigator.of(context).pop(); // Close the dialog
                             },
