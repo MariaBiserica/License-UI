@@ -247,14 +247,32 @@ class _RegisterPageState extends State<RegisterPage> {
                             children: [
                               SizedBox(height: 20),
                               ElevatedButton(
-                                onPressed: _pickImageFromGallery, // Directly invoke the method when the button is pressed.
+                                onPressed: _pickImageFromGallery,
                                 child: Text('Upload Image'),
                               ),
                               SizedBox(height: 20),
-                              if (_image != null) // Check if an image has been picked and display it.
+                              if (_image != null)
                                 Padding(
                                   padding: EdgeInsets.only(top: 8.0),
-                                  child: Image.file(File(_image!.path), width: 100, height: 100),
+                                  child: Container(
+                                    width: 150, // Adjust the size as needed
+                                    height: 150, // Adjust the size as needed
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(75), // Rounder edges
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.black.withOpacity(0.3),
+                                          spreadRadius: 3,
+                                          blurRadius: 7,
+                                          offset: Offset(0, 3),
+                                        ),
+                                      ],
+                                    ),
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(75),
+                                      child: Image.file(File(_image!.path), fit: BoxFit.cover),
+                                    ),
+                                  ),
                                 ),
                             ],
                           ),
