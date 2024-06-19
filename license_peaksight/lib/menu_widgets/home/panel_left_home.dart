@@ -311,11 +311,9 @@ class _LeftPanelHomeState extends State<LeftPanelHome> {
           return Text("Error: ${snapshot.error}");
         }
         return Text(
-          "No recent tasks found",
+          "No recent tasks found.",
           style: TextStyle(
-            fontFamily: 'TellMeAJoke',
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
+            fontSize: 15,
             color: widget.themeColors['textColor'],
           ),
         );

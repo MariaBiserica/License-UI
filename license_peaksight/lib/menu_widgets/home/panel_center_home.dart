@@ -44,57 +44,70 @@ class _CenterPanelHomeState extends State<CenterPanelHome> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.all(Constants.kPaddingHome / 2),
-      margin: EdgeInsets.all(Constants.kPaddingHome),
-      decoration: BoxDecoration(
-        color: widget.themeColors['panelBackground'],
-        borderRadius: BorderRadius.circular(Constants.borderRadius),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.2),
-            spreadRadius: 1,
-            blurRadius: 20,
-            offset: Offset(0, 10),
-          ),
-        ],
-      ),
-      child: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            SizedBox(height: Constants.kPaddingHome),
-            Text(
-              'Statistics',
-              style: TextStyle(
-                fontFamily: 'HeaderFont',
-                fontSize: 35,
-                color: widget.themeColors['textColor'],
-                shadows: [
-                  Shadow(
-                    color: Colors.black.withOpacity(0.5),
-                    offset: Offset(1, 1),
-                    blurRadius: 2,
-                  ),
-                ],
+    return Scaffold(
+      body: SingleChildScrollView(
+        child: Container(
+          padding: EdgeInsets.all(Constants.kPaddingHome / 2),
+          margin: EdgeInsets.all(Constants.kPaddingHome),
+          decoration: BoxDecoration(
+            color: widget.themeColors['panelBackground'],
+            borderRadius: BorderRadius.circular(Constants.borderRadius),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.2),
+                spreadRadius: 1,
+                blurRadius: 20,
+                offset: Offset(0, 10),
               ),
-            ),
-            StreamBuilder<List<ChartData>>(
-              stream: taskStream(),
-              builder: (context, snapshot) {
-                if (snapshot.hasData) {
-                  return Column(
-                    children: [
-                      PieChartGoals(snapshot.data!),
+            ],
+          ),
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                SizedBox(height: Constants.kPaddingHome),
+                Text(
+                  'Statistics',
+                  style: TextStyle(
+                    fontFamily: 'HeaderFont',
+                    fontSize: 35,
+                    color: widget.themeColors['textColor'],
+                    shadows: [
+                      Shadow(
+                        color: Colors.black.withOpacity(0.5),
+                        offset: Offset(1, 1),
+                        blurRadius: 2,
+                      ),
                     ],
-                  );
-                } else if (snapshot.hasError) {
-                  return Text("Error: ${snapshot.error}");
-                }
-                return CircularProgressIndicator();
-              },
+                  ),
+                ),
+                StreamBuilder<List<ChartData>>(
+                  stream: taskStream(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return CircularProgressIndicator();
+                    } else if (snapshot.hasError) {
+                      return Text("Error: ${snapshot.error}");
+                    } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                      return Text(
+                        "There are no tasks available for statistics at the moment.",
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: widget.themeColors['textColor'],
+                        ),
+                      );
+                    } else {
+                      return Column(
+                        children: [
+                          PieChartGoals(snapshot.data!),
+                        ],
+                      );
+                    }
+                  },
+                ),
+              ],
             ),
-          ],
+          ),
         ),
       ),
     );
