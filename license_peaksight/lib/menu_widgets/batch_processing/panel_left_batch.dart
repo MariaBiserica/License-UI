@@ -27,6 +27,7 @@ class _PanelLeftBatchProcessingState extends State<PanelLeftBatchProcessing> {
   bool isOverallQualitySelected = false;
 
   final ScrollController _scrollController = ScrollController();
+  bool hasOutliers = false;
 
   void startAnalysis() {
     if (isOverallQualitySelected && selectedOverallQualityMetric != null) {
@@ -71,6 +72,16 @@ class _PanelLeftBatchProcessingState extends State<PanelLeftBatchProcessing> {
                 ),
                 SizedBox(height: 20),
                 buildLineChart(),
+                if (hasOutliers) ...[
+                  SizedBox(height: 20),
+                  Text(
+                    'Non-conforming outlier values have been excluded from the display.',
+                    style: TextStyle(
+                      fontSize: 15,
+                      color: widget.themeColors['subtitleColor'],
+                    ),
+                  ),
+                ],
                 SizedBox(height: 20),
                 ElevatedButton(
                   onPressed: showClassificationStats,
@@ -351,123 +362,138 @@ class _PanelLeftBatchProcessingState extends State<PanelLeftBatchProcessing> {
   }
 
   Widget buildLineChart() {
-    return Container(
-      height: 250, // Set a fixed height for the chart
-      padding: const EdgeInsets.all(Constants.kPadding),
-      child: Scrollbar(
-        thumbVisibility: true, // Ensure the thumb is always visible
-        controller: _scrollController,
-        thickness: 15, // Increase the thickness of the scrollbar
-        radius: Radius.circular(10), // Make the scrollbar rounded
-        child: SingleChildScrollView(
-          scrollDirection: Axis.horizontal, // Enable horizontal scrolling
-          controller: _scrollController,
-          child: Container(
-            width: widget.scores.length * 50.0, // Adjust width based on number of scores
-            child: Card(
-              color: widget.themeColors['panelBackground'],
-              elevation: 3,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(Constants.kPadding, Constants.kPadding * 6, Constants.kPadding * 3, Constants.kPadding),
-                child: LineChart(
-                  LineChartData(
-                    gridData: FlGridData(
-                      show: true,
-                      drawVerticalLine: true,
-                      horizontalInterval: 1,
-                      verticalInterval: 1,
-                      getDrawingHorizontalLine: (value) {
-                        return FlLine(color: Constants.blue, strokeWidth: 1);
-                      },
-                      getDrawingVerticalLine: (value) {
-                        return FlLine(color: Constants.blue, strokeWidth: 1);
-                      },
-                    ),
-                    titlesData: FlTitlesData(
-                      show: true,
-                      rightTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                      topTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                      bottomTitles: AxisTitles(
-                        sideTitles: SideTitles(
-                          showTitles: true,
-                          reservedSize: 50,
-                          interval: 1,
-                          getTitlesWidget: (double value, TitleMeta meta) {
-                            const style = TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 10);
-                            if (value.toInt() < widget.imagePaths.length) {
-                              return SideTitleWidget(
-                                axisSide: meta.axisSide,
-                                space: 10, // Add space above the text
-                                child: Transform.rotate(
-                                  angle: -pi / 7, // Rotate the text by 45 degrees
-                                  child: Text(path.basename(widget.imagePaths[value.toInt()]), style: style),
-                                ),
-                              );
-                            } else {
-                              return Container();
-                            }
-                          },
-                        ),
-                      ),
-                      leftTitles: AxisTitles(
-                        sideTitles: SideTitles(
-                          showTitles: true,
-                          interval: 1,
-                          getTitlesWidget: (double value, TitleMeta meta) {
-                            const style = TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 15);
-                            switch (value.toInt()) {
-                              case 1:
-                                return Text('1', style: style, textAlign: TextAlign.left);
-                              case 2:
-                                return Text('2', style: style, textAlign: TextAlign.left);
-                              case 3:
-                                return Text('3', style: style, textAlign: TextAlign.left);
-                              case 4:
-                                return Text('4', style: style, textAlign: TextAlign.left);
-                              case 5:
-                                return Text('5', style: style, textAlign: TextAlign.left);
-                              default:
-                                return Container();
-                            }
-                          },
-                          reservedSize: 42,
-                        ),
-                      ),
-                    ),
-                    borderData: FlBorderData(
-                      show: true,
-                      border: Border.all(color: const Color(0xff37434d)),
-                    ),
-                    minX: 0,
-                    maxX: widget.scores.length.toDouble() - 1,
-                    minY: 0,
-                    maxY: 5,
-                    lineBarsData: [
-                      LineChartBarData(
-                        spots: widget.scores.asMap().entries.map((entry) {
-                          return FlSpot(entry.key.toDouble(), entry.value);
-                        }).toList(),
-                        isCurved: true,
-                        gradient: LinearGradient(colors: [Color(0xff23b6e6), Color(0xff02d39a)]),
-                        barWidth: 5,
-                        isStrokeCapRound: true,
-                        dotData: FlDotData(show: false),
-                        belowBarData: BarAreaData(
+    // Filter out outlier values and corresponding image paths
+    List<FlSpot> validSpots = [];
+    List<String> validImagePaths = [];
+    hasOutliers = false;
+    for (int i = 0; i < widget.scores.length; i++) {
+      if (widget.scores[i] >= 1 && widget.scores[i] <= 5) {
+        validSpots.add(FlSpot(validSpots.length.toDouble(), widget.scores[i]));
+        validImagePaths.add(widget.imagePaths[i]);
+      } else {
+        hasOutliers = true;
+      }
+    }
+
+    return Column(
+      children: [
+        Container(
+          height: 350, // Set a fixed height for the chart
+          padding: const EdgeInsets.all(Constants.kPadding),
+          child: Scrollbar(
+            thumbVisibility: true, // Ensure the thumb is always visible
+            controller: _scrollController,
+            thickness: 20, // Increase the thickness of the scrollbar
+            radius: Radius.circular(10), // Make the scrollbar rounded
+            child: SingleChildScrollView(
+              scrollDirection: Axis.horizontal, // Enable horizontal scrolling
+              controller: _scrollController,
+              child: Container(
+                width: validSpots.length * 50.0, // Adjust width based on number of valid scores
+                child: Card(
+                  color: widget.themeColors['panelBackground'],
+                  elevation: 3,
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(Constants.kPadding, Constants.kPadding * 6, Constants.kPadding * 3, Constants.kPadding),
+                    child: LineChart(
+                      LineChartData(
+                        gridData: FlGridData(
                           show: true,
-                          gradient: LinearGradient(
-                            colors: [Color(0xff23b6e6).withOpacity(0.3), Color(0xff02d39a).withOpacity(0.3)],
+                          drawVerticalLine: true,
+                          horizontalInterval: 1,
+                          verticalInterval: 1,
+                          getDrawingHorizontalLine: (value) {
+                            return FlLine(color: Constants.blue, strokeWidth: 1);
+                          },
+                          getDrawingVerticalLine: (value) {
+                            return FlLine(color: Constants.blue, strokeWidth: 1);
+                          },
+                        ),
+                        titlesData: FlTitlesData(
+                          show: true,
+                          rightTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                          topTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                          bottomTitles: AxisTitles(
+                            sideTitles: SideTitles(
+                              showTitles: true,
+                              reservedSize: 50,
+                              interval: 1,
+                              getTitlesWidget: (double value, TitleMeta meta) {
+                                const style = TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 10);
+                                if (value.toInt() < validImagePaths.length) {
+                                  return SideTitleWidget(
+                                    axisSide: meta.axisSide,
+                                    space: 5, // Add space above the text
+                                    child: Transform.rotate(
+                                      angle: -pi / 5, // Rotate the text by 45 degrees
+                                      child: Text(path.basename(validImagePaths[value.toInt()]), style: style),
+                                    ),
+                                  );
+                                } else {
+                                  return Container();
+                                }
+                              },
+                            ),
+                          ),
+                          leftTitles: AxisTitles(
+                            sideTitles: SideTitles(
+                              showTitles: true,
+                              interval: 1,
+                              getTitlesWidget: (double value, TitleMeta meta) {
+                                const style = TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 15);
+                                switch (value.toInt()) {
+                                  case 1:
+                                    return Text('1', style: style, textAlign: TextAlign.left);
+                                  case 2:
+                                    return Text('2', style: style, textAlign: TextAlign.left);
+                                  case 3:
+                                    return Text('3', style: style, textAlign: TextAlign.left);
+                                  case 4:
+                                    return Text('4', style: style, textAlign: TextAlign.left);
+                                  case 5:
+                                    return Text('5', style: style, textAlign: TextAlign.left);
+                                  default:
+                                    return Container();
+                                }
+                              },
+                              reservedSize: 42,
+                            ),
                           ),
                         ),
+                        borderData: FlBorderData(
+                          show: true,
+                          border: Border.all(color: const Color(0xff37434d)),
+                        ),
+                        minX: 0,
+                        maxX: validSpots.length > 0 ? validSpots.length.toDouble() - 1 : 0,
+                        minY: 0,
+                        maxY: 5,
+                        lineBarsData: [
+                          LineChartBarData(
+                            spots: validSpots,
+                            isCurved: true,
+                            gradient: LinearGradient(colors: [Color(0xff23b6e6), Color(0xff02d39a)]),
+                            barWidth: 5,
+                            isStrokeCapRound: true,
+                            dotData: FlDotData(show: false),
+                            belowBarData: BarAreaData(
+                              show: true,
+                              gradient: LinearGradient(
+                                colors: [Color(0xff23b6e6).withOpacity(0.3), Color(0xff02d39a).withOpacity(0.3)],
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
-                    ],
+                    ),
                   ),
                 ),
               ),
             ),
           ),
         ),
-      ),
+      ],
     );
   }
 }
