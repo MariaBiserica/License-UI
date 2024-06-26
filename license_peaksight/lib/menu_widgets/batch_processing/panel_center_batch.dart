@@ -63,6 +63,9 @@ class _PanelCenterBatchProcessingState extends State<PanelCenterBatchProcessing>
     if (widget.imagePaths.isNotEmpty && widget.selectedMetric.isNotEmpty) {
       for (String imagePath in widget.imagePaths) {
         if (isPaused) {
+          widget.onScoresCalculated(scores);
+          print("Paused analysis");
+
           await Future.doWhile(() => Future.delayed(Duration(milliseconds: 100)).then((_) => isPaused));
         }
 
