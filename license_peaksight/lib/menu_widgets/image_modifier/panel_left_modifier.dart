@@ -82,7 +82,7 @@ class _PanelLeftImageModifierState extends State<PanelLeftImageModifier> {
 
   final List<Map<String, dynamic>> colorEnhancementPresets = [
     {'hueScalar': 1.1, 'saturationScalar': 1.6, 'valueScalar': 1.3, 'description': 'Suitable images with a lot of green'},
-    {'hueScalar': 1.2, 'saturationScalar': 1.5, 'valueScalar': 0.8, 'description': 'Ideal for portraits'},
+    {'hueScalar': 1.2, 'saturationScalar': 1.3, 'valueScalar': 0.9, 'description': 'Ideal for portraits'},
     {'hueScalar': 1.0, 'saturationScalar': 1.3, 'valueScalar': 1.5, 'description': 'Good for cityscapes and urban photos'},
     {'hueScalar': 0.9, 'saturationScalar': 1.1, 'valueScalar': 1.2, 'description': 'Enhances underwater photos'},
     {'hueScalar': 1.0, 'saturationScalar': 1.2, 'valueScalar': 0.9, 'description': 'Best for sunset and sunrise images'},
