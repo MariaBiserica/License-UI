@@ -32,6 +32,7 @@ class _PanelCenterBatchProcessingState extends State<PanelCenterBatchProcessing>
   int processedCount = 0;
   Map<String, String> metricTiming = {};
   bool showTop10 = false;
+  bool isPaused = false;
 
   List<String> excellentImages = [];
   List<String> goodImages = [];
@@ -49,7 +50,7 @@ class _PanelCenterBatchProcessingState extends State<PanelCenterBatchProcessing>
     super.didUpdateWidget(oldWidget);
     if (widget.selectedMetric != oldWidget.selectedMetric || widget.imagePaths != oldWidget.imagePaths) {
       progress = 0.0;
-      processedCount = 0;  // Reset the processed count
+      processedCount = 0; // Reset the processed count
       metricTiming.clear();
       calculateQualityScores();
     }
@@ -57,10 +58,14 @@ class _PanelCenterBatchProcessingState extends State<PanelCenterBatchProcessing>
 
   void calculateQualityScores() async {
     List<double> scores = [];
-    processedCount = 0;  // Ensure reset of processed count each time the method is called
+    processedCount = 0; // Ensure reset of processed count each time the method is called
 
     if (widget.imagePaths.isNotEmpty && widget.selectedMetric.isNotEmpty) {
       for (String imagePath in widget.imagePaths) {
+        if (isPaused) {
+          await Future.doWhile(() => Future.delayed(Duration(milliseconds: 100)).then((_) => isPaused));
+        }
+
         final scoresResult = await predictImageQuality(File(imagePath), {widget.selectedMetric});
 
         if (scoresResult != null) {
@@ -314,7 +319,7 @@ class _PanelCenterBatchProcessingState extends State<PanelCenterBatchProcessing>
     setState(() {
       scoreMap.clear();
       progress = 0.0;
-      processedCount = 0;  // Reset processed count when panel is cleared
+      processedCount = 0; // Reset processed count when panel is cleared
       metricTiming.clear();
       excellentImages.clear();
       goodImages.clear();
@@ -369,12 +374,28 @@ class _PanelCenterBatchProcessingState extends State<PanelCenterBatchProcessing>
             ),
             Padding(
               padding: const EdgeInsets.all(Constants.kPadding),
-              child: ElevatedButton(
-                onPressed: clearPanel,
-                child: Text('Clear Panel', style: TextStyle(color: widget.themeColors['textColor'])),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: widget.themeColors['panelForeground'],
-                ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  ElevatedButton(
+                    onPressed: clearPanel,
+                    child: Text('Clear Panel', style: TextStyle(color: widget.themeColors['textColor'])),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: widget.themeColors['panelForeground'],
+                    ),
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      setState(() {
+                        isPaused = !isPaused;
+                      });
+                    },
+                    child: Text(isPaused ? 'Resume Analysis' : 'Pause Analysis', style: TextStyle(color: widget.themeColors['textColor'])),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: widget.themeColors['panelForeground'],
+                    ),
+                  ),
+                ],
               ),
             ),
             if (showDropdown)
@@ -565,8 +586,8 @@ class _PanelCenterBatchProcessingState extends State<PanelCenterBatchProcessing>
               Text(
                 "Analysis Overview",
                 style: TextStyle(
-                  fontFamily: 'HeaderFont', 
-                  fontSize: 35, 
+                  fontFamily: 'HeaderFont',
+                  fontSize: 35,
                   color: widget.themeColors['textColor'],
                   shadows: <Shadow>[
                     Shadow(
@@ -706,7 +727,7 @@ class _PanelCenterBatchProcessingState extends State<PanelCenterBatchProcessing>
       ),
       trailing: isCalculating
           ? SizedBox(
-              width: 60,  // Set a specific width for the SizedBox
+              width: 60, // Set a specific width for the SizedBox
               height: 20, // Set a specific height for the animation
               child: SpinKitThreeBounce(
                 color: widget.themeColors['textColor'],
@@ -729,11 +750,7 @@ class _PanelCenterBatchProcessingState extends State<PanelCenterBatchProcessing>
               ),
               child: Text(
                 metricTiming[imagePath] ?? "Calculating...",
-                style: TextStyle(
-                  color: widget.themeColors['textColor'], 
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16
-                ),
+                style: TextStyle(color: widget.themeColors['textColor'], fontWeight: FontWeight.bold, fontSize: 16),
               ),
             ),
     );
