@@ -13,12 +13,12 @@ class RightPanelHome extends StatefulWidget {
   final Map<String, Color> themeColors;
 
   RightPanelHome({
-    required this.notifications, 
-    required this.onRestore, 
+    required this.notifications,
+    required this.onRestore,
     required this.key,
     required this.themeColors,
   });
-  
+
   @override
   RightPanelHomeState createState() => RightPanelHomeState();
 }
@@ -143,7 +143,7 @@ class RightPanelHomeState extends State<RightPanelHome> {
               child: Text('Cancel', style: TextStyle(color: widget.themeColors['textColor'])),
             ),
             TextButton(
-              onPressed: () {
+              onPressed: () async {
                 if (_formKey.currentState!.validate()) {
                   if (task == null) {
                     _addTask(titleController.text, status, category, descriptionController.text);
@@ -152,6 +152,7 @@ class RightPanelHomeState extends State<RightPanelHome> {
                     task.description = descriptionController.text;
                     task.category = category;
                     task.status = status;
+                    task.creationDate = DateTime.now().toIso8601String(); // Update creation date to current time
                     _editTask(task);
                   }
                   Navigator.of(context).pop();
@@ -168,7 +169,14 @@ class RightPanelHomeState extends State<RightPanelHome> {
   void _addTask(String title, String status, String category, String description) async {
     String? userId = _authService.getCurrentUserId();
     if (userId != null) {
-      var newTask = Task(id: '', title: title, status: status, category: category, description: description);
+      var newTask = Task(
+        id: '',
+        title: title,
+        status: status,
+        category: category,
+        description: description,
+        creationDate: DateTime.now().toIso8601String(), // Set creation date
+      );
       var docRef = await FirebaseFirestore.instance.collection('tasks').add({
         ...newTask.toMap(),
         'userId': userId,
@@ -223,7 +231,7 @@ class RightPanelHomeState extends State<RightPanelHome> {
     _fetchTasks();
     _addNotification(task, "Task '${task.title}' deleted");
   }
-  
+
   void restoreTask(Task task) async {
     String? userId = _authService.getCurrentUserId();
     if (userId != null) {
@@ -262,20 +270,21 @@ class RightPanelHomeState extends State<RightPanelHome> {
           Text(
             'Tasks & Goals',
             style: TextStyle(
-                fontFamily: 'HeaderFont', 
-                fontSize: 35, 
-                color: widget.themeColors['textColor'],
-                shadows: <Shadow>[
-                  Shadow(
-                    color: Colors.black.withOpacity(0.5),
-                    offset: Offset(1, 1),
-                    blurRadius: 2,
-                  ),
-                ],
-              ),
+              fontFamily: 'HeaderFont',
+              fontSize: 35,
+              color: widget.themeColors['textColor'],
+              shadows: <Shadow>[
+                Shadow(
+                  color: Colors.black.withOpacity(0.5),
+                  offset: Offset(1, 1),
+                  blurRadius: 2,
+                ),
+              ],
+            ),
           ),
           SizedBox(height: Constants.kPaddingHome),
-          Expanded( // This will contain the scrollable part
+          Expanded(
+            // This will contain the scrollable part
             child: SingleChildScrollView(
               child: Column(
                 children: [
@@ -303,16 +312,16 @@ class RightPanelHomeState extends State<RightPanelHome> {
   Widget _buildCategoryTasks(String category) {
     List<Task> categoryTasks = tasks.where((task) => task.category == category).toList();
     return Container(
-      margin: EdgeInsets.symmetric(vertical: 8.0),  // Adds space between category tiles
+      margin: EdgeInsets.symmetric(vertical: 8.0), // Adds space between category tiles
       decoration: BoxDecoration(
-        color: widget.themeColors['panelForeground'], 
-        borderRadius: BorderRadius.circular(Constants.borderRadius),  // Rounded corners
+        color: widget.themeColors['panelForeground'],
+        borderRadius: BorderRadius.circular(Constants.borderRadius), // Rounded corners
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.1),
             spreadRadius: 1,
             blurRadius: 6,
-            offset: Offset(0, 2),  // Shadow effect
+            offset: Offset(0, 2), // Shadow effect
           ),
         ],
       ),
@@ -333,8 +342,8 @@ class RightPanelHomeState extends State<RightPanelHome> {
                   color: Color.fromARGB(150, 0, 0, 0),
                 ),
               ],
-              fontFamily: 'Rastaglion',  // Custom font applied
-              fontSize: 20,  // Slightly larger font size
+              fontFamily: 'Rastaglion', // Custom font applied
+              fontSize: 20, // Slightly larger font size
             ),
           ),
           children: categoryTasks.map((task) => _buildTaskCard(task, context)).toList(),
@@ -421,5 +430,4 @@ class RightPanelHomeState extends State<RightPanelHome> {
         return Colors.black; // Default color if none of the statuses match
     }
   }
-
 }

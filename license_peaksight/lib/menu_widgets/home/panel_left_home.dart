@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:intl/intl.dart';
 import 'package:license_peaksight/constants.dart';
 import 'package:license_peaksight/authentication/authentication_service.dart';
 import 'package:license_peaksight/menu_widgets/home/task.dart';
@@ -265,9 +266,19 @@ class _LeftPanelHomeState extends State<LeftPanelHome> {
                     ),
                   ],
                 ),
-                subtitle: Text(
-                  'Tap for details', // or use task.description for more details
-                  style: TextStyle(color: widget.themeColors['detailsColor']),
+                subtitle: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    if (task.creationDate != null) // Check for null
+                      Text(
+                        'Timestamp: ${DateFormat('dd/MM/yyyy - HH:mm:ss').format(DateTime.parse(task.creationDate!))}', // Display creation date
+                        style: TextStyle(color: widget.themeColors['detailsColor']),
+                      ),
+                    Text(
+                      'Tap for details', // or use task.description for more details
+                      style: TextStyle(color: widget.themeColors['detailsColor']),
+                    ),
+                  ],
                 ),
                 onTap: () => showDialog(
                   context: context,
@@ -342,6 +353,7 @@ class _LeftPanelHomeState extends State<LeftPanelHome> {
       yield* FirebaseFirestore.instance
           .collection('tasks')
           .where('userId', isEqualTo: userId)
+          .orderBy('creationDate', descending: true) // Order by creation date
           .limit(5)
           .snapshots()
           .map((snapshot) => snapshot.docs.map((doc) => Task.fromMap(doc.data() as Map<String, dynamic>, doc.id)).toList());

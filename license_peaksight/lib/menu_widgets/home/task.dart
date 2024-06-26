@@ -4,6 +4,7 @@ class Task {
   String status; // completed, queued, in progress, new
   String category; // Daily, Weekly, Monthly
   String description; // Description of the task
+  String? creationDate; // Date the task was created, nullable
 
   Task({
     required this.id,
@@ -11,6 +12,7 @@ class Task {
     required this.status,
     required this.category,
     this.description = '', // Default to an empty string if not provided
+    this.creationDate, // Nullable creation date
   });
 
   Map<String, dynamic> toMap() {
@@ -19,6 +21,7 @@ class Task {
       'status': status,
       'category': category,
       'description': description,
+      'creationDate': creationDate, // Store as a string
     };
   }
 
@@ -29,6 +32,7 @@ class Task {
       status: map['status'],
       category: map['category'],
       description: map['description'] ?? '', // Handle nulls from the database
+      creationDate: map['creationDate'], // Handle null or missing creationDate
     );
   }
 }
