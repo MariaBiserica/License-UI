@@ -2,6 +2,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:license_peaksight/menu_widgets/image_modifier/hermite_curve_painter.dart';
+import 'package:license_peaksight/theme_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:license_peaksight/constants.dart';
 
@@ -42,8 +43,8 @@ class _PanelLeftImageModifierState extends State<PanelLeftImageModifier> {
   final List<String> metrics = [
     'Sharpening',
     'Curves Adjustment',
-    'Histogram Equalization',
     'Color Enhancement',
+    'Histogram Equalization',
     'Color Space Conversion',
     'Inverse Color',
     'Morphological Transformation',
@@ -57,8 +58,8 @@ class _PanelLeftImageModifierState extends State<PanelLeftImageModifier> {
   final Map<String, String> metricDescriptions = {
     'Sharpening': 'For improving clarity and contrast.',
     'Curves Adjustment': 'For adjusting the tonal curves of the image. Modifies contrast and luminosity.',
-    'Histogram Equalization': 'For highlighting details.',
     'Color Enhancement': 'For special effects and color adjustments.',
+    'Histogram Equalization': 'For highlighting details.',
     'Color Space Conversion': 'For image transformation and adjustment.',
     'Inverse Color': 'For special effects and color adjustments.',
     'Morphological Transformation': 'For image transformation and adjustment.',
@@ -79,14 +80,14 @@ class _PanelLeftImageModifierState extends State<PanelLeftImageModifier> {
   double saturationScalar = 1.0;
   double valueScalar = 1.0;
 
-  final List<Map<String, double>> colorEnhancementPresets = [
-    {'hueScalar': 0.7, 'saturationScalar': 1.5, 'valueScalar': 0.5},
-    {'hueScalar': 0.7, 'saturationScalar': 1.5, 'valueScalar': 1.5},
-    {'hueScalar': 1.3, 'saturationScalar': 1.5, 'valueScalar': 0.5},
-    {'hueScalar': 1.3, 'saturationScalar': 1.5, 'valueScalar': 1.5},
-    {'hueScalar': 1.1, 'saturationScalar': 1.2, 'valueScalar': 1.1},
-    {'hueScalar': 1.2, 'saturationScalar': 1.5, 'valueScalar': 1.2},
-    {'hueScalar': 1.5, 'saturationScalar': 2.0, 'valueScalar': 1.5},
+  final List<Map<String, dynamic>> colorEnhancementPresets = [
+    {'hueScalar': 1.1, 'saturationScalar': 1.6, 'valueScalar': 1.3, 'description': 'Suitable for landscapes with a lot of green'},
+    {'hueScalar': 1.2, 'saturationScalar': 1.5, 'valueScalar': 0.8, 'description': 'Ideal for portraits'},
+    {'hueScalar': 1.0, 'saturationScalar': 1.3, 'valueScalar': 1.5, 'description': 'Good for cityscapes and urban photos'},
+    {'hueScalar': 0.9, 'saturationScalar': 1.1, 'valueScalar': 1.2, 'description': 'Enhances underwater photos'},
+    {'hueScalar': 1.0, 'saturationScalar': 1.2, 'valueScalar': 0.9, 'description': 'Best for sunset and sunrise images'},
+    {'hueScalar': 1.1, 'saturationScalar': 1.4, 'valueScalar': 1.0, 'description': 'Great for images with a lot of blue sky'},
+    {'hueScalar': 1.5, 'saturationScalar': 2.0, 'valueScalar': 1.5, 'description': 'For images with dull colors needing a vibrant boost'},
   ];
 
   int _current = 0;
@@ -98,7 +99,7 @@ class _PanelLeftImageModifierState extends State<PanelLeftImageModifier> {
     selectedMetric = metrics.first;
   }
 
-  void applyPreset(Map<String, double> preset) {
+  void applyPreset(Map<String, dynamic> preset) {
     setState(() {
       hueScalar = preset['hueScalar']!;
       saturationScalar = preset['saturationScalar']!;
@@ -389,7 +390,18 @@ class _PanelLeftImageModifierState extends State<PanelLeftImageModifier> {
                                 children: [
                                   Text(
                                     'Presets',
-                                    style: TextStyle(fontWeight: FontWeight.bold, color: widget.themeColors['detailsColor'], fontSize: 16),
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color: widget.themeColors['detailsColor'],
+                                      fontSize: 20,
+                                      shadows: <Shadow>[
+                                        Shadow(
+                                          color: Colors.black.withOpacity(0.8),
+                                          offset: Offset(1, 2),
+                                          blurRadius: 2,
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                   SizedBox(height: 10),
                                   Wrap(
@@ -399,22 +411,56 @@ class _PanelLeftImageModifierState extends State<PanelLeftImageModifier> {
                                       final bool isSelected = hueScalar == preset['hueScalar'] &&
                                           saturationScalar == preset['saturationScalar'] &&
                                           valueScalar == preset['valueScalar'];
-                                      return ElevatedButton(
-                                        onPressed: () => applyPreset(preset),
-                                        style: ElevatedButton.styleFrom(
-                                          backgroundColor: isSelected ? widget.themeColors['selectedColor'] : widget.themeColors['panelForeground'],
-                                        ),
-                                        child: Text(
-                                          'Hue: ${preset['hueScalar']}, Sat: ${preset['saturationScalar']}, Val: ${preset['valueScalar']}',
-                                          style: TextStyle(color: widget.themeColors['textColor']),
-                                        ),
+                                      return Column(
+                                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                                        children: [
+                                          Container(
+                                            padding: EdgeInsets.all(4),
+                                            decoration: BoxDecoration(
+                                              color: widget.themeColors['appBackground'],
+                                              borderRadius: BorderRadius.circular(8),
+                                            ),
+                                            child: Text(
+                                              preset['description'],
+                                              style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 17,
+                                              ),
+                                            ),
+                                          ),
+                                          SizedBox(height: 5),
+                                          ElevatedButton(
+                                            onPressed: () => applyPreset(preset),
+                                            style: ElevatedButton.styleFrom(
+                                              backgroundColor: isSelected
+                                                  ? widget.themeColors['selectedColor']
+                                                  : widget.themeColors['panelForeground'],
+                                            ),
+                                            child: Text(
+                                              'Hue: ${preset['hueScalar']}, Sat: ${preset['saturationScalar']}, Val: ${preset['valueScalar']}',
+                                              style: TextStyle(color: widget.themeColors['textColor']),
+                                            ),
+                                          ),
+                                          SizedBox(height: 10),
+                                        ],
                                       );
                                     }).toList(),
                                   ),
                                   SizedBox(height: 10),
                                   Text(
                                     'Custom',
-                                    style: TextStyle(fontWeight: FontWeight.bold, color: widget.themeColors['detailsColor'], fontSize: 16),
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color: widget.themeColors['detailsColor'],
+                                      fontSize: 20,
+                                      shadows: <Shadow>[
+                                        Shadow(
+                                          color: Colors.black.withOpacity(0.8),
+                                          offset: Offset(1, 2),
+                                          blurRadius: 2,
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                   SizedBox(height: 5),
                                   Text(
