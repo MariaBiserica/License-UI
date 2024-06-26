@@ -40,34 +40,34 @@ class PanelLeftImageModifier extends StatefulWidget {
 
 class _PanelLeftImageModifierState extends State<PanelLeftImageModifier> {
   final List<String> metrics = [
-    'Curves Adjustment',
-    'Gaussian Blur',
-    'Edge Detection',
-    'Color Space Conversion',
-    'Histogram Equalization',
-    'Image Rotation',
-    'Morphological Transformation',
-    'Inverse Color',
-    'Color Enhancement',
     'Sharpening',
+    'Curves Adjustment',
+    'Histogram Equalization',
+    'Color Enhancement',
+    'Color Space Conversion',
+    'Inverse Color',
+    'Morphological Transformation',
+    'Gaussian Blur',
     'Median Blur',
     'Noise Reduction',
+    'Edge Detection',
+    'Image Rotation',
   ];
 
   final Map<String, String> metricDescriptions = {
-  'Curves Adjustment': 'For adjusting the tonal curves of the image. Modifies contrast and luminosity.',
-  'Gaussian Blur': 'For noise reduction.',
-  'Edge Detection': 'For image transformation and adjustment.',
-  'Color Space Conversion': 'For image transformation and adjustment.',
-  'Histogram Equalization': 'For highlighting details.',
-  'Image Rotation': 'For image transformation and adjustment.',
-  'Morphological Transformation': 'For image transformation and adjustment.',
-  'Inverse Color': 'For special effects and color adjustments.',
-  'Color Enhancement': 'For special effects and color adjustments.',
-  'Sharpening': 'For improving clarity and contrast.',
-  'Median Blur': 'For noise reduction.',
-  'Noise Reduction': 'For noise reduction.',
-};
+    'Sharpening': 'For improving clarity and contrast.',
+    'Curves Adjustment': 'For adjusting the tonal curves of the image. Modifies contrast and luminosity.',
+    'Histogram Equalization': 'For highlighting details.',
+    'Color Enhancement': 'For special effects and color adjustments.',
+    'Color Space Conversion': 'For image transformation and adjustment.',
+    'Inverse Color': 'For special effects and color adjustments.',
+    'Morphological Transformation': 'For image transformation and adjustment.',
+    'Gaussian Blur': 'For noise reduction.',
+    'Median Blur': 'For noise reduction.',
+    'Noise Reduction': 'For noise reduction.',
+    'Edge Detection': 'For image transformation and adjustment.',
+    'Image Rotation': 'For image transformation and adjustment.',
+  };
 
   String? selectedMetric;
   double rotationAngle = 45.0;
