@@ -37,7 +37,10 @@ class _CenterPanelHomeState extends State<CenterPanelHome> {
               categoryData[task.category] = categoryData[task.category] ?? {};
               categoryData[task.category]?[task.status] = (categoryData[task.category]?[task.status] ?? 0) + 1;
             }
-            return categoryData.entries.map((entry) => ChartData(entry.key, entry.value)).toList();
+            List<ChartData> chartDataList = categoryData.entries.map((entry) => ChartData(entry.key, entry.value)).toList();
+            // Sort the chartDataList based on your desired criteria. For example, by category name.
+            chartDataList.sort((a, b) => a.category.compareTo(b.category));
+            return chartDataList;
           });
     }
   }
