@@ -269,14 +269,26 @@ class _LeftPanelHomeState extends State<LeftPanelHome> {
                 subtitle: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
+                    SizedBox(height: 2),
                     if (task.creationDate != null) // Check for null
                       Text(
-                        'Timestamp: ${DateFormat('dd/MM/yyyy - HH:mm:ss').format(DateTime.parse(task.creationDate!))}', // Display creation date
-                        style: TextStyle(color: widget.themeColors['detailsColor']),
+                        '${DateFormat('dd/MM/yyyy - HH:mm:ss').format(DateTime.parse(task.creationDate!))}', // Display creation date
+                        style: TextStyle(
+                          color: widget.themeColors['detailsColor']),
                       ),
+                    SizedBox(height: 5),
                     Text(
                       'Tap for details', // or use task.description for more details
-                      style: TextStyle(color: widget.themeColors['detailsColor']),
+                      style: TextStyle(
+                        color: widget.themeColors['detailsColor'],
+                        shadows: [
+                            Shadow(
+                              color: Colors.black.withOpacity(0.5),
+                              offset: Offset(1, 1),
+                              blurRadius: 2,
+                            ),
+                          ],
+                      ),
                     ),
                   ],
                 ),
