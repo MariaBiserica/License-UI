@@ -89,14 +89,17 @@ class HermiteCurvePainter extends CustomPainter {
         ..strokeWidth = 2;
 
       for (int i = 0; i < sortedPoints.length - 1; i++) {
-        final p0 = sortedPoints[i];
+        final p0 = sortedPoints[i]; // current pair of points
         final p1 = sortedPoints[i + 1];
+        // ghost point used for the first point to ensure smoothness
         final pMinus1 = i == 0 ? Offset(2 * p0.dx - p1.dx, 2 * p0.dy - p1.dy) : sortedPoints[i - 1];
+        // ghost point used for the last point to ensure smoothness - the 'next point'
         final p2 = i + 2 < sortedPoints.length ? sortedPoints[i + 2] : Offset(2 * p1.dx - p0.dx, 2 * p1.dy - p0.dy);
 
-        final m0 = Offset((p1.dx - pMinus1.dx) / 2, (p1.dy - pMinus1.dy) / 2);
+        final m0 = Offset((p1.dx - pMinus1.dx) / 2, (p1.dy - pMinus1.dy) / 2); // tangents - the slope
         final m1 = Offset((p2.dx - p0.dx) / 2, (p2.dy - p0.dy) / 2);
 
+        // calculate hermite basis functions
         for (double t = 0; t <= 1; t += 0.01) {
           final h1 = 2 * pow(t, 3) - 3 * pow(t, 2) + 1;
           final h2 = -2 * pow(t, 3) + 3 * pow(t, 2);
